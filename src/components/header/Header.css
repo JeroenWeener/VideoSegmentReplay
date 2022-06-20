@@ -1,0 +1,12 @@
+.header {
+    background-color: lightblue;
+}
+
+.header .header-content {
+    max-width: 1400px;
+    margin: 0 auto 0 auto;
+}
+
+.header h1 {
+    margin: 0;
+}
