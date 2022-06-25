@@ -8,8 +8,8 @@ const NewProject = () => {
 
   const handleOnSubmit = (event: FormEvent) => {
     event.preventDefault()
-    navigate(`../projects/${projectName}/${JSON.stringify({ url: youtubeUrl, moments: [] })}`)
-
+    const videoId = youtubeUrl.split('?v=')[1]
+    navigate(`../projects/${projectName}/${JSON.stringify({ videoId: videoId, moments: [] })}`)
   }
 
   return <>
