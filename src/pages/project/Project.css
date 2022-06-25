@@ -1,7 +1,9 @@
 :root {
-    --player-control-height: 80px;
+    --player-control-height: 60px;
     --player-control-padding: 20px;
     --button-action-size: calc(var(--player-control-height) - 2 * var(--player-control-padding));
+    --seek-bar-height: calc(var(--button-action-size) / 2);
+    --seek-bar-handle-size: calc(2 * var(--seek-bar-height));
 }
 
 .project-container {
@@ -13,6 +15,9 @@
     border-radius: 10px 10px 0 0;
     padding: var(--player-control-padding);
     height: var(--player-control-height);
+    display: flex;
+    flex-direction: row;
+    align-items: center;
 }
 
 .button-action {
@@ -21,8 +26,9 @@
     background: transparent;
     height: var(--button-action-size);
 
-    border-color: transparent transparent transparent #202020;
-    transition: 100ms all ease;
+    border-color: transparent transparent transparent whitesmoke;
+    opacity: .7;
+    transition: 100ms opacity ease;
     cursor: pointer;
 
     border-style: solid;
@@ -35,5 +41,50 @@
 }
 
 .button-action:hover {
-    border-color: transparent transparent transparent #404040;
+    opacity: 1;
+}
+
+.clock {
+    text-align: center;
+    font-size: 1.2em;
+    min-width: 6em;
+    color: whitesmoke;
+}
+
+.seek-bar {
+    flex-grow: 1;
+    appearance: none;
+    height: var(--seek-bar-height);
+    min-width: 2em;
+    background: whitesmoke;
+    outline: none;
+    border-radius: 100vw;
+    opacity: 0.7;
+    transition: opacity .2s;
+}
+
+.seek-bar:hover {
+    opacity: 1;
+}
+
+.seek-bar::-webkit-slider-thumb {
+    appearance: none;
+    outline: none;
+    border: 0;
+    border-radius: 50%;
+    height: var(--seek-bar-handle-size);
+    width: var(--seek-bar-handle-size);
+    background: peru;
+    cursor: pointer;
+}
+
+.seek-bar::-moz-range-thumb {
+    appearance: none;
+    outline: none;
+    border: 0;
+    border-radius: 50%;
+    height: var(--seek-bar-handle-size);
+    width: var(--seek-bar-handle-size);
+    background: peru;
+    cursor: pointer;
 }
