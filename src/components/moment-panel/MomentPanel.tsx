@@ -1,4 +1,5 @@
 import { Moment } from "../../models/moment.model"
+import { secondsToHMSString } from "../../utils/moment.util"
 import './MomentPanel.css'
 
 interface MomentPanelProps {
@@ -11,7 +12,7 @@ const MomentPanel = ({ moment, onClick }: MomentPanelProps) => {
         className="moment-panel"
         onClick={() => onClick()}
     >
-        <div>{moment.time}</div>
+        <div className='time'>{secondsToHMSString(moment.time)}</div>
     </div>
 }
 

@@ -4,6 +4,7 @@ import MomentPanel from '../../components/moment-panel/MomentPanel'
 import { Moment } from '../../models/moment.model'
 import YouTube, { YouTubeProps } from 'react-youtube'
 import './Project.css'
+import { secondsToHMSString } from '../../utils/moment.util'
 
 const Project = () => {
   const navigate = useNavigate()
@@ -54,6 +55,7 @@ const Project = () => {
       e.keyCode === 32
     ) {
       playing ? pause() : play()
+      return false
     }
   }
 
@@ -89,14 +91,10 @@ const Project = () => {
 
   const getTimeString = () => {
     if (!player || duration === 0) return '-:-- / -:--'
-    
-    const currentMinutes = Math.floor(currentTime / 60)
-    const currentSeconds = currentTime % 60
-    const currentSecondsString = currentSeconds >= 10 ? currentSeconds : '0' + currentSeconds
-    const totalMinutes = Math.floor(duration / 60)
-    const totalSeconds = duration % 60
-    const totalSecondsString = totalSeconds >= 10 ? totalSeconds : '0' + totalSeconds
-    return `${currentMinutes}:${currentSecondsString} / ${totalMinutes}:${totalSecondsString}`
+
+    const totalHMS = secondsToHMSString(duration)
+    const currentHMS = secondsToHMSString(currentTime, totalHMS.length > '--:--'.length)
+    return `${currentHMS} / ${totalHMS}`
   }
 
   const momentClicked = (moment: Moment) => {

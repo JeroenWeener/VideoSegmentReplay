@@ -11,8 +11,15 @@
     align-items: center;
     color: aliceblue;
     font-size: 3em;
+    min-width: 0;
 }
 
 .moment-panel:hover {
     background-color: olive;
+}
+
+.time {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
