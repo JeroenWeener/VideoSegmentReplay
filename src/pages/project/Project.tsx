@@ -9,12 +9,11 @@ const Project = () => {
   const navigate = useNavigate()
   const { projectName, data } = useParams()
   const { videoId, moments: parsedMoments } = JSON.parse(data!)
-  const [moments, setMoments] = useState(parsedMoments || [])
-  const [playing, setPlaying] = useState(false)
+  const [moments, setMoments] = useState<Moment[]>(parsedMoments || [])
+  const [playing, setPlaying] = useState<boolean>(false)
   const [player, setPlayer] = useState<YT.Player>()
-  const [currentTime, setCurrentTime] = useState(0)
-  const [duration, setDuration] = useState(0)
-  const [momentId, increaseMomentId] = useState(0)
+  const [currentTime, setCurrentTime] = useState<number>(0)
+  const [duration, setDuration] = useState<number>(0)
 
   const getProjectDataString = () => {
     return JSON.stringify({
@@ -24,10 +23,8 @@ const Project = () => {
   }
 
   const addMoment = () => {
-    increaseMomentId(id => ++id)
     const updatedMoments = moments
     updatedMoments.push({
-      id: momentId,
       time: currentTime,
     })
     setMoments(updatedMoments)
@@ -53,8 +50,6 @@ const Project = () => {
   const setTime = (seconds: number) => {
     setCurrentTime(Math.ceil(seconds))
   }
-
-  const panels = moments.map((moment: Moment) => <MomentPanel key={moment.id} moment={moment} />)
 
   const onReady: YouTubeProps['onReady'] = (event) => {
     console.log(`onReady ${event}`)
@@ -99,12 +94,12 @@ const Project = () => {
       <div>YouTube video ID: {videoId}</div>
       <button onClick={addMoment}>Add moment</button>
       <div className='panel-container'>
-        {panels}
+        {moments.map((moment: Moment, index: number) => <MomentPanel key={index} moment={moment} />)}
       </div>
     </div>
     <div className='player-controls'>
       <button onClick={() => playing ? pause() : play()} className={`button-action ${playing ? 'pause' : ''}`}></button>
-      <span className='clock'>{getTimeString()}</span>
+      <span className='time-display'>{getTimeString()}</span>
       <input
         type="range"
         min="0"
