@@ -13,6 +13,7 @@ const Project = () => {
   const [playing, setPlaying] = useState(false)
   const [player, setPlayer] = useState<YT.Player>()
   const [currentTime, setCurrentTime] = useState(0)
+  const [duration, setDuration] = useState(0)
 
   const getProjectDataString = () => {
     return JSON.stringify({
@@ -42,10 +43,22 @@ const Project = () => {
   }
 
   setInterval(() => {
-    setCurrentTime(player?.getCurrentTime() || 0)
-  }, 1000)
+    if (player && playing && player.getCurrentTime() !== 0) {
+      setTime(player.getCurrentTime())
+    }
+  }, 500)
+
+  const setTime = (seconds: number) => {
+    setCurrentTime(Math.ceil(seconds))
+  }
 
   const panels = moments.map((moment: Moment) => <MomentPanel key={moment.id} moment={moment} />)
+
+  const onReady: YouTubeProps['onReady'] = (event) => {
+    console.log(`onReady ${event}`)
+    setPlayer(event.target)
+    setDuration(Math.floor(player?.getDuration() || 0))
+  }
 
   const play = () => {
     player?.playVideo()
@@ -57,24 +70,23 @@ const Project = () => {
     setPlaying(false)
   }
 
-  const seekAndPlay = (seconds: number) => {
-    setCurrentTime(seconds)
-    player?.seekTo(seconds, true)
-    play()
+  const onEnd = () => {
+    setPlaying(false)
   }
 
-  const updatePlayer: YouTubeProps['onPlay' | 'onPause'] = (event) => {
-    console.log(event)
-    setPlayer(event.target)
+  const seekAndPlay = (seconds: number) => {
+    setTime(seconds)
+    player?.seekTo(seconds, true)
+    play()
   }
 
   const getTimeString = () => {
     if (!player) return ''
     const currentMinutes = Math.floor(currentTime / 60)
-    const currentSeconds = Math.floor(currentTime % 60)
+    const currentSeconds = currentTime % 60
     const currentSecondsString = currentSeconds >= 10 ? currentSeconds : '0' + currentSeconds
-    const totalMinutes = Math.floor(player.getDuration() / 60)
-    const totalSeconds = Math.floor(player.getDuration() % 60)
+    const totalMinutes = Math.floor(duration / 60)
+    const totalSeconds = duration % 60
     const totalSecondsString = totalSeconds >= 10 ? totalSeconds : '0' + totalSeconds
     return `${currentMinutes}:${currentSecondsString} / ${totalMinutes}:${totalSecondsString}`
   }
@@ -92,7 +104,7 @@ const Project = () => {
       <input
         type="range"
         min="0"
-        max={Math.floor(player?.getDuration() || 0)}
+        max={duration}
         onChange={(e) => seekAndPlay(+e.target.value)}
         value={currentTime}
         className='seek-bar'
@@ -100,9 +112,8 @@ const Project = () => {
     </div>
     <YouTube
       style={{ display: 'none' }}
-      onReady={updatePlayer}
-      onPlay={updatePlayer}
-      onPause={updatePlayer}
+      onReady={onReady}
+      onEnd={onEnd}
       videoId={videoId}
       opts={opts}
     />
