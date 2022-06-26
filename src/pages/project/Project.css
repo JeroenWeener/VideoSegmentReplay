@@ -10,6 +10,33 @@
     height: calc(100% - var(--player-control-height));
 }
 
+.panel-container {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1em;
+    /* TODO */
+    max-height: 80vh;
+    overflow-y: auto;
+}
+
+@media (min-width:480px) {
+    .panel-container {
+        grid-template-columns: repeat(4, 1fr);
+    }
+}
+
+@media (min-width:720px) {
+    .panel-container {
+        grid-template-columns: repeat(6, 1fr);
+    }
+}
+
+@media (min-width:960px) {
+    .panel-container {
+        grid-template-columns: repeat(8, 1fr);
+    }
+}
+
 .player-controls {
     background-color: grey;
     border-radius: 10px 10px 0 0;

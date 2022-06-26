@@ -1,0 +1,18 @@
+.moment-panel {
+    background-color: teal;
+    border-radius: 10px;
+    aspect-ratio: 1;
+    cursor: pointer;
+    user-select: none;
+    transition: background-color .2s;
+    box-shadow: 0px 3px 4px rgba(0, 0, 0, 0.15);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: aliceblue;
+    font-size: 3em;
+}
+
+.moment-panel:hover {
+    background-color: olive;
+}

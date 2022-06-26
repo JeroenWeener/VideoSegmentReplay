@@ -14,6 +14,7 @@ const Project = () => {
   const [player, setPlayer] = useState<YT.Player>()
   const [currentTime, setCurrentTime] = useState(0)
   const [duration, setDuration] = useState(0)
+  const [momentId, increaseMomentId] = useState(0)
 
   const getProjectDataString = () => {
     return JSON.stringify({
@@ -23,10 +24,11 @@ const Project = () => {
   }
 
   const addMoment = () => {
+    increaseMomentId(id => ++id)
     const updatedMoments = moments
     updatedMoments.push({
-      id: 9,
-      time: 3.4,
+      id: momentId,
+      time: currentTime,
     })
     setMoments(updatedMoments)
 
@@ -96,7 +98,9 @@ const Project = () => {
       <div>Project name: {projectName}</div>
       <div>YouTube video ID: {videoId}</div>
       <button onClick={addMoment}>Add moment</button>
-      {panels}
+      <div className='panel-container'>
+        {panels}
+      </div>
     </div>
     <div className='player-controls'>
       <button onClick={() => playing ? pause() : play()} className={`button-action ${playing ? 'pause' : ''}`}></button>
