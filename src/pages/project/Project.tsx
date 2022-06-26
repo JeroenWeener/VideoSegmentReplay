@@ -47,6 +47,16 @@ const Project = () => {
     }
   }, 500)
 
+  document.body.onkeyup = (e) => {
+    if (
+      e.key === ' ' ||
+      e.code === 'Space' ||
+      e.keyCode === 32
+    ) {
+      playing ? pause() : play()
+    }
+  }
+
   const setTime = (seconds: number) => {
     setCurrentTime(Math.ceil(seconds))
   }
@@ -88,13 +98,17 @@ const Project = () => {
     return `${currentMinutes}:${currentSecondsString} / ${totalMinutes}:${totalSecondsString}`
   }
 
+  const momentClicked = (moment: Moment) => {
+    seekAndPlay(moment.time)
+  }
+
   return <>
     <div className='project-container'>
       <div>Project name: {projectName}</div>
       <div>YouTube video ID: {videoId}</div>
       <button onClick={addMoment}>Add moment</button>
       <div className='panel-container'>
-        {moments.map((moment: Moment, index: number) => <MomentPanel key={index} moment={moment} />)}
+        {moments.map((moment: Moment, index: number) => <MomentPanel key={index} moment={moment} onClick={() => momentClicked(moment)} />)}
       </div>
     </div>
     <div className='player-controls'>

@@ -3,10 +3,14 @@ import './MomentPanel.css'
 
 interface MomentPanelProps {
     moment: Moment
+    onClick: Function
 }
 
-const MomentPanel = ({ moment }: MomentPanelProps) => {
-    return <div className="moment-panel">
+const MomentPanel = ({ moment, onClick }: MomentPanelProps) => {
+    return <div
+        className="moment-panel"
+        onClick={() => onClick()}
+    >
         <div>{moment.time}</div>
     </div>
 }
