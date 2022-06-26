@@ -88,7 +88,8 @@ const Project = () => {
   }
 
   const getTimeString = () => {
-    if (!player) return ''
+    if (!player || duration === 0) return '-:-- / -:--'
+    
     const currentMinutes = Math.floor(currentTime / 60)
     const currentSeconds = currentTime % 60
     const currentSecondsString = currentSeconds >= 10 ? currentSeconds : '0' + currentSeconds
