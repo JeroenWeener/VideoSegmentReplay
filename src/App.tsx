@@ -7,18 +7,18 @@ import Header from './components/header/Header';
 
 const App = () => {
   return <>
-    <div className='header'>
-      <Header />
-    </div>
-    <div className='content'>
-      <BrowserRouter>
+    <BrowserRouter>
+      <div className='header'>
+        <Header />
+      </div>
+      <div className='content'>
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/projects/new" element={<NewProject />} />
           <Route path="/projects/:projectName/:data" element={<Project />} />
         </Routes>
-      </BrowserRouter>
-    </div>
+      </div>
+    </BrowserRouter>
   </>;
 }
 

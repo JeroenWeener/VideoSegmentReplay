@@ -1,12 +1,35 @@
 .header {
-    background-color: lightblue;
+    background-color: teal;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
 }
 
 .header .header-content {
     max-width: 1400px;
     margin: 0 auto 0 auto;
+    padding: 1em;
+    color: white;
+    font-size: 2em;
 }
 
-.header h1 {
-    margin: 0;
+.logo {
+    position: relative;
+    overflow: hidden;
+}
+
+.logo span {
+    float: left;
+}
+
+.logo .logo-appear {
+    transition: opacity .3s, margin-left .3s .2s;
+    margin-left: -100%;
+    opacity: 0;
+}
+
+.logo:hover .logo-appear {
+    transition: margin-left .3s, opacity .3s .2s;
+    margin-left: 0;
+    opacity: 1;
 }
