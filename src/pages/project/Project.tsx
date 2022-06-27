@@ -15,6 +15,7 @@ const Project = () => {
   const [player, setPlayer] = useState<YT.Player>()
   const [currentTime, setCurrentTime] = useState<number>(0)
   const [duration, setDuration] = useState<number>(0)
+  const [ended, setEnded] = useState<boolean>(false)
 
   const getProjectDataString = () => {
     return JSON.stringify({
@@ -34,11 +35,16 @@ const Project = () => {
   }
 
   const opts: YouTubeProps['opts'] = {
-    height: '0',
-    width: '0',
     playerVars: {
       // https://developers.google.com/youtube/player_parameters
       autoplay: 0,
+      cc_load_policy: 0,
+      controls: 0,
+      disablekb: 1,
+      fs: 0,
+      iv_load_policy: 3,
+      modest_branding: 1,
+      rel: 0,
     },
   }
 
@@ -72,6 +78,7 @@ const Project = () => {
   const play = () => {
     player?.playVideo()
     setPlaying(true)
+    setEnded(false)
   }
 
   const pause = () => {
@@ -81,6 +88,7 @@ const Project = () => {
 
   const onEnd = () => {
     setPlaying(false)
+    setEnded(true)
   }
 
   const seekAndPlay = (seconds: number) => {
@@ -101,15 +109,37 @@ const Project = () => {
     seekAndPlay(moment.time)
   }
 
-  return <>
+  return <div className='outer-container'>
     <div className='project-container'>
-      <div>Project name: {projectName}</div>
-      <div>YouTube video ID: {videoId}</div>
-      <button onClick={addMoment}>Add moment</button>
-      <div className='panel-container'>
-        {moments.map((moment: Moment, index: number) => <MomentPanel key={index} moment={moment} onClick={() => momentClicked(moment)} />)}
+      <div>
+        <div>Project name: {projectName}</div>
+        <div>YouTube video ID: {videoId}</div>
+        <div className='video-player-wrapper'>
+          <YouTube
+            title=' '
+            onReady={onReady}
+            onEnd={onEnd}
+            videoId={videoId}
+            opts={opts}
+          />
+          <div
+            className={`
+            video-player-cover
+            ${playing ? '' : 'paused'}
+            ${ended ? 'ended' : ''}
+          `}
+            onClick={() => playing ? pause() : play()}
+          ></div>
+        </div>
+      </div>
+      <div>
+        <button onClick={addMoment}>Add moment</button>
+        <div className='panel-container'>
+          {moments.map((moment: Moment, index: number) => <MomentPanel key={index} moment={moment} onClick={() => momentClicked(moment)} />)}
+        </div>
       </div>
     </div>
+    
     <div className='player-controls'>
       <button onClick={() => playing ? pause() : play()} className={`button-action ${playing ? 'pause' : ''}`}></button>
       <span className='time-display'>{getTimeString()}</span>
@@ -122,14 +152,7 @@ const Project = () => {
         className='seek-bar'
       ></input>
     </div>
-    <YouTube
-      style={{ display: 'none' }}
-      onReady={onReady}
-      onEnd={onEnd}
-      videoId={videoId}
-      opts={opts}
-    />
-  </>
+  </div>
 }
 
 export default Project
