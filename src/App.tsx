@@ -4,12 +4,15 @@ import Home from './pages/home/Home';
 import NewProject from './pages/new-project/NewProject';
 import Project from './pages/project/Project';
 import Header from './components/header/Header';
+import { getProjects } from './utils/local-storage.util';
 
 const App = () => {
+  const projects = getProjects()
+
   return <>
     <BrowserRouter>
       <div className='header-container'>
-        <Header />
+        <Header projects={projects} />
       </div>
       <div className='content'>
         <Routes>

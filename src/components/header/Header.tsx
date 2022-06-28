@@ -1,7 +1,12 @@
 import { useNavigate } from 'react-router-dom'
+import { Project } from '../../models/project.model'
 import './Header.css'
 
-const Header = () => {
+interface HeaderProps {
+    projects: Project[]
+}
+
+const Header = ({ projects }: HeaderProps) => {
     const navigate = useNavigate()
 
     return <div className="header">
@@ -14,6 +19,8 @@ const Header = () => {
                 <span>R</span>
                 <span className='logo-appear'>eplay</span>
             </div>
+
+            <select>{ projects.map((project) => <option key={project.id} value={project.id}>{project.name}</option>)}</select>
         </div>
     </div>
 }
