@@ -90,7 +90,7 @@ const Project = () => {
 
   return <>
     <div className="content-container">
-      <div className="player-side">
+      <div className="player-container">
         <VideoPlayer
           videoId={videoId}
           playing={playing}
@@ -101,7 +101,7 @@ const Project = () => {
           onEnd={onEnd}
         ></VideoPlayer>
       </div>
-      <div className="moments-side">
+      <div className="moments-container">
         <button onClick={addMoment}>Add moment</button>
         <div className='panel-container'>
           {moments.map((moment: Moment, index: number) => <MomentPanel key={index} moment={moment} onClick={() => momentClicked(moment)} />)}

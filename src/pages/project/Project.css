@@ -14,7 +14,7 @@
     column-gap: 1em;
 }
 
-.content-container .moments-side {
+.content-container .moments-container {
     flex-basis: 100%;
 }
 
@@ -25,12 +25,12 @@
         padding-top: 1em;
     }
 
-    .content-container .player-side {
+    .content-container .player-container {
         flex-basis: 100%;
     }
 }
 
-.moments-side {
+.moments-container {
     display: flex;
     flex-direction: column;
     min-height: 0;
@@ -38,7 +38,7 @@
 }
 
 @media (min-width: 720px) {
-    .moments-side {
+    .moments-container {
         padding: unset;
     }
 }
