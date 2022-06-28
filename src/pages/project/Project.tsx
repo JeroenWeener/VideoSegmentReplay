@@ -109,14 +109,11 @@ const Project = () => {
     seekAndPlay(moment.time)
   }
 
-  return <div className='outer-container'>
-    <div className='project-container'>
-      <div>
-        <div>Project name: {projectName}</div>
-        <div>YouTube video ID: {videoId}</div>
+  return <>
+    <div className="content-container">
+      <div className="player-side">
         <div className='video-player-wrapper'>
           <YouTube
-            title=' '
             onReady={onReady}
             onEnd={onEnd}
             videoId={videoId}
@@ -124,35 +121,35 @@ const Project = () => {
           />
           <div
             className={`
-            video-player-cover
-            ${playing ? '' : 'paused'}
-            ${ended ? 'ended' : ''}
-          `}
+             video-player-cover
+             ${playing ? '' : 'paused'}
+             ${ended ? 'ended' : ''}
+           `}
             onClick={() => playing ? pause() : play()}
           ></div>
         </div>
       </div>
-      <div>
+      <div className="moments-side">
         <button onClick={addMoment}>Add moment</button>
         <div className='panel-container'>
           {moments.map((moment: Moment, index: number) => <MomentPanel key={index} moment={moment} onClick={() => momentClicked(moment)} />)}
         </div>
       </div>
     </div>
-    
-    <div className='player-controls'>
+
+    <div className="player-controls">
       <button onClick={() => playing ? pause() : play()} className={`button-action ${playing ? 'pause' : ''}`}></button>
       <span className='time-display'>{getTimeString()}</span>
       <input
+        className='seek-bar'
         type="range"
         min="0"
         max={duration}
-        onChange={(e) => seekAndPlay(+e.target.value)}
         value={currentTime}
-        className='seek-bar'
+        onChange={(e) => seekAndPlay(+e.target.value)}
       ></input>
     </div>
-  </div>
+  </>
 }
 
 export default Project
