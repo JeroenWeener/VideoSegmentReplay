@@ -124,8 +124,8 @@ const ProjectPage = () => {
         </div>
         <div className="moments-container">
           <div className='panel-container'>
-            <NewMomentPanel onClick={createMoment} />
             {project.moments.map((moment: Moment, index: number) => <MomentPanel key={index} moment={moment} onClick={() => momentClicked(moment)} />)}
+            <NewMomentPanel onClick={createMoment} />
           </div>
         </div>
       </div>
