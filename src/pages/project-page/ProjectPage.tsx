@@ -8,6 +8,7 @@ import PlayerControl from '../../components/player-control/PlayerControl'
 import VideoPlayer from '../../components/video-player/VideoPlayer'
 import { projectFromBase64, projectToBase64 } from '../../utils/project.util'
 import { Project } from '../../models/project.model'
+import NewMomentPanel from '../../components/new-moment-panel/NewMomentPanel'
 
 const ProjectPage = () => {
   const navigate = useNavigate()
@@ -27,7 +28,7 @@ const ProjectPage = () => {
   const onMount = () => {
     loadProjectFromUrl()
   }
-
+  
   document.body.onkeyup = (e) => {
     if (
       e.key === ' ' ||
@@ -53,10 +54,11 @@ const ProjectPage = () => {
         return
       }
     }
+    // Return to home if project data is corrupt
     navigate('/')
   }
 
-  const addMoment = () => {
+  const createMoment = () => {
     const updatedMoments = project!.moments
     updatedMoments.push({
       time: currentTime,
@@ -64,11 +66,11 @@ const ProjectPage = () => {
 
     const updatedProject = {
       ...project!,
-      updatedMoments,
+      moments: updatedMoments,
     }
     setProject(updatedProject)
 
-    navigate(`../projects/${projectToBase64(updatedProject)}`, { replace: true })
+    navigate(`../project/${projectToBase64(updatedProject)}`, { replace: true })
   }
 
   const setTime = (seconds: number) => {
@@ -121,8 +123,8 @@ const ProjectPage = () => {
           ></VideoPlayer>
         </div>
         <div className="moments-container">
-          <button onClick={addMoment}>Add moment</button>
           <div className='panel-container'>
+            <NewMomentPanel onClick={createMoment} />
             {project.moments.map((moment: Moment, index: number) => <MomentPanel key={index} moment={moment} onClick={() => momentClicked(moment)} />)}
           </div>
         </div>

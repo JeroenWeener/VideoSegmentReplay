@@ -31,8 +31,8 @@ const Content = () => {
     <div className='content'>
       <Routes>
         <Route path="/" element={<Home />} />
-        <Route path="/projects/new" element={<NewProject />} />
-        <Route path="/projects/:projectData" element={<ProjectPage />} />
+        <Route path="/project/new" element={<NewProject />} />
+        <Route path="/project/:projectData" element={<ProjectPage />} />
         <Route path="*" element={<Navigate to="/" />} />
       </Routes>
     </div>

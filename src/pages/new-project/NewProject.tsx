@@ -15,7 +15,7 @@ const NewProject = () => {
 
     if (videoId) {
       const project = addProject(projectName, videoId)
-      navigate(`../projects/${projectToBase64(project)}`)
+      navigate(`../project/${projectToBase64(project)}`)
     }
   }
 

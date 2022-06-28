@@ -1,16 +1,11 @@
-import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import './Home.css'
 
 const Home = () => {
   const navigate = useNavigate();
 
-  const addProject = () => {
-    navigate(`../projects/new`);
-  }
-
   return <>
-    <button className='button-project-add' onClick={addProject}>Add project</button>
+    <button className='button-project-add' onClick={() => navigate('../project/new')}>Add project</button>
   </>;
 }
 
