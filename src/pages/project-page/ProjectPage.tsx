@@ -26,13 +26,24 @@ const ProjectPage = () => {
 
   const onMount = () => {
     loadProjectFromUrl()
-
-    setInterval(() => {
-      if (player && playing && player.getCurrentTime() !== 0) {
-        setTime(player.getCurrentTime())
-      }
-    }, 500)
   }
+
+  document.body.onkeyup = (e) => {
+    if (
+      e.key === ' ' ||
+      e.code === 'Space' ||
+      e.keyCode === 32
+    ) {
+      playing ? pause() : play()
+      return false
+    }
+  }
+
+  setInterval(() => {
+    if (player && playing && player.getCurrentTime() !== 0) {
+      setTime(player.getCurrentTime())
+    }
+  }, 500)
 
   const loadProjectFromUrl = () => {
     if (projectData) {
@@ -58,17 +69,6 @@ const ProjectPage = () => {
     setProject(updatedProject)
 
     navigate(`../projects/${projectToBase64(updatedProject)}`, { replace: true })
-  }
-
-  document.body.onkeyup = (e) => {
-    if (
-      e.key === ' ' ||
-      e.code === 'Space' ||
-      e.keyCode === 32
-    ) {
-      playing ? pause() : play()
-      return false
-    }
   }
 
   const setTime = (seconds: number) => {
