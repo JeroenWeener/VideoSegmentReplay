@@ -9,7 +9,11 @@ import { isValidVideoId } from "./regex.util"
  * @returns the Base64 encoding of the provided project as URLProject
  */
 export const projectToBase64 = (project: Project): string => {
-    return window.btoa(JSON.stringify(toUrlProject(project)))
+    const urlProject: URLProject = toUrlProject(project)
+    const jsonString: string = JSON.stringify(urlProject)
+    // Remove quotes from property names
+    const strippedJsonString: string = jsonString.replaceAll(/"([a-z])":/g, "$1:")
+    return window.btoa(strippedJsonString)
 }
 
 /**
@@ -20,7 +24,10 @@ export const projectToBase64 = (project: Project): string => {
  */
 export const projectFromBase64 = (encodedString: string): (Project | null) => {
     try {
-        const urlProject: URLProject = JSON.parse(window.atob(encodedString))
+        const strippedJsonString: string = window.atob(encodedString)
+        // Restore quotes round property names
+        const jsonString: string = strippedJsonString.replaceAll(/([a-z]):/g, "\"$1\":")
+        const urlProject: URLProject = JSON.parse(jsonString)
         return isURLProjectSafe(urlProject) ? fromUrlProject(urlProject) : null
     } catch {
         return null
