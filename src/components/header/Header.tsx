@@ -4,13 +4,9 @@ import './Header.css'
 const Header = () => {
     const navigate = useNavigate()
 
-    const navigateToHome = () => {
-        navigate(`/`)
-    }
-
     return <div className="header">
         <div className='header-content'>
-            <div className='logo' onClick={navigateToHome}>
+            <div className='logo' onClick={() => navigate('/')}>
                 <span>V</span>
                 <span className='logo-appear'>ideo</span>
                 <span>S</span>

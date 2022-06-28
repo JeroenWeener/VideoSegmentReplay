@@ -1,16 +1,17 @@
 .header {
     background-color: teal;
-    display: flex;
-    align-items: center;
-    cursor: pointer;
+    height: 100%;
 }
 
 .header .header-content {
+    display: flex;
+    align-items: center;
     max-width: 1400px;
     margin: 0 auto 0 auto;
-    padding: 1em;
+    padding: 0 .5em 0 .5em;
     color: white;
     font-size: 2em;
+    height: 100%;
 }
 
 .logo {

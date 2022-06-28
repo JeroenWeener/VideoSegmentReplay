@@ -12,7 +12,7 @@ body {
   height: 100vh;
 }
 
-.header {
+.header-container {
   height: var(--header-height);
 }
 

@@ -8,7 +8,7 @@ import Header from './components/header/Header';
 const App = () => {
   return <>
     <BrowserRouter>
-      <div className='header'>
+      <div className='header-container'>
         <Header />
       </div>
       <div className='content'>
