@@ -1,7 +1,8 @@
-import React, { FormEvent, useState } from 'react'
+import { FormEvent, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { addProject } from '../../utils/local-storage.util'
 import { projectToBase64 } from '../../utils/project.util'
+import { extractVideoIdFromYouTubeUrl, isValidYouTubeUrl } from '../../utils/regex.util'
 
 const NewProject = () => {
   const navigate = useNavigate()
@@ -10,10 +11,12 @@ const NewProject = () => {
 
   const handleOnSubmit = (event: FormEvent) => {
     event.preventDefault()
-    const videoId = youtubeUrl.split('?v=')[1]
+    const videoId = extractVideoIdFromYouTubeUrl(youtubeUrl)
 
-    const project = addProject(projectName, videoId)
-    navigate(`../projects/${projectToBase64(project)}`)
+    if (videoId) {
+      const project = addProject(projectName, videoId)
+      navigate(`../projects/${projectToBase64(project)}`)
+    }
   }
 
   return <>
@@ -28,7 +31,7 @@ const NewProject = () => {
         <input type='text' value={youtubeUrl} onChange={(e) => setYoutubeUrl(e.target.value)} />
       </label>
       <br />
-      <input type='submit' value='Submit' />
+      <input type='submit' value='Submit' disabled={projectName.length === 0 || !isValidYouTubeUrl(youtubeUrl)} />
     </form>
   </>
 }
