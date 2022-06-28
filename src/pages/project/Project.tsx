@@ -4,7 +4,7 @@ import MomentPanel from '../../components/moment-panel/MomentPanel'
 import { Moment } from '../../models/moment.model'
 import YouTube, { YouTubeProps } from 'react-youtube'
 import './Project.css'
-import { secondsToHMSString } from '../../utils/moment.util'
+import PlayerControl from '../../components/player-control/PlayerControl'
 
 const Project = () => {
   const navigate = useNavigate()
@@ -97,14 +97,6 @@ const Project = () => {
     play()
   }
 
-  const getTimeString = () => {
-    if (!player || duration === 0) return '-:-- / -:--'
-
-    const totalHMS = secondsToHMSString(duration)
-    const currentHMS = secondsToHMSString(currentTime, totalHMS.length > '--:--'.length)
-    return `${currentHMS} / ${totalHMS}`
-  }
-
   const momentClicked = (moment: Moment) => {
     seekAndPlay(moment.time)
   }
@@ -137,18 +129,14 @@ const Project = () => {
       </div>
     </div>
 
-    <div className="player-controls">
-      <button onClick={() => playing ? pause() : play()} className={`button-action ${playing ? 'pause' : ''}`}></button>
-      <span className='time-display'>{getTimeString()}</span>
-      <input
-        className='seek-bar'
-        type="range"
-        min="0"
-        max={duration}
-        value={currentTime}
-        onChange={(e) => seekAndPlay(+e.target.value)}
-      ></input>
-    </div>
+    <PlayerControl
+      playing={playing}
+      currentTime={currentTime}
+      duration={duration}
+      onPlay={play}
+      onPause={pause}
+      onSeek={seekAndPlay}
+    ></PlayerControl>
   </>
 }
 
