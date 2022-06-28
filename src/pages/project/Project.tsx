@@ -5,6 +5,7 @@ import { Moment } from '../../models/moment.model'
 import YouTube, { YouTubeProps } from 'react-youtube'
 import './Project.css'
 import PlayerControl from '../../components/player-control/PlayerControl'
+import VideoPlayer from '../../components/video-player/VideoPlayer'
 
 const Project = () => {
   const navigate = useNavigate()
@@ -32,20 +33,6 @@ const Project = () => {
     setMoments(updatedMoments)
 
     navigate(`../projects/${projectName}/${getProjectDataString()}`, { replace: true })
-  }
-
-  const opts: YouTubeProps['opts'] = {
-    playerVars: {
-      // https://developers.google.com/youtube/player_parameters
-      autoplay: 0,
-      cc_load_policy: 0,
-      controls: 0,
-      disablekb: 1,
-      fs: 0,
-      iv_load_policy: 3,
-      modest_branding: 1,
-      rel: 0,
-    },
   }
 
   setInterval(() => {
@@ -104,22 +91,15 @@ const Project = () => {
   return <>
     <div className="content-container">
       <div className="player-side">
-        <div className='video-player-wrapper'>
-          <YouTube
-            onReady={onReady}
-            onEnd={onEnd}
-            videoId={videoId}
-            opts={opts}
-          />
-          <div
-            className={`
-             video-player-cover
-             ${playing ? '' : 'paused'}
-             ${ended ? 'ended' : ''}
-           `}
-            onClick={() => playing ? pause() : play()}
-          ></div>
-        </div>
+        <VideoPlayer
+          videoId={videoId}
+          playing={playing}
+          ended={ended}
+          onReady={onReady}
+          onPlay={play}
+          onPause={pause}
+          onEnd={onEnd}
+        ></VideoPlayer>
       </div>
       <div className="moments-side">
         <button onClick={addMoment}>Add moment</button>
