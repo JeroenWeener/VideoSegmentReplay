@@ -1,5 +1,7 @@
 import React, { FormEvent, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { addProject } from '../../utils/local-storage.util'
+import { projectToBase64 } from '../../utils/project.util'
 
 const NewProject = () => {
   const navigate = useNavigate()
@@ -9,7 +11,9 @@ const NewProject = () => {
   const handleOnSubmit = (event: FormEvent) => {
     event.preventDefault()
     const videoId = youtubeUrl.split('?v=')[1]
-    navigate(`../projects/${projectName}/${JSON.stringify({ videoId: videoId, moments: [] })}`)
+
+    const project = addProject(projectName, videoId)
+    navigate(`../projects/${projectToBase64(project)}`)
   }
 
   return <>

@@ -18,6 +18,7 @@
 .logo {
     position: relative;
     overflow: hidden;
+    cursor: pointer;
 }
 
 .logo span {

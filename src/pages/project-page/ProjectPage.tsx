@@ -1,45 +1,64 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import MomentPanel from '../../components/moment-panel/MomentPanel'
 import { Moment } from '../../models/moment.model'
 import { YouTubeProps } from 'react-youtube'
-import './Project.css'
+import './ProjectPage.css'
 import PlayerControl from '../../components/player-control/PlayerControl'
 import VideoPlayer from '../../components/video-player/VideoPlayer'
+import { projectFromBase64, projectToBase64 } from '../../utils/project.util'
+import { Project } from '../../models/project.model'
 
-const Project = () => {
+const ProjectPage = () => {
   const navigate = useNavigate()
-  const { projectName, data } = useParams()
-  const { videoId, moments: parsedMoments } = JSON.parse(data!)
-  const [moments, setMoments] = useState<Moment[]>(parsedMoments || [])
+  const { projectData } = useParams()
+  const [project, setProject] = useState<Project>()
   const [playing, setPlaying] = useState<boolean>(false)
   const [player, setPlayer] = useState<YT.Player>()
   const [currentTime, setCurrentTime] = useState<number>(0)
   const [duration, setDuration] = useState<number>(0)
   const [ended, setEnded] = useState<boolean>(false)
 
-  const getProjectDataString = () => {
-    return JSON.stringify({
-      videoId,
-      moments,
-    })
+  useEffect(() => {
+    onMount()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+
+  const onMount = () => {
+    loadProjectFromUrl()
+
+    setInterval(() => {
+      if (player && playing && player.getCurrentTime() !== 0) {
+        setTime(player.getCurrentTime())
+      }
+    }, 500)
+  }
+
+  const loadProjectFromUrl = () => {
+    if (projectData) {
+      const supposedProject = projectFromBase64(projectData)
+      if (supposedProject) {
+        setProject(supposedProject)
+        return
+      }
+    }
+    navigate('/')
   }
 
   const addMoment = () => {
-    const updatedMoments = moments
+    const updatedMoments = project!.moments
     updatedMoments.push({
       time: currentTime,
     })
-    setMoments(updatedMoments)
 
-    navigate(`../projects/${projectName}/${getProjectDataString()}`, { replace: true })
-  }
-
-  setInterval(() => {
-    if (player && playing && player.getCurrentTime() !== 0) {
-      setTime(player.getCurrentTime())
+    const updatedProject = {
+      ...project!,
+      updatedMoments,
     }
-  }, 500)
+    setProject(updatedProject)
+
+    navigate(`../projects/${projectToBase64(updatedProject)}`, { replace: true })
+  }
 
   document.body.onkeyup = (e) => {
     if (
@@ -57,7 +76,6 @@ const Project = () => {
   }
 
   const onReady: YouTubeProps['onReady'] = (event) => {
-    console.log(`onReady ${event}`)
     setPlayer(event.target)
     setDuration(Math.floor(player?.getDuration() || 0))
   }
@@ -89,25 +107,27 @@ const Project = () => {
   }
 
   return <>
-    <div className="content-container">
-      <div className="player-container">
-        <VideoPlayer
-          videoId={videoId}
-          playing={playing}
-          ended={ended}
-          onReady={onReady}
-          onPlay={play}
-          onPause={pause}
-          onEnd={onEnd}
-        ></VideoPlayer>
-      </div>
-      <div className="moments-container">
-        <button onClick={addMoment}>Add moment</button>
-        <div className='panel-container'>
-          {moments.map((moment: Moment, index: number) => <MomentPanel key={index} moment={moment} onClick={() => momentClicked(moment)} />)}
+    {project &&
+      <div className="content-container">
+        <div className="player-container">
+          <VideoPlayer
+            videoId={project.videoId}
+            playing={playing}
+            ended={ended}
+            onReady={onReady}
+            onPlay={play}
+            onPause={pause}
+            onEnd={onEnd}
+          ></VideoPlayer>
+        </div>
+        <div className="moments-container">
+          <button onClick={addMoment}>Add moment</button>
+          <div className='panel-container'>
+            {project.moments.map((moment: Moment, index: number) => <MomentPanel key={index} moment={moment} onClick={() => momentClicked(moment)} />)}
+          </div>
         </div>
       </div>
-    </div>
+    }
 
     <PlayerControl
       playing={playing}
@@ -120,4 +140,4 @@ const Project = () => {
   </>
 }
 
-export default Project
+export default ProjectPage
