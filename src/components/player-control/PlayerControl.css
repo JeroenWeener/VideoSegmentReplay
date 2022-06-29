@@ -1,15 +1,17 @@
 .player-controls {
-    background-color: grey;
+    background-color: var(--color-secondary);
     padding: var(--player-control-padding);
     height: var(--player-control-height);
     display: flex;
     flex-direction: row;
     align-items: center;
+    box-shadow: 0 0 4px rgb(0 0 0 / .15);
 }
 
 @media (min-width: 720px) {
     .player-controls {
         border-radius: 10px 10px 0 0;
+        margin: 0 10px;
     }
 }
 
@@ -19,7 +21,7 @@
     background: transparent;
     height: var(--button-action-size);
 
-    border-color: transparent transparent transparent whitesmoke;
+    border-color: transparent transparent transparent var(--color-primary);
     opacity: .7;
     transition: 100ms opacity ease;
     cursor: pointer;
@@ -39,9 +41,9 @@
 
 .player-controls .time-display {
     text-align: center;
-    font-size: 1.2em;
+    font-size: 1.3em;
     min-width: 6em;
-    color: whitesmoke;
+    color: var(--color-primary);
 }
 
 .player-controls .seek-bar {
@@ -49,7 +51,7 @@
     appearance: none;
     height: var(--seek-bar-height);
     min-width: 2em;
-    background: whitesmoke;
+    background: var(--color-primary);
     outline: none;
     border-radius: 100vw;
     opacity: 0.7;
@@ -67,7 +69,7 @@
     border-radius: 50%;
     height: var(--seek-bar-handle-size);
     width: var(--seek-bar-handle-size);
-    background: peru;
+    background: var(--color-accent);
     cursor: pointer;
 }
 
@@ -78,6 +80,6 @@
     border-radius: 50%;
     height: var(--seek-bar-handle-size);
     width: var(--seek-bar-handle-size);
-    background: peru;
+    background: var(--color-accent);
     cursor: pointer;
 }

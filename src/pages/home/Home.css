@@ -1,5 +1,17 @@
 .button-project-add {
-    background-color: pink;
+    background-color: var(--color-accent);
+    color: var(--color-primary);
     outline: none;
     border: none;
+    width: 100px;
+    height: 100px;
+    margin: 1em;
+    border-radius: 10px;
+    font-size: 1em;
+    transition: transform .2s;
+    cursor: pointer;
+}
+
+.button-project-add:hover {
+    transform: scale(1.02);
 }

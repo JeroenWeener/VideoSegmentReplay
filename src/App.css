@@ -1,5 +1,8 @@
 :root {
   --header-height: 64px;
+  --color-primary: #eee;
+  --color-secondary: #333;
+  --color-accent: #2D4EB3;
 }
 
 *,
@@ -10,6 +13,8 @@
 
 body {
   height: 100vh;
+  background-color: var(--color-primary);
+  color: var(--color-secondary);
 }
 
 .header-container {

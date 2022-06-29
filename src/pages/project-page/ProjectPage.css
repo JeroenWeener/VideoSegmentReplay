@@ -1,5 +1,5 @@
 :root {
-    --player-control-height: 60px;
+    --player-control-height: 70px;
     --player-control-padding: 20px;
     --button-action-size: calc(var(--player-control-height) - 2 * var(--player-control-padding));
     --seek-bar-height: calc(var(--button-action-size) / 2);
@@ -27,6 +27,7 @@
 
     .content-container .player-container {
         flex-basis: 100%;
+        padding: 10px 0 0 10px;
     }
 }
 

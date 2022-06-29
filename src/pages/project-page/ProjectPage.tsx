@@ -29,12 +29,13 @@ const ProjectPage = () => {
     loadProjectFromUrl()
   }
   
-  document.body.onkeyup = (e) => {
+  document.body.onkeydown = (e) => {
     if (
       e.key === ' ' ||
       e.code === 'Space' ||
       e.keyCode === 32
     ) {
+      e.preventDefault()
       playing ? pause() : play()
       return false
     }
