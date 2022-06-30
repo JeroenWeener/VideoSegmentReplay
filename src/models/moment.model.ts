@@ -1,10 +1,12 @@
 export interface Moment {
-    time: number
+    startTime: number
+    endTime?: number
 }
 
 /**
  * Moment as stored in the URL, featuring shorter field names, to preserve space.
  */
  export interface URLMoment {
-    t: number
+    s: number
+    e?: number
 }

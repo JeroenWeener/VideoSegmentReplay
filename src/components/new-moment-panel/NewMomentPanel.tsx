@@ -2,15 +2,15 @@ import '../moment-panel/MomentPanel.css'
 import './NewMomentPanel.css'
 
 interface NewMomentPanelProps {
-    onClick: Function
+    onClick?: Function
 }
 
 const NewMomentPanel = ({ onClick }: NewMomentPanelProps) => {
     return <div
-        className="moment-panel"
-        onClick={() => onClick()}
+        className="moment-panel new-moment-panel"
+        onClick={() => onClick ? onClick() : {}}
     >
-        <div className='plus'/>
+        <div className='plus' />
     </div>
 }
 

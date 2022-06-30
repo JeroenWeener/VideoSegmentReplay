@@ -1,3 +1,4 @@
+import { LOG_SAFETY_CHECKS } from "../config"
 import { Project, URLProject } from "../models/project.model"
 import { fromUrlMoment, isURLMomentSafe, toUrlMoment } from "./moment.util"
 import { isValidVideoId } from "./regex.util"
@@ -80,8 +81,21 @@ const isURLProjectSafe = (urlProject: URLProject): boolean => {
     const idIsNumber = typeof urlProject.i === 'number'
     const videoIdIsValid = isValidVideoId(urlProject.v)
     const nameIsString = typeof urlProject.n === 'string'
+
+    if (LOG_SAFETY_CHECKS) {
+        console.debug('--- Project ---')
+        console.debug('Contains only described properties:', containsOnlyDescribedProperties)
+        console.debug('ID is number:', idIsNumber)
+        console.debug('Name is string:', nameIsString)
+    }
+
     const momentsIsArray = Array.isArray(urlProject.m)
     const momentsAreSafe = urlProject.m.every(moment => isURLMomentSafe(moment))
+
+    if (LOG_SAFETY_CHECKS) {
+        console.debug('Moments is array:', momentsIsArray)
+        console.debug('Moments are safe:', momentsAreSafe)
+    }
 
     return (
         containsOnlyDescribedProperties &&

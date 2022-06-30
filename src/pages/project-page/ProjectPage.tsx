@@ -28,7 +28,7 @@ const ProjectPage = () => {
   const onMount = () => {
     loadProjectFromUrl()
   }
-  
+
   document.body.onkeydown = (e) => {
     if (
       e.key === ' ' ||
@@ -62,7 +62,8 @@ const ProjectPage = () => {
   const createMoment = () => {
     const updatedMoments = project!.moments
     updatedMoments.push({
-      time: currentTime,
+      startTime: currentTime,
+      endTime: currentTime + 10,
     })
 
     const updatedProject = {
@@ -106,7 +107,7 @@ const ProjectPage = () => {
   }
 
   const momentClicked = (moment: Moment) => {
-    seekAndPlay(moment.time)
+    seekAndPlay(moment.startTime)
   }
 
   return <>
@@ -125,8 +126,18 @@ const ProjectPage = () => {
         </div>
         <div className="moments-container">
           <div className='panel-container'>
-            {project.moments.map((moment: Moment, index: number) => <MomentPanel key={index} moment={moment} onClick={() => momentClicked(moment)} />)}
+            {project.moments.map((moment: Moment, index: number) =>
+              <MomentPanel
+                key={index}
+                currentTime={currentTime}
+                moment={moment}
+                onClick={() => momentClicked(moment)}
+              />
+            )}
             <NewMomentPanel onClick={createMoment} />
+            {project.moments.length === 0 &&
+              <div style={{ visibility: 'hidden' }}><NewMomentPanel /></div>
+            }
           </div>
         </div>
       </div>

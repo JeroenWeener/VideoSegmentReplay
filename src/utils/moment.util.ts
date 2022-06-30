@@ -1,3 +1,4 @@
+import { LOG_SAFETY_CHECKS } from "../config"
 import { Moment, URLMoment } from "../models/moment.model"
 
 export const secondsToHMSString = (seconds: number, showHours: boolean = false) => {
@@ -17,7 +18,8 @@ export const secondsToHMSString = (seconds: number, showHours: boolean = false) 
  */
 export const toUrlMoment = (moment: Moment): URLMoment => {
     return {
-        t: moment.time,
+        s: moment.startTime,
+        e: moment.endTime,
     }
 }
 
@@ -29,7 +31,8 @@ export const toUrlMoment = (moment: Moment): URLMoment => {
  */
 export const fromUrlMoment = (urlMoment: URLMoment): Moment => {
     return {
-        time: urlMoment.t,
+        startTime: urlMoment.s,
+        endTime: urlMoment.e,
     }
 }
 
@@ -42,14 +45,23 @@ export const fromUrlMoment = (urlMoment: URLMoment): Moment => {
  * @returns whether the URLMoment is considered safe for use
  */
  export const isURLMomentSafe = (urlMoment: URLMoment): boolean => {
-    const momentProperties = ['t']
+    const momentProperties = ['s', 'e']
 
     const containsOnlyDescribedProperties = Object.keys(urlMoment).every(property => momentProperties.includes(property))
 
-    const timeIsNumber = typeof urlMoment.t === 'number'
+    const startTimeIsNumber = typeof urlMoment.s === 'number'
+    const endTimeIsNumberOrUndefined = typeof urlMoment.e === 'number' || typeof urlMoment.e === 'undefined'
+
+    if (LOG_SAFETY_CHECKS) {
+        console.debug('\t--- Moment ---')
+        console.debug('\tContains only described properties:', containsOnlyDescribedProperties)
+        console.debug('\tStart time is number:', endTimeIsNumberOrUndefined)
+        console.debug('\tEnd time is number or undefined:', endTimeIsNumberOrUndefined)
+    }
 
     return (
         containsOnlyDescribedProperties &&
-        timeIsNumber
+        startTimeIsNumber &&
+        endTimeIsNumberOrUndefined
     )
 }
