@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { SetStateAction, useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import MomentPanel from '../../components/moment-panel/MomentPanel'
 import { Moment } from '../../models/moment.model'
@@ -23,31 +23,18 @@ const ProjectPage = () => {
   useEffect(() => {
     loadProjectFromUrl()
 
+    registerSpacebarShortcut()
+
+    // Update current time in 120fps
     const interval = setInterval(() => {
-      setCurrentTime((old) => (old + 50) % 1000)
-    }, 500)
+      // if (player && playing) {
+      //   setTime(player?.getCurrentTime())
+      // }
+      setTimeFn((current) => (current + 1000/120))
+    }, 1000 / 120)
     return () => clearInterval(interval)
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
-
-  document.body.onkeydown = (e) => {
-    if (
-      e.key === ' ' ||
-      e.code === 'Space' ||
-      e.keyCode === 32
-    ) {
-      e.preventDefault()
-      playing ? pause() : play()
-      return false
-    }
-  }
-
-  // setInterval(() => {
-    // if (player && playing && player.getCurrentTime() !== 0) {
-      // setTime(player.getCurrentTime())
-    // }
-    // setTime(currentTime + 10)
-  // }, 500)
 
   const loadProjectFromUrl = () => {
     if (projectData) {
@@ -59,6 +46,20 @@ const ProjectPage = () => {
     }
     // Return to home if project data is corrupt
     navigate('/')
+  }
+
+  const registerSpacebarShortcut = () => {
+    document.body.onkeydown = (e) => {
+      if (
+        e.key === ' ' ||
+        e.code === 'Space' ||
+        e.keyCode === 32
+      ) {
+        e.preventDefault()
+        playing ? pause() : play()
+        return false
+      }
+    }
   }
 
   const createMoment = () => {
@@ -78,12 +79,16 @@ const ProjectPage = () => {
   }
 
   const setTime = (seconds: number) => {
-    setCurrentTime(Math.ceil(seconds * 100) / 100)
+    setCurrentTime(Math.ceil(seconds * 1000) / 1000)
+  }
+
+  const setTimeFn = (fn: SetStateAction<number>) => {
+    setCurrentTime(fn)
   }
 
   const onReady: YouTubeProps['onReady'] = (event) => {
     setPlayer(event.target)
-    setDuration(Math.floor((player?.getDuration() || 0) * 100) / 100)
+    setDuration(Math.floor((player?.getDuration() || 0) * 1000) / 1000)
   }
 
   const play = () => {

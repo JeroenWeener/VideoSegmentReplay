@@ -1,12 +1,3 @@
-.new-moment-panel {
-    border-radius: calc(var(--border-radius) + var(--progress-border-width));
-    box-shadow: 0 3px 4px rgb(0 0 0 / .15);
-}
-
-.new-moment-panel::after {
-    inset: 0;
-}
-
 .plus {
     height: 100%;
     width: 100%;
