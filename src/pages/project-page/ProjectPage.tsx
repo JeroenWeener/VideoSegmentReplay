@@ -1,6 +1,5 @@
 import { SetStateAction, useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
-import MomentPanel from '../../components/moment-panel/MomentPanel'
 import { Moment } from '../../models/moment.model'
 import { YouTubeProps } from 'react-youtube'
 import './ProjectPage.css'
@@ -8,7 +7,7 @@ import PlayerControl from '../../components/player-control/PlayerControl'
 import VideoPlayer from '../../components/video-player/VideoPlayer'
 import { projectFromBase64, projectToBase64 } from '../../utils/project.util'
 import { Project } from '../../models/project.model'
-import NewMomentPanel from '../../components/new-moment-panel/NewMomentPanel'
+import MomentPanelContainer from '../../components/moment-panel-container/MomentPanelContainer'
 
 const ProjectPage = () => {
   const navigate = useNavigate()
@@ -56,26 +55,10 @@ const ProjectPage = () => {
     }
   }
 
-  const createMoment = () => {
-    const updatedMoments = project!.moments
-    updatedMoments.push({
-      startTime: currentTime,
-      endTime: currentTime + 10,
-    })
-
+  const updateMoments = (moments: Moment[]) => {
     const updatedProject = {
       ...project!,
-      moments: updatedMoments,
-    }
-    setProject(updatedProject)
-
-    navigate(`../project/${projectToBase64(updatedProject)}`, { replace: true })
-  }
-
-  const deleteMoment = (momentIndex: number) => {
-    const updatedProject = {
-      ...project!,
-      moments: project!.moments.filter((_, i) => i !== momentIndex),
+      moments,
     }
     setProject(updatedProject)
 
@@ -117,10 +100,6 @@ const ProjectPage = () => {
     play()
   }
 
-  const momentClicked = (moment: Moment) => {
-    seekAndPlay(moment.startTime)
-  }
-
   return <>
     {project &&
       <div className="content-container">
@@ -136,21 +115,12 @@ const ProjectPage = () => {
           ></VideoPlayer>
         </div>
         <div className="moments-container">
-          <div className='panel-container'>
-            {project.moments.map((moment: Moment, index: number) =>
-              <MomentPanel
-                key={index}
-                currentTime={currentTime}
-                moment={moment}
-                onStart={() => momentClicked(moment)}
-                onDelete={() => deleteMoment(index)}
-              />
-            )}
-            <NewMomentPanel onClick={createMoment} />
-            {project.moments.length === 0 &&
-              <div style={{ visibility: 'hidden' }}><NewMomentPanel /></div>
-            }
-          </div>
+          <MomentPanelContainer
+            moments={project.moments}
+            momentsUpdated={(moments) => updateMoments(moments)}
+            currentTime={currentTime}
+            seekTo={seekAndPlay}
+          />
         </div>
       </div>
     }
