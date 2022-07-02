@@ -83,28 +83,9 @@
     height: 100%;
     border-radius: 100%;
     clip: rect(0px, 250px, 500px, 0px);
-}
-
-.loading-indicator .left .fill {
-    animation: left 1s linear forwards;
-}
-
-@keyframes left {
-    to {
-        transform: rotate(180deg);
-    }
+    transition: transform .5s linear;
 }
 
 .loading-indicator .right {
     transform: rotate(180deg);
-}
-
-.loading-indicator .right .fill {
-    animation: right 1s linear 1s 1 normal forwards;
-}
-
-@keyframes right {
-    to {
-        transform: rotate(180deg);
-    }
 }

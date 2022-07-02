@@ -28,7 +28,7 @@ const PlayerControl = ({
   }
 
   return <div className="player-controls">
-    <button onClick={() => playing ? onPause() : onPlay()} className={`button-action ${playing ? 'pause' : ''}`}></button>
+    <button onClick={() => playing ? onPause() : onPlay()} className={`button-action ${playing ? 'pause' : ''}`}/>
     <span className='time-display'>{getTimeString()}</span>
     <input
       className='seek-bar'

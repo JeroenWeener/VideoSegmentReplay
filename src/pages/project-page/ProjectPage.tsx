@@ -21,13 +21,14 @@ const ProjectPage = () => {
   const [ended, setEnded] = useState<boolean>(false)
 
   useEffect(() => {
-    onMount()
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
-
-  const onMount = () => {
     loadProjectFromUrl()
-  }
+
+    const interval = setInterval(() => {
+      setCurrentTime((old) => (old + 50) % 1000)
+    }, 500)
+    return () => clearInterval(interval)
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   document.body.onkeydown = (e) => {
     if (
@@ -41,11 +42,12 @@ const ProjectPage = () => {
     }
   }
 
-  setInterval(() => {
-    if (player && playing && player.getCurrentTime() !== 0) {
-      setTime(player.getCurrentTime())
-    }
-  }, 500)
+  // setInterval(() => {
+    // if (player && playing && player.getCurrentTime() !== 0) {
+      // setTime(player.getCurrentTime())
+    // }
+    // setTime(currentTime + 10)
+  // }, 500)
 
   const loadProjectFromUrl = () => {
     if (projectData) {
@@ -76,12 +78,12 @@ const ProjectPage = () => {
   }
 
   const setTime = (seconds: number) => {
-    setCurrentTime(Math.ceil(seconds))
+    setCurrentTime(Math.ceil(seconds * 100) / 100)
   }
 
   const onReady: YouTubeProps['onReady'] = (event) => {
     setPlayer(event.target)
-    setDuration(Math.floor(player?.getDuration() || 0))
+    setDuration(Math.floor((player?.getDuration() || 0) * 100) / 100)
   }
 
   const play = () => {
