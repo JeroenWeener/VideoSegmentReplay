@@ -20,21 +20,17 @@ const ProjectPage = () => {
   const [duration, setDuration] = useState<number>(0)
   const [ended, setEnded] = useState<boolean>(false)
 
+  // Load project from URL
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  useEffect(() => loadProjectFromUrl(), [])
+
+  // Update current time in 120 fps
   useEffect(() => {
-    loadProjectFromUrl()
-
-    registerSpacebarShortcut()
-
-    // Update current time in 120fps
     const interval = setInterval(() => {
-      // if (player && playing) {
-      //   setTime(player?.getCurrentTime())
-      // }
-      setTimeFn((current) => (current + 1000 / 120))
+      setTimeFn((previousTime: number) => player?.getCurrentTime() || previousTime)
     }, 1000 / 120)
     return () => clearInterval(interval)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+  }, [player])
 
   const loadProjectFromUrl = () => {
     if (projectData) {
@@ -48,24 +44,21 @@ const ProjectPage = () => {
     navigate('/')
   }
 
-  const registerSpacebarShortcut = () => {
-    document.body.onkeydown = (e) => {
-      if (
-        e.key === ' ' ||
-        e.code === 'Space' ||
-        e.keyCode === 32
-      ) {
-        e.preventDefault()
-        playing ? pause() : play()
-        return false
-      }
+  document.body.onkeydown = (e) => {
+    if (
+      e.key === ' ' ||
+      e.code === 'Space' ||
+      e.keyCode === 32
+    ) {
+      e.preventDefault()
+      playing ? pause() : play()
+      return false
     }
   }
 
   const createMoment = () => {
     const updatedMoments = project!.moments
     updatedMoments.push({
-      id: Math.max(0, ...updatedMoments.map(m => m.id)) + 1,
       startTime: currentTime,
       endTime: currentTime + 10,
     })
@@ -79,11 +72,10 @@ const ProjectPage = () => {
     navigate(`../project/${projectToBase64(updatedProject)}`, { replace: true })
   }
 
-  const deleteMoment = (moment: Moment) => {
-    const updatedMoments = project!.moments.filter(m => m.id !== moment.id)
+  const deleteMoment = (momentIndex: number) => {
     const updatedProject = {
       ...project!,
-      moments: updatedMoments,
+      moments: project!.moments.filter((_, i) => i !== momentIndex),
     }
     setProject(updatedProject)
 
@@ -151,7 +143,7 @@ const ProjectPage = () => {
                 currentTime={currentTime}
                 moment={moment}
                 onStart={() => momentClicked(moment)}
-                onDelete={() => deleteMoment(moment)}
+                onDelete={() => deleteMoment(index)}
               />
             )}
             <NewMomentPanel onClick={createMoment} />

@@ -15,7 +15,7 @@ const MomentPanel = ({
     onStart,
     onDelete,
 }: MomentPanelProps) => {
-    let progress = (currentTime - moment.startTime) / (moment.endTime! - moment.startTime)
+    let progress = 100 * (currentTime - moment.startTime) / (moment.endTime! - moment.startTime)
     progress = progress < 0 ? 0 : progress
     progress = progress > 100 ? 100 : progress
 
