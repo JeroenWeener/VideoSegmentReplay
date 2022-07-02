@@ -35,6 +35,7 @@ const PlayerControl = ({
       type="range"
       min="0"
       max={duration}
+      step=".01"
       value={currentTime}
       onChange={(e) => onSeek(+e.target.value)}
     ></input>

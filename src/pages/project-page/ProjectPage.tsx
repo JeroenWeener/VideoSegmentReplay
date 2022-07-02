@@ -26,7 +26,10 @@ const ProjectPage = () => {
   // Update current time in 120 fps
   useEffect(() => {
     const interval = setInterval(() => {
+      const playerState = player?.getPlayerState()
       setCurrentTime((previousTime: number) => player?.getCurrentTime() || previousTime)
+      setPlaying(playerState !== YT.PlayerState.PAUSED && playerState !== YT.PlayerState.ENDED)
+      setEnded(playerState === YT.PlayerState.ENDED)
     }, 1000 / 120)
     return () => clearInterval(interval)
   }, [player])
@@ -51,7 +54,51 @@ const ProjectPage = () => {
     ) {
       e.preventDefault()
       playing ? pause() : play()
-      return false
+    }
+
+    if (
+      e.key === 'ArrowLeft' ||
+      e.code === 'ArrowLeft' ||
+      e.keyCode === 37
+    ) {
+      e.preventDefault()
+      seek(currentTime - 5)
+    }
+
+    if (
+      e.key === 'ArrowRight' ||
+      e.code === 'ArrowRight' ||
+      e.keyCode === 39
+    ) {
+      e.preventDefault()
+      seek(currentTime + 5)
+    }
+
+    if (
+      e.key === 'j' ||
+      e.code === 'KeyJ' ||
+      e.keyCode === 74
+    ) {
+      e.preventDefault()
+      seek(currentTime - 10)
+    }
+
+    if (
+      e.key === 'l' ||
+      e.code === 'KeyL' ||
+      e.keyCode === 76
+    ) {
+      e.preventDefault()
+      seek(currentTime + 10)
+    }
+
+    if (
+      e.key === 'k' ||
+      e.code === 'KeyK' ||
+      e.keyCode === 75
+    ) {
+      e.preventDefault()
+      playing ? pause() : play()
     }
   }
 
@@ -61,7 +108,6 @@ const ProjectPage = () => {
       moments,
     }
     setProject(updatedProject)
-
     navigate(`../project/${projectToBase64(updatedProject)}`, { replace: true })
   }
 
@@ -72,21 +118,13 @@ const ProjectPage = () => {
 
   const play = () => {
     player?.playVideo()
-    setPlaying(true)
-    setEnded(false)
   }
 
   const pause = () => {
     player?.pauseVideo()
-    setPlaying(false)
   }
 
-  const onEnd = () => {
-    setPlaying(false)
-    setEnded(true)
-  }
-
-  const seekAndPlay = (seconds: number) => {
+  const seek = (seconds: number) => {
     player?.seekTo(seconds, true)
   }
 
@@ -101,7 +139,6 @@ const ProjectPage = () => {
             onReady={onReady}
             onPlay={play}
             onPause={pause}
-            onEnd={onEnd}
           ></VideoPlayer>
         </div>
         <div className="moments-container">
@@ -109,7 +146,7 @@ const ProjectPage = () => {
             moments={project.moments}
             momentsUpdated={(moments) => updateMoments(moments)}
             currentTime={currentTime}
-            seekTo={seekAndPlay}
+            seekTo={seek}
           />
         </div>
       </div>
@@ -121,7 +158,7 @@ const ProjectPage = () => {
       duration={duration}
       onPlay={play}
       onPause={pause}
-      onSeek={seekAndPlay}
+      onSeek={seek}
     ></PlayerControl>
   </>
 }

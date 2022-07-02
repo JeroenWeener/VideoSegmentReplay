@@ -9,7 +9,6 @@ interface VideoPlayerProps {
     onReady: Function
     onPlay: Function
     onPause: Function
-    onEnd: Function
 }
 
 const VideoPlayer = ({
@@ -19,7 +18,6 @@ const VideoPlayer = ({
     onReady,
     onPlay,
     onPause,
-    onEnd,
 }: VideoPlayerProps) => {
     const opts: YouTubeProps['opts'] = {
         playerVars: {
@@ -38,7 +36,6 @@ const VideoPlayer = ({
     return <div className='video-player-wrapper'>
         <YouTube
             onReady={(e) => onReady(e)}
-            onEnd={(e) => onEnd(e)}
             videoId={videoId}
             opts={opts}
         />
@@ -48,6 +45,7 @@ const VideoPlayer = ({
              ${playing ? '' : 'paused'}
              ${ended ? 'ended' : ''}
            `}
+           style={{display: 'none'}}
             onClick={() => playing ? onPause() : onPlay()}
         ></div>
     </div>
