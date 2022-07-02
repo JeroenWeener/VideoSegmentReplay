@@ -31,7 +31,7 @@ const VideoPlayer = ({
             fs: 0,
             iv_load_policy: 3,
             modest_branding: 1,
-            rel: 0,
+            rel: 1,
         },
     }
 

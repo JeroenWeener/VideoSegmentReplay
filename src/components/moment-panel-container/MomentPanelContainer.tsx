@@ -16,10 +16,16 @@ const MomentPanelContainer = ({
     currentTime,
     seekTo,
 }: MomentPanelContainerProps) => {
+    /**
+     * Creates a Moment at the currentTime.
+     * 
+     * The current time will be rounded to 1 decimal
+     */
     const createMoment = () => {
+        const startTime = Math.round(currentTime * 10) / 10
         const updatedMoments = [...moments, {
-            startTime: currentTime,
-            endTime: currentTime + 10,
+            startTime: startTime,
+            endTime: startTime + 10,
         }]
         momentsUpdated(updatedMoments)
     }

@@ -1,4 +1,4 @@
-import { SetStateAction, useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { Moment } from '../../models/moment.model'
 import { YouTubeProps } from 'react-youtube'
@@ -13,11 +13,11 @@ const ProjectPage = () => {
   const navigate = useNavigate()
   const { projectData } = useParams()
   const [project, setProject] = useState<Project>()
-  const [playing, setPlaying] = useState<boolean>(false)
   const [player, setPlayer] = useState<YT.Player>()
+  const [playing, setPlaying] = useState<boolean>(false)
+  const [ended, setEnded] = useState<boolean>(false)
   const [currentTime, setCurrentTime] = useState<number>(0)
   const [duration, setDuration] = useState<number>(0)
-  const [ended, setEnded] = useState<boolean>(false)
 
   // Load project from URL
   // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -26,7 +26,7 @@ const ProjectPage = () => {
   // Update current time in 120 fps
   useEffect(() => {
     const interval = setInterval(() => {
-      setTimeFn((previousTime: number) => player?.getCurrentTime() || previousTime)
+      setCurrentTime((previousTime: number) => player?.getCurrentTime() || previousTime)
     }, 1000 / 120)
     return () => clearInterval(interval)
   }, [player])
@@ -65,17 +65,9 @@ const ProjectPage = () => {
     navigate(`../project/${projectToBase64(updatedProject)}`, { replace: true })
   }
 
-  const setTime = (seconds: number) => {
-    setCurrentTime(Math.ceil(seconds * 1000) / 1000)
-  }
-
-  const setTimeFn = (fn: SetStateAction<number>) => {
-    setCurrentTime(fn)
-  }
-
   const onReady: YouTubeProps['onReady'] = (event) => {
     setPlayer(event.target)
-    setDuration(Math.floor((player?.getDuration() || 0) * 1000) / 1000)
+    setDuration(Math.round(event.target.getDuration() * 10) / 10)
   }
 
   const play = () => {
@@ -95,9 +87,7 @@ const ProjectPage = () => {
   }
 
   const seekAndPlay = (seconds: number) => {
-    setTime(seconds)
     player?.seekTo(seconds, true)
-    play()
   }
 
   return <>
