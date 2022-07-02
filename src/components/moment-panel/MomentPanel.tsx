@@ -1,3 +1,4 @@
+import React from "react"
 import { Moment } from "../../models/moment.model"
 import { secondsToHMSString } from "../../utils/moment.util"
 import './MomentPanel.css'
@@ -19,11 +20,16 @@ const MomentPanel = ({
     progress = progress < 0 ? 0 : progress
     progress = progress > 100 ? 100 : progress
 
+    const deleteMoment = (event: React.MouseEvent) => {
+        onDelete()
+        event.stopPropagation()
+    }
+
     return <div
         className="moment-panel"
         onClick={() => onStart()}
     >
-        <div className="button-delete" onClick={() => onDelete()}/>
+        <div className="button-delete" onClick={(e) => deleteMoment(e)} />
         <div className='time'>{secondsToHMSString(moment.startTime)}</div>
 
         <div
