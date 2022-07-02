@@ -18,6 +18,7 @@ export const secondsToHMSString = (seconds: number, showHours: boolean = false) 
  */
 export const toUrlMoment = (moment: Moment): URLMoment => {
     return {
+        i: moment.id,
         s: moment.startTime,
         e: moment.endTime,
     }
@@ -31,6 +32,7 @@ export const toUrlMoment = (moment: Moment): URLMoment => {
  */
 export const fromUrlMoment = (urlMoment: URLMoment): Moment => {
     return {
+        id: urlMoment.i,
         startTime: urlMoment.s,
         endTime: urlMoment.e,
     }
@@ -45,22 +47,25 @@ export const fromUrlMoment = (urlMoment: URLMoment): Moment => {
  * @returns whether the URLMoment is considered safe for use
  */
  export const isURLMomentSafe = (urlMoment: URLMoment): boolean => {
-    const momentProperties = ['s', 'e']
+    const momentProperties = ['i', 's', 'e']
 
     const containsOnlyDescribedProperties = Object.keys(urlMoment).every(property => momentProperties.includes(property))
 
+    const idIsNumber = typeof urlMoment.i === 'number'
     const startTimeIsNumber = typeof urlMoment.s === 'number'
     const endTimeIsNumberOrUndefined = typeof urlMoment.e === 'number' || typeof urlMoment.e === 'undefined'
 
     if (LOG_SAFETY_CHECKS) {
         console.debug('\t--- Moment ---')
         console.debug('\tContains only described properties:', containsOnlyDescribedProperties)
+        console.debug('\tID is number:', idIsNumber)
         console.debug('\tStart time is number:', endTimeIsNumberOrUndefined)
         console.debug('\tEnd time is number or undefined:', endTimeIsNumberOrUndefined)
     }
 
     return (
         containsOnlyDescribedProperties &&
+        idIsNumber &&
         startTimeIsNumber &&
         endTimeIsNumberOrUndefined
     )

@@ -5,13 +5,15 @@ import './MomentPanel.css'
 interface MomentPanelProps {
     currentTime: number
     moment: Moment
-    onClick: Function
+    onStart: Function
+    onDelete: Function
 }
 
 const MomentPanel = ({
     currentTime,
     moment,
-    onClick,
+    onStart,
+    onDelete,
 }: MomentPanelProps) => {
     let progress = (currentTime - moment.startTime) / (moment.endTime! - moment.startTime)
     progress = progress < 0 ? 0 : progress
@@ -19,8 +21,9 @@ const MomentPanel = ({
 
     return <div
         className="moment-panel"
-        onClick={() => onClick()}
+        onClick={() => onStart()}
     >
+        <div className="button-delete" onClick={() => onDelete()}/>
         <div className='time'>{secondsToHMSString(moment.startTime)}</div>
 
         <div

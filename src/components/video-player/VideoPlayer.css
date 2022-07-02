@@ -27,7 +27,7 @@
     inset: 0;
     cursor: pointer;
     background-color: transparent;
-    transition: background-color .2s 100ms;
+    transition: background-color .1s 100ms;
 }
 
 .video-player-wrapper .video-player-cover.paused,
@@ -37,7 +37,7 @@
     background-repeat: no-repeat;
     background-position: center;
     background-size: 64px 64px;
-    transition: background-size .2s;
+    transition: background-size .1s;
 }
 
 .video-player-wrapper .video-player-cover.paused:hover,

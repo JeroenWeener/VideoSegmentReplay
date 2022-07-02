@@ -30,7 +30,7 @@ const ProjectPage = () => {
       // if (player && playing) {
       //   setTime(player?.getCurrentTime())
       // }
-      setTimeFn((current) => (current + 1000/120))
+      setTimeFn((current) => (current + 1000 / 120))
     }, 1000 / 120)
     return () => clearInterval(interval)
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -65,10 +65,22 @@ const ProjectPage = () => {
   const createMoment = () => {
     const updatedMoments = project!.moments
     updatedMoments.push({
+      id: Math.max(0, ...updatedMoments.map(m => m.id)) + 1,
       startTime: currentTime,
       endTime: currentTime + 10,
     })
 
+    const updatedProject = {
+      ...project!,
+      moments: updatedMoments,
+    }
+    setProject(updatedProject)
+
+    navigate(`../project/${projectToBase64(updatedProject)}`, { replace: true })
+  }
+
+  const deleteMoment = (moment: Moment) => {
+    const updatedMoments = project!.moments.filter(m => m.id !== moment.id)
     const updatedProject = {
       ...project!,
       moments: updatedMoments,
@@ -138,7 +150,8 @@ const ProjectPage = () => {
                 key={index}
                 currentTime={currentTime}
                 moment={moment}
-                onClick={() => momentClicked(moment)}
+                onStart={() => momentClicked(moment)}
+                onDelete={() => deleteMoment(moment)}
               />
             )}
             <NewMomentPanel onClick={createMoment} />
