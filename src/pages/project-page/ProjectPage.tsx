@@ -14,6 +14,7 @@ const ProjectPage = () => {
 
   const [project, setProject] = useState<Project>()
   const [playing, setPlaying] = useState<boolean>(false)
+  const [ended, setEnded] = useState<boolean>(false)
   const [currentTime, setCurrentTime] = useState<number>(0)
   const [duration, setDuration] = useState<number>(0)
   const [seekToSeconds, setSeekToSeconds] = useState<number>(0)
@@ -43,7 +44,7 @@ const ProjectPage = () => {
       e.keyCode === 32
     ) {
       e.preventDefault()
-      setPlaying((playing) => !playing)
+      toggle()
     }
 
     if (
@@ -52,7 +53,7 @@ const ProjectPage = () => {
       e.keyCode === 37
     ) {
       e.preventDefault()
-      setSeekToSeconds(currentTime - 5)
+      seek(currentTime - 5)
     }
 
     if (
@@ -61,7 +62,7 @@ const ProjectPage = () => {
       e.keyCode === 39
     ) {
       e.preventDefault()
-      setSeekToSeconds(currentTime + 5)
+      seek(currentTime + 5)
     }
 
     if (
@@ -70,7 +71,7 @@ const ProjectPage = () => {
       e.keyCode === 74
     ) {
       e.preventDefault()
-      setSeekToSeconds(currentTime - 10)
+      seek(currentTime - 10)
     }
 
     if (
@@ -79,7 +80,7 @@ const ProjectPage = () => {
       e.keyCode === 76
     ) {
       e.preventDefault()
-      setSeekToSeconds(currentTime + 10)
+      seek(currentTime + 10)
     }
 
     if (
@@ -88,7 +89,7 @@ const ProjectPage = () => {
       e.keyCode === 75
     ) {
       e.preventDefault()
-      setPlaying(playing => !playing)
+      toggle()
     }
   }
 
@@ -101,16 +102,41 @@ const ProjectPage = () => {
     navigate(`../project/${projectToBase64(updatedProject)}`, { replace: true })
   }
 
+  const play = () => {
+    setPlaying(true)
+    setEnded(false)
+  }
+
+  const pause = () => {
+    setPlaying(false)
+  }
+
+  const end = () => {
+    setPlaying(false)
+    setEnded(true)
+  }
+
+  const toggle = () => {
+    playing ? pause() : play()
+  }
+
+  const progress = (seconds: number) => {
+    if (!ended) {
+      setCurrentTime(seconds)
+    }
+  }
+
   const seek = (seconds: number) => {
     let s = seconds < 0 ? 0 : seconds
     s = s > duration ? duration : s
+    setEnded(s === duration)
     setCurrentTime(s)
     setSeekToSeconds(s)
   }
 
   const seekAndPlay = (seconds: number) => {
     seek(seconds)
-    setPlaying(true)
+    play()
   }
 
   return <>
@@ -120,10 +146,10 @@ const ProjectPage = () => {
           <VideoPlayer
             videoId={project.videoId}
             playing={playing}
-            onPlay={() => setPlaying(true)}
-            onPause={() => setPlaying(false)}
-            onProgress={setCurrentTime}
-            onEnded={() => setPlaying(false)}
+            onPlay={play}
+            onPause={pause}
+            onProgress={progress}
+            onEnded={end}
             setDuration={setDuration}
             seek={seekToSeconds}
           ></VideoPlayer>
@@ -131,7 +157,7 @@ const ProjectPage = () => {
         <div className="moments-container">
           <MomentPanelContainer
             moments={project.moments}
-            momentsUpdated={(moments) => updateMoments(moments)}
+            momentsUpdated={updateMoments}
             currentTime={currentTime}
             seekTo={seekAndPlay}
           />
@@ -143,8 +169,8 @@ const ProjectPage = () => {
       playing={playing}
       currentTime={currentTime}
       duration={duration}
-      onPlay={() => setPlaying(true)}
-      onPause={() => setPlaying(false)}
+      onPlay={play}
+      onPause={pause}
       onSeek={seek}
     ></PlayerControl>
   </>
