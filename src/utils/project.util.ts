@@ -86,6 +86,7 @@ const isURLProjectSafe = (urlProject: URLProject): boolean => {
         console.debug('--- Project ---')
         console.debug('Contains only described properties:', containsOnlyDescribedProperties)
         console.debug('ID is number:', idIsNumber)
+        console.debug('Video ID is valid', videoIdIsValid)
         console.debug('Name is string:', nameIsString)
     }
 

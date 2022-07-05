@@ -1,1 +1,1 @@
-export const LOG_SAFETY_CHECKS = true
+export const LOG_SAFETY_CHECKS = false

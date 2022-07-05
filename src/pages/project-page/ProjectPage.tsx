@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { Moment } from '../../models/moment.model'
-import { YouTubeProps } from 'react-youtube'
 import './ProjectPage.css'
 import PlayerControl from '../../components/player-control/PlayerControl'
 import VideoPlayer from '../../components/video-player/VideoPlayer'
@@ -12,27 +11,18 @@ import MomentPanelContainer from '../../components/moment-panel-container/Moment
 const ProjectPage = () => {
   const navigate = useNavigate()
   const { projectData } = useParams()
+
   const [project, setProject] = useState<Project>()
-  const [player, setPlayer] = useState<YT.Player>()
   const [playing, setPlaying] = useState<boolean>(false)
-  const [ended, setEnded] = useState<boolean>(false)
   const [currentTime, setCurrentTime] = useState<number>(0)
   const [duration, setDuration] = useState<number>(0)
+  const [seekToSeconds, setSeekToSeconds] = useState<number>(0)
 
   // Load project from URL
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  useEffect(() => loadProjectFromUrl(), [])
-
-  // Update current time in 120 fps
   useEffect(() => {
-    const interval = setInterval(() => {
-      const playerState = player?.getPlayerState()
-      setCurrentTime((previousTime: number) => player?.getCurrentTime() || previousTime)
-      setPlaying(playerState !== YT.PlayerState.PAUSED && playerState !== YT.PlayerState.ENDED)
-      setEnded(playerState === YT.PlayerState.ENDED)
-    }, 1000 / 120)
-    return () => clearInterval(interval)
-  }, [player])
+    loadProjectFromUrl()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   const loadProjectFromUrl = () => {
     if (projectData) {
@@ -53,7 +43,7 @@ const ProjectPage = () => {
       e.keyCode === 32
     ) {
       e.preventDefault()
-      playing ? pause() : play()
+      setPlaying((playing) => !playing)
     }
 
     if (
@@ -62,7 +52,7 @@ const ProjectPage = () => {
       e.keyCode === 37
     ) {
       e.preventDefault()
-      seek(currentTime - 5)
+      setSeekToSeconds(currentTime - 5)
     }
 
     if (
@@ -71,7 +61,7 @@ const ProjectPage = () => {
       e.keyCode === 39
     ) {
       e.preventDefault()
-      seek(currentTime + 5)
+      setSeekToSeconds(currentTime + 5)
     }
 
     if (
@@ -80,7 +70,7 @@ const ProjectPage = () => {
       e.keyCode === 74
     ) {
       e.preventDefault()
-      seek(currentTime - 10)
+      setSeekToSeconds(currentTime - 10)
     }
 
     if (
@@ -89,7 +79,7 @@ const ProjectPage = () => {
       e.keyCode === 76
     ) {
       e.preventDefault()
-      seek(currentTime + 10)
+      setSeekToSeconds(currentTime + 10)
     }
 
     if (
@@ -98,7 +88,7 @@ const ProjectPage = () => {
       e.keyCode === 75
     ) {
       e.preventDefault()
-      playing ? pause() : play()
+      setPlaying(playing => !playing)
     }
   }
 
@@ -111,21 +101,16 @@ const ProjectPage = () => {
     navigate(`../project/${projectToBase64(updatedProject)}`, { replace: true })
   }
 
-  const onReady: YouTubeProps['onReady'] = (event) => {
-    setPlayer(event.target)
-    setDuration(Math.round(event.target.getDuration() * 10) / 10)
-  }
-
-  const play = () => {
-    player?.playVideo()
-  }
-
-  const pause = () => {
-    player?.pauseVideo()
-  }
-
   const seek = (seconds: number) => {
-    player?.seekTo(seconds, true)
+    let s = seconds < 0 ? 0 : seconds
+    s = s > duration ? duration : s
+    setCurrentTime(s)
+    setSeekToSeconds(s)
+  }
+
+  const seekAndPlay = (seconds: number) => {
+    seek(seconds)
+    setPlaying(true)
   }
 
   return <>
@@ -135,10 +120,12 @@ const ProjectPage = () => {
           <VideoPlayer
             videoId={project.videoId}
             playing={playing}
-            ended={ended}
-            onReady={onReady}
-            onPlay={play}
-            onPause={pause}
+            onPlay={() => setPlaying(true)}
+            onPause={() => setPlaying(false)}
+            onProgress={setCurrentTime}
+            onEnded={() => setPlaying(false)}
+            setDuration={setDuration}
+            seek={seekToSeconds}
           ></VideoPlayer>
         </div>
         <div className="moments-container">
@@ -146,7 +133,7 @@ const ProjectPage = () => {
             moments={project.moments}
             momentsUpdated={(moments) => updateMoments(moments)}
             currentTime={currentTime}
-            seekTo={seek}
+            seekTo={seekAndPlay}
           />
         </div>
       </div>
@@ -156,8 +143,8 @@ const ProjectPage = () => {
       playing={playing}
       currentTime={currentTime}
       duration={duration}
-      onPlay={play}
-      onPause={pause}
+      onPlay={() => setPlaying(true)}
+      onPause={() => setPlaying(false)}
       onSeek={seek}
     ></PlayerControl>
   </>

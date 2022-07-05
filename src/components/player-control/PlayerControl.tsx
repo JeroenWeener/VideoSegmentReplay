@@ -6,9 +6,9 @@ interface PlayerControlProps {
   currentTime: number
   duration: number
 
-  onPlay: Function
-  onPause: Function
-  onSeek: Function
+  onPlay: () => void
+  onPause: () => void
+  onSeek: (seconds: number) => void
 }
 
 const PlayerControl = ({
@@ -28,7 +28,7 @@ const PlayerControl = ({
   }
 
   return <div className="player-controls">
-    <button onClick={() => playing ? onPause() : onPlay()} className={`button-action ${playing ? 'pause' : ''}`}/>
+    <button onClick={() => playing ? onPause() : onPlay()} className={`button-action ${playing ? 'pause' : ''}`} />
     <span className='time-display'>{getTimeString()}</span>
     <input
       className='seek-bar'
