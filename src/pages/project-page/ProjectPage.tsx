@@ -7,17 +7,19 @@ import VideoPlayer from '../../components/video-player/VideoPlayer'
 import { projectFromBase64, projectToBase64 } from '../../utils/project.util'
 import { Project } from '../../models/project.model'
 import MomentPanelContainer from '../../components/moment-panel-container/MomentPanelContainer'
+import ReactPlayer from 'react-player'
 
 const ProjectPage = () => {
   const navigate = useNavigate()
   const { projectData } = useParams()
 
   const [project, setProject] = useState<Project>()
+  // Expose player to seek, as this is not directly supported by ReactPlayer
+  const [player, setPlayer] = useState<ReactPlayer>()
   const [playing, setPlaying] = useState<boolean>(false)
   const [ended, setEnded] = useState<boolean>(false)
   const [currentTime, setCurrentTime] = useState<number>(0)
   const [duration, setDuration] = useState<number>(0)
-  const [seekToSeconds, setSeekToSeconds] = useState<number>(0)
 
   // Load project from URL
   useEffect(() => {
@@ -131,7 +133,7 @@ const ProjectPage = () => {
     s = s > duration ? duration : s
     setEnded(s === duration)
     setCurrentTime(s)
-    setSeekToSeconds(s)
+    player?.seekTo(s)
   }
 
   const seekAndPlay = (seconds: number) => {
@@ -151,15 +153,17 @@ const ProjectPage = () => {
             onProgress={progress}
             onEnded={end}
             setDuration={setDuration}
-            seek={seekToSeconds}
+            setPlayer={setPlayer}
           ></VideoPlayer>
         </div>
         <div className="moments-container">
           <MomentPanelContainer
+            playing={playing}
             moments={project.moments}
             momentsUpdated={updateMoments}
             currentTime={currentTime}
             seekTo={seekAndPlay}
+            onPause={pause}
           />
         </div>
       </div>

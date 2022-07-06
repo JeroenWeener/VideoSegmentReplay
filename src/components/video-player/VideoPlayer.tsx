@@ -11,7 +11,7 @@ interface VideoPlayerProps {
     onEnded: () => void
     onProgress: (seconds: number) => void
     setDuration: (seconds: number) => void
-    seek: number
+    setPlayer: (player: ReactPlayer) => void
 }
 
 const VideoPlayer = ({
@@ -23,7 +23,7 @@ const VideoPlayer = ({
     onEnded,
     onProgress,
     setDuration,
-    seek,
+    setPlayer,
 }: VideoPlayerProps) => {
     const videoWrapperRef = useRef<HTMLDivElement>(null)
     const reactPlayerRef = useRef<ReactPlayer>(null)
@@ -35,10 +35,6 @@ const VideoPlayer = ({
         window.addEventListener('resize', handleResize)
         return () => window.removeEventListener('resize', handleResize)
     }, [])
-
-    useEffect(() => {
-        reactPlayerRef?.current?.seekTo(seek)
-    }, [seek])
 
     /**
      * Blur iframe every .1s so keyboard events remain on document
@@ -96,6 +92,7 @@ const VideoPlayer = ({
                 onProgress={({ playedSeconds }) => onProgress(playedSeconds)}
                 onEnded={onEnded}
                 onDuration={setDuration}
+                onReady={setPlayer}
             />
         </div>
     </div>

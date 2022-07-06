@@ -1,21 +1,28 @@
+import { useState } from 'react'
 import { Moment } from '../../models/moment.model'
 import MomentPanel from '../moment-panel/MomentPanel'
 import NewMomentPanel from '../new-moment-panel/NewMomentPanel'
 import './MomentPanelContainer.css'
 
 interface MomentPanelContainerProps {
+    playing: boolean
     moments: Moment[]
     momentsUpdated: (moments: Moment[]) => void
     currentTime: number
-    seekTo: Function
+    seekTo: (seconds: number) => void
+    onPause: () => void
 }
 
 const MomentPanelContainer = ({
+    playing,
     moments,
     momentsUpdated,
     currentTime,
     seekTo,
+    onPause,
 }: MomentPanelContainerProps) => {
+    const [activeMomentIndex, setActiveMomentIndex] = useState<number | null>(null)
+
     /**
      * Creates a Moment at the currentTime.
      * 
@@ -32,7 +39,15 @@ const MomentPanelContainer = ({
 
     const deleteMoment = (momentIndex: number) => {
         const updatedMoments = moments.filter((_, i) => i !== momentIndex)
+        if (momentIndex === activeMomentIndex) {
+            setActiveMomentIndex(null)
+        }
         momentsUpdated(updatedMoments)
+    }
+
+    const activateMoment = (moment: Moment, index: number) => {
+        setActiveMomentIndex(index)
+        seekTo(moment.startTime)
     }
 
     return <div className='panel-container'>
@@ -41,8 +56,11 @@ const MomentPanelContainer = ({
                 key={index}
                 currentTime={currentTime}
                 moment={moment}
-                onStart={() => seekTo(moment.startTime)}
+                active={index === activeMomentIndex}
+                playing={playing}
+                onStart={() => activateMoment(moment, index)}
                 onDelete={() => deleteMoment(index)}
+                onFinished={onPause}
             />
         )}
         <NewMomentPanel onClick={createMoment} />
