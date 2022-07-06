@@ -8,6 +8,7 @@ import { projectFromBase64, projectToBase64 } from '../../utils/project.util'
 import { Project } from '../../models/project.model'
 import MomentPanelContainer from '../../components/moment-panel-container/MomentPanelContainer'
 import ReactPlayer from 'react-player'
+import ShortcutListener from '../../components/shortcut-listener/ShortcutListener'
 
 const ProjectPage = () => {
   const navigate = useNavigate()
@@ -37,62 +38,6 @@ const ProjectPage = () => {
     }
     // Return to home if project data is corrupt
     navigate('/')
-  }
-
-  document.body.onkeydown = (e) => {
-    if (
-      e.key === ' ' ||
-      e.code === 'Space' ||
-      e.keyCode === 32
-    ) {
-      e.preventDefault()
-      toggle()
-    }
-
-    if (
-      e.key === 'ArrowLeft' ||
-      e.code === 'ArrowLeft' ||
-      e.keyCode === 37
-    ) {
-      e.preventDefault()
-      seek(currentTime - 5)
-    }
-
-    if (
-      e.key === 'ArrowRight' ||
-      e.code === 'ArrowRight' ||
-      e.keyCode === 39
-    ) {
-      e.preventDefault()
-      seek(currentTime + 5)
-    }
-
-    if (
-      e.key === 'j' ||
-      e.code === 'KeyJ' ||
-      e.keyCode === 74
-    ) {
-      e.preventDefault()
-      seek(currentTime - 10)
-    }
-
-    if (
-      e.key === 'l' ||
-      e.code === 'KeyL' ||
-      e.keyCode === 76
-    ) {
-      e.preventDefault()
-      seek(currentTime + 10)
-    }
-
-    if (
-      e.key === 'k' ||
-      e.code === 'KeyK' ||
-      e.keyCode === 75
-    ) {
-      e.preventDefault()
-      toggle()
-    }
   }
 
   const updateMoments = (moments: Moment[]) => {
@@ -177,6 +122,11 @@ const ProjectPage = () => {
       onPause={pause}
       onSeek={seek}
     ></PlayerControl>
+
+    <ShortcutListener
+      onToggle={toggle}
+      onSeekRelative={(seconds) => seek(currentTime + seconds)}
+    />
   </>
 }
 

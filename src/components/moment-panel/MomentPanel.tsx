@@ -1,4 +1,4 @@
-import React from "react"
+import React, { useEffect, useState } from "react"
 import { Moment } from "../../models/moment.model"
 import { secondsToHMSString } from "../../utils/moment.util"
 import './MomentPanel.css'
@@ -22,13 +22,19 @@ const MomentPanel = ({
     onDelete,
     onFinished,
 }: MomentPanelProps) => {
-    let progress = 100 * (currentTime - moment.startTime) / (moment.endTime! - moment.startTime)
-    progress = progress < 0 ? 0 : progress
-    progress = progress > 100 ? 100 : progress
-    
-    if (active && progress === 100) {
-        onFinished()
-    }
+    const [progress, setProgress] = useState<number>(0);
+
+    useEffect(() => {
+        let progress = 100 * (currentTime - moment.startTime) / (moment.endTime! - moment.startTime)
+        progress = progress < 0 ? 0 : progress
+        progress = progress > 100 ? 100 : progress
+
+        if (active && progress === 100) {
+            onFinished()
+        }
+
+        setProgress(progress)
+    }, [active, progress, moment, currentTime, onFinished])
 
     const deleteMoment = (event: React.MouseEvent) => {
         onDelete()
