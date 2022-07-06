@@ -107,6 +107,7 @@ const ProjectPage = () => {
             moments={project.moments}
             momentsUpdated={updateMoments}
             currentTime={currentTime}
+            duration={duration}
             seekTo={seekAndPlay}
             onPause={pause}
           />

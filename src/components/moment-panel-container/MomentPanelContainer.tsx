@@ -9,6 +9,7 @@ interface MomentPanelContainerProps {
     moments: Moment[]
     momentsUpdated: (moments: Moment[]) => void
     currentTime: number
+    duration: number
     seekTo: (seconds: number) => void
     onPause: () => void
 }
@@ -18,6 +19,7 @@ const MomentPanelContainer = ({
     moments,
     momentsUpdated,
     currentTime,
+    duration,
     seekTo,
     onPause,
 }: MomentPanelContainerProps) => {
@@ -25,8 +27,7 @@ const MomentPanelContainer = ({
 
     /**
      * Creates a Moment at the currentTime.
-     * 
-     * The current time will be rounded to 1 decimal
+     * The current time will be rounded to 1 decimal.
      */
     const createMoment = () => {
         const startTime = Math.round(currentTime * 10) / 10
@@ -50,20 +51,28 @@ const MomentPanelContainer = ({
         seekTo(moment.startTime)
     }
 
+    const deactivateMoment = () => {
+        setActiveMomentIndex(null)
+        // onPause()
+    }
+
     return <div className='panel-container'>
         {moments.map((moment: Moment, index: number) =>
             <MomentPanel
                 key={index}
                 currentTime={currentTime}
+                duration={duration}
                 moment={moment}
                 active={index === activeMomentIndex}
                 playing={playing}
                 onStart={() => activateMoment(moment, index)}
                 onDelete={() => deleteMoment(index)}
-                onFinished={onPause}
+                onFinished={deactivateMoment}
             />
         )}
+        
         <NewMomentPanel onClick={createMoment} />
+
         {moments.length === 0 &&
             <div style={{ visibility: 'hidden' }}><NewMomentPanel /></div>
         }

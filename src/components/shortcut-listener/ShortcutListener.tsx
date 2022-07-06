@@ -29,7 +29,7 @@ const ShortcutListener = ({
             e.keyCode === 37
         ) {
             e.preventDefault()
-            onSeekRelative(5)
+            onSeekRelative(-5)
         }
 
         if (

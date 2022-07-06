@@ -5,6 +5,7 @@ import './MomentPanel.css'
 
 interface MomentPanelProps {
     currentTime: number
+    duration: number
     moment: Moment
     active: boolean
     playing: boolean
@@ -15,6 +16,7 @@ interface MomentPanelProps {
 
 const MomentPanel = ({
     currentTime,
+    duration,
     moment,
     active,
     playing,
@@ -25,16 +27,19 @@ const MomentPanel = ({
     const [progress, setProgress] = useState<number>(0);
 
     useEffect(() => {
-        let progress = 100 * (currentTime - moment.startTime) / (moment.endTime! - moment.startTime)
-        progress = progress < 0 ? 0 : progress
-        progress = progress > 100 ? 100 : progress
+        if (active) {
+            let updatedProgress = 100 * (currentTime - moment.startTime) / ((moment.endTime || duration) - moment.startTime)
 
-        if (active && progress === 100) {
-            onFinished()
+            if (updatedProgress < 0 || updatedProgress >= 100) {
+                onFinished()
+            }
+
+            updatedProgress = updatedProgress < 0 ? 0 : updatedProgress
+            updatedProgress = updatedProgress > 100 ? 100 : updatedProgress
+
+            setProgress(updatedProgress)
         }
-
-        setProgress(progress)
-    }, [active, progress, moment, currentTime, onFinished])
+    }, [active, moment, currentTime, onFinished, duration])
 
     const deleteMoment = (event: React.MouseEvent) => {
         onDelete()
@@ -42,11 +47,15 @@ const MomentPanel = ({
     }
 
     return <div
-        className={`moment-panel ${active ? 'active' : ''} ${active && playing ? 'pulse' : ''}`}
+        className={`moment-panel ${active ? 'active' : ''} ${playing && active ? 'pulse' : ''}`}
         onClick={() => onStart()}
     >
         <div className="button-delete" onClick={(e) => deleteMoment(e)} />
-        <div className='time'>{secondsToHMSString(moment.startTime)}</div>
+
+        <div className="times-container">
+            <div className='time'>{secondsToHMSString(moment.startTime)}</div>
+            <div className='time'>{secondsToHMSString(moment.endTime || duration)}</div>
+        </div>
 
         {active && <div
             className="progress-indicator"
