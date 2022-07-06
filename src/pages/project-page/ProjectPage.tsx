@@ -78,7 +78,7 @@ const ProjectPage = () => {
     s = s > duration ? duration : s
     setEnded(s === duration)
     setCurrentTime(s)
-    player?.seekTo(s)
+    player?.seekTo(s, 'seconds')
   }
 
   const seekAndPlay = (seconds: number) => {
