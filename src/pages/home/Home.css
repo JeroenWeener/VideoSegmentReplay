@@ -15,3 +15,9 @@
 .button-project-add:hover {
     transform: scale(1.02);
 }
+
+.project-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: stretch;
+}

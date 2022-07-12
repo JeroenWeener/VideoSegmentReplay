@@ -43,7 +43,6 @@ export const projectFromBase64 = (encodedString: string): (Project | null) => {
  */
 const toUrlProject = (project: Project): URLProject => {
     return {
-        i: project.id,
         n: project.name,
         v: project.videoId,
         m: project.moments.map(moment => toUrlMoment(moment)),
@@ -58,7 +57,6 @@ const toUrlProject = (project: Project): URLProject => {
  */
 const fromUrlProject = (urlProject: URLProject): Project => {
     return {
-        id: urlProject.i,
         name: urlProject.n,
         videoId: urlProject.v,
         moments: urlProject.m.map(urlMoment => fromUrlMoment(urlMoment)),
@@ -74,18 +72,16 @@ const fromUrlProject = (urlProject: URLProject): Project => {
  * @returns whether the project is considered safe for use
  */
 const isURLProjectSafe = (urlProject: URLProject): boolean => {
-    const projectProperties = ['i', 'n', 'v', 'm']
+    const projectProperties = ['n', 'v', 'm']
 
     const containsOnlyDescribedProperties = Object.keys(urlProject).every(property => projectProperties.includes(property))
 
-    const idIsNumber = typeof urlProject.i === 'number'
     const videoIdIsValid = isValidVideoId(urlProject.v)
     const nameIsString = typeof urlProject.n === 'string'
 
     if (LOG_SAFETY_CHECKS) {
         console.debug('--- Project ---')
         console.debug('Contains only described properties:', containsOnlyDescribedProperties)
-        console.debug('ID is number:', idIsNumber)
         console.debug('Video ID is valid', videoIdIsValid)
         console.debug('Name is string:', nameIsString)
     }
@@ -100,7 +96,6 @@ const isURLProjectSafe = (urlProject: URLProject): boolean => {
 
     return (
         containsOnlyDescribedProperties &&
-        idIsNumber &&
         videoIdIsValid &&
         nameIsString &&
         momentsIsArray &&

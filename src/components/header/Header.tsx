@@ -20,7 +20,7 @@ const Header = ({ projects }: HeaderProps) => {
                 <span className='logo-appear'>eplay</span>
             </div>
 
-            <select>{ projects.map((project) => <option key={project.id} value={project.id}>{project.name}</option>)}</select>
+            <select>{projects.map((project, index) => <option key={index} value={index}>{project.name}</option>)}</select>
         </div>
     </div>
 }

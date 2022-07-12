@@ -1,3 +1,4 @@
+import _ from "lodash"
 import { Project } from "../models/project.model"
 
 const PROJECTS = 'projects'
@@ -21,12 +22,11 @@ export const setProjects = (projects: Project[]): void => {
 export const addProject = (projectName: string, videoId: string): Project => {
     const projects: Project[] = getProjects()
     const newProject = {
-        id: Math.max(...projects.map(project => project.id)) + 1,
         name: projectName,
         videoId: videoId,
         moments: [],
     }
-    
+
     const updatedProjects = [...projects, newProject]
     setProjects(updatedProjects)
 
@@ -41,7 +41,7 @@ export const addProject = (projectName: string, videoId: string): Project => {
  */
 export const updateProject = (project: Project): Project[] => {
     const projects: Project[] = getProjects()
-    const updatedProjects = projects.map(p => p.id === project.id ? project : p)
+    const updatedProjects = projects.map(p => p === project ? project : p)
     setProjects(updatedProjects)
     return updatedProjects
 }
@@ -49,12 +49,12 @@ export const updateProject = (project: Project): Project[] => {
 /**
  * Deletes the provided project from local storage. Returns the updated list of projects from local storage.
  * 
- * @param projectId the ID of the project that should be deleted
+ * @param project the project that should be deleted
  * @returns the updated list of projects from local storage
  */
-export const deleteProject = (projectId: number): Project[] => {
+export const deleteProject = (project: Project): Project[] => {
     const projects: Project[] = getProjects()
-    const updatedProjects = projects.filter(p => p.id !== projectId)
-    setProjects(updatedProjects)
-    return updatedProjects
+    const remainingProjects = projects.filter(p => !_.isEqual(p, project))
+    setProjects(remainingProjects)
+    return remainingProjects
 }
