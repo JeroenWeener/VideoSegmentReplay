@@ -5,11 +5,13 @@
  */
 
 interface ShortcutListenerProps {
+    onMute: () => void
     onToggle: () => void
     onSeekRelative: (seconds: number) => void
 }
 
 const ShortcutListener = ({
+    onMute,
     onToggle,
     onSeekRelative,
 }: ShortcutListenerProps) => {
@@ -66,6 +68,15 @@ const ShortcutListener = ({
         ) {
             e.preventDefault()
             onToggle()
+        }
+
+        if (
+            e.key === 'm' ||
+            e.code === 'KeyM' ||
+            e.keyCode === 77
+        ) {
+            e.preventDefault()
+            onMute()
         }
     }
 

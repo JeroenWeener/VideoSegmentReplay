@@ -127,6 +127,7 @@ const ProjectPage = () => {
     ></PlayerControl>
 
     <ShortcutListener
+      onMute={() => setVolume(volume === 0 ? 100 : 0)}
       onToggle={toggle}
       onSeekRelative={(seconds) => seek(currentTime + seconds)}
     />
