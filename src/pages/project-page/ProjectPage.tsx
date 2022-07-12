@@ -22,6 +22,8 @@ const ProjectPage = () => {
   const [ended, setEnded] = useState<boolean>(false)
   const [currentTime, setCurrentTime] = useState<number>(0)
   const [duration, setDuration] = useState<number>(0)
+  const [lastUserUpdate, setLastUserUpdate] = useState<number>(Date.now())
+
 
   // Load project from URL
   useEffect(() => {
@@ -68,13 +70,33 @@ const ProjectPage = () => {
     playing ? pause() : play()
   }
 
-  const progress = (seconds: number) => {
+  /**
+   * Set current time. This method is called continuously by the VideoPlayer.
+   * 
+   * Because users can influence the current time in various ways, their might be a delay between the current time set by the user
+   * and the current time reported by the player. To remedy this, updates from the video player are dropped for the first 100 ms after
+   * a user update.
+   * @param seconds the new current time in seconds 
+   */
+  const handlePlayerProgress = (seconds: number) => {
     if (!ended) {
-      setCurrentTime(seconds)
+      if (Date.now() - lastUserUpdate > 100) {
+        setCurrentTime(seconds)
+      }
     }
   }
 
+  /**
+   * Seeks player to provided time. This method is called by user interaction only.
+   * 
+   * Because there might be a delay between setting the time and the player actually playing at that time
+   * we drop updates from the player for a while after issuing this method. Therefore, we need to store
+   * a timestamp of when this method last ran.
+   * 
+   * @param seconds proposed new current time for player in seconds
+   */
   const seek = (seconds: number) => {
+    setLastUserUpdate(Date.now())
     let s = seconds < 0 ? 0 : seconds
     s = s > duration ? duration : s
     setEnded(s === duration)
@@ -97,7 +119,7 @@ const ProjectPage = () => {
             volume={volume}
             onPlay={play}
             onPause={pause}
-            onProgress={progress}
+            onProgress={handlePlayerProgress}
             onEnded={end}
             setDuration={setDuration}
             setPlayer={setPlayer}
