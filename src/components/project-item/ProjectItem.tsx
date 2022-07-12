@@ -1,4 +1,5 @@
 import { Project } from "../../models/project.model"
+import './ProjectItem.css'
 
 interface ProjectItemProps {
     project: Project
@@ -9,10 +10,10 @@ const ProjectItem = ({
     project,
     onDelete,
 }: ProjectItemProps) => {
-    return <>
-        <span>{project.name}</span>
-        <button onClick={onDelete}>X</button>
-    </>
+    return <div className="project-row">
+        <span className="label-project-name">{project.name}</span>
+        <button className="button-project-delete" onClick={onDelete} />
+    </div>
 }
 
 export default ProjectItem
