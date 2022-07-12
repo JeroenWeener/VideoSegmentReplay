@@ -9,7 +9,10 @@ const root = ReactDOM.createRoot(
 );
 root.render(
   // <React.StrictMode>
+  <>
+    <link href='https://fonts.googleapis.com/css?family=Montserrat' rel='stylesheet'></link>
     <App />
+  </> 
   // </React.StrictMode>
 );
 

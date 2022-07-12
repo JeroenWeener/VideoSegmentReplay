@@ -59,7 +59,7 @@ const VideoPlayer = ({
     }
 
     return <div className="video-wrapper" ref={videoWrapperRef} style={{
-        borderRadius: `${(window.innerWidth || 0) > 720 ? 30 * videoScale : 0}px`,
+        borderRadius: `${(window.innerWidth || 0) > 720 ? 5 * videoScale : 0}px`,
     }}>
         <div className="video-scaling-container" style={{
             transform: `scale(${videoScale})`,
