@@ -5,6 +5,7 @@ import './VideoPlayer.css'
 interface VideoPlayerProps {
     videoId: string
     playing: boolean
+    muted: boolean
 
     onPlay: () => void
     onPause: () => void
@@ -17,6 +18,7 @@ interface VideoPlayerProps {
 const VideoPlayer = ({
     videoId,
     playing,
+    muted,
 
     onPlay,
     onPause,
@@ -69,6 +71,7 @@ const VideoPlayer = ({
                 url={`https://www.youtube.com/embed/${videoId}`}
                 progressInterval={1000 / 120}
                 playing={playing}
+                muted={muted}
                 config={{
                     youtube: {
                         playerVars: {

@@ -93,6 +93,7 @@ const ProjectPage = () => {
           <VideoPlayer
             videoId={project.videoId}
             playing={playing}
+            muted={true}
             onPlay={play}
             onPause={pause}
             onProgress={progress}
@@ -109,7 +110,6 @@ const ProjectPage = () => {
             currentTime={currentTime}
             duration={duration}
             seekTo={seekAndPlay}
-            onPause={pause}
           />
         </div>
       </div>

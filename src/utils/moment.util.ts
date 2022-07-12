@@ -1,6 +1,14 @@
 import { LOG_SAFETY_CHECKS } from "../config"
 import { Moment, URLMoment } from "../models/moment.model"
 
+/**
+ * Formats seconds to a hh:mm:ss string.
+ * 
+ * Hours are shown when relevant or when explicitly requested by setting showHours to true.
+ * 
+ * @param seconds the number of seconds that are to be formatted to a hh:mm:ss string
+ * @returns (hh):(m)m:ss string
+ */
 export const secondsToHMSString = (seconds: number, showHours: boolean = false) => {
     const h = Math.floor(seconds / 60 / 60)
     const m = Math.floor(seconds / 60 % 60)
@@ -19,7 +27,6 @@ export const secondsToHMSString = (seconds: number, showHours: boolean = false) 
 export const toUrlMoment = (moment: Moment): URLMoment => {
     return {
         s: moment.startTime,
-        e: moment.endTime,
     }
 }
 
@@ -32,7 +39,6 @@ export const toUrlMoment = (moment: Moment): URLMoment => {
 export const fromUrlMoment = (urlMoment: URLMoment): Moment => {
     return {
         startTime: urlMoment.s,
-        endTime: urlMoment.e,
     }
 }
 
@@ -45,23 +51,20 @@ export const fromUrlMoment = (urlMoment: URLMoment): Moment => {
  * @returns whether the URLMoment is considered safe for use
  */
  export const isURLMomentSafe = (urlMoment: URLMoment): boolean => {
-    const momentProperties = ['i', 's', 'e']
+    const momentProperties = ['i', 's']
 
     const containsOnlyDescribedProperties = Object.keys(urlMoment).every(property => momentProperties.includes(property))
 
     const startTimeIsNumber = typeof urlMoment.s === 'number'
-    const endTimeIsNumberOrUndefined = typeof urlMoment.e === 'number' || typeof urlMoment.e === 'undefined'
 
     if (LOG_SAFETY_CHECKS) {
         console.debug('\t--- Moment ---')
         console.debug('\tContains only described properties:', containsOnlyDescribedProperties)
-        console.debug('\tStart time is number:', endTimeIsNumberOrUndefined)
-        console.debug('\tEnd time is number or undefined:', endTimeIsNumberOrUndefined)
+        console.debug('\tStart time is number:', startTimeIsNumber)
     }
 
     return (
         containsOnlyDescribedProperties &&
-        startTimeIsNumber &&
-        endTimeIsNumberOrUndefined
+        startTimeIsNumber
     )
 }

@@ -1,6 +1,5 @@
 export interface Moment {
     startTime: number
-    endTime?: number
 }
 
 /**
@@ -8,5 +7,4 @@ export interface Moment {
  */
  export interface URLMoment {
     s: number
-    e?: number
 }
