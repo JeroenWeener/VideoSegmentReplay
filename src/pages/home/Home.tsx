@@ -21,14 +21,16 @@ const Home = () => {
 
   return <>
     <div className='project-container'>
-      {projects.map((project, index) =>
-        <ProjectItem
-          key={index}
-          project={project}
-          onSelect={() => handleProjectSelect(project)}
-          onDelete={() => handleProjectDelete(project)}
-        />
-      )}
+      <div className="project-rows">
+        {projects.map((project, index) =>
+          <ProjectItem
+            key={index}
+            project={project}
+            onSelect={() => handleProjectSelect(project)}
+            onDelete={() => handleProjectDelete(project)}
+          />
+        )}
+      </div>
     </div>
     <button className='button-project-add' onClick={() => navigate('../project/new')}>Add project</button>
   </>;
