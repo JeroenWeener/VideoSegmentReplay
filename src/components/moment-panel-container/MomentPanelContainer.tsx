@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Moment } from '../../models/moment.model'
 import MomentPanel from '../moment-panel/MomentPanel'
 import NewMomentPanel from '../new-moment-panel/NewMomentPanel'
@@ -9,7 +9,6 @@ interface MomentPanelContainerProps {
     moments: Moment[]
     momentsUpdated: (moments: Moment[]) => void
     currentTime: number
-    duration: number
     seekTo: (seconds: number) => void
 }
 
@@ -18,10 +17,18 @@ const MomentPanelContainer = ({
     moments,
     momentsUpdated,
     currentTime,
-    duration,
     seekTo,
 }: MomentPanelContainerProps) => {
     const [activeMomentIndex, setActiveMomentIndex] = useState<number | null>(null)
+
+    useEffect(() => {
+        if (activeMomentIndex) {
+            const activeMoment = moments[activeMomentIndex]
+            if (currentTime < activeMoment.startTime) {
+                setActiveMomentIndex(null)
+            }
+        }
+    }, [activeMomentIndex, currentTime, moments])
 
     /**
      * Creates a Moment at the current time.
@@ -57,7 +64,7 @@ const MomentPanelContainer = ({
                 onDelete={() => deleteMoment(index)}
             />
         )}
-        
+
         <NewMomentPanel onClick={createMoment} />
 
         {moments.length === 0 &&
