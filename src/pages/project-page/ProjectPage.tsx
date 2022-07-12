@@ -18,6 +18,7 @@ const ProjectPage = () => {
   // Expose player to seek, as this is not directly supported by ReactPlayer
   const [player, setPlayer] = useState<ReactPlayer>()
   const [playing, setPlaying] = useState<boolean>(false)
+  const [volume, setVolume] = useState<number>(100)
   const [ended, setEnded] = useState<boolean>(false)
   const [currentTime, setCurrentTime] = useState<number>(0)
   const [duration, setDuration] = useState<number>(0)
@@ -93,7 +94,7 @@ const ProjectPage = () => {
           <VideoPlayer
             videoId={project.videoId}
             playing={playing}
-            muted={true}
+            volume={volume}
             onPlay={play}
             onPause={pause}
             onProgress={progress}
@@ -116,11 +117,13 @@ const ProjectPage = () => {
 
     <PlayerControl
       playing={playing}
+      volume={volume}
       currentTime={currentTime}
       duration={duration}
       onPlay={play}
       onPause={pause}
       onSeek={seek}
+      setVolume={setVolume}
     ></PlayerControl>
 
     <ShortcutListener

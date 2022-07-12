@@ -3,21 +3,25 @@ import './PlayerControl.css'
 
 interface PlayerControlProps {
   playing: boolean
+  volume: number
   currentTime: number
   duration: number
 
   onPlay: () => void
   onPause: () => void
   onSeek: (seconds: number) => void
+  setVolume: (volume: number) => void
 }
 
 const PlayerControl = ({
   playing,
+  volume,
   currentTime,
   duration,
   onPlay,
   onPause,
   onSeek,
+  setVolume,
 }: PlayerControlProps) => {
   const getTimeString = () => {
     if (duration === 0) return '-:-- / -:--'
@@ -29,6 +33,9 @@ const PlayerControl = ({
 
   return <div className="player-controls">
     <button onClick={() => playing ? onPause() : onPlay()} className={`button-action ${playing ? 'pause' : ''}`} />
+    <button onClick={() => volume === 0 ? setVolume(100) : setVolume(0)} className={`button-mute ${volume === 100 ? '' : 'muted'}`}>
+      <span></span>
+    </button>
     <span className='time-display'>{getTimeString()}</span>
     <input
       className='seek-bar'

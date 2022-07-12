@@ -1,3 +1,12 @@
+/* Variables */
+:root {
+    --player-control-padding: 12px;
+    --button-action-size: calc(var(--player-control-height) - 2 * var(--player-control-padding));
+    --seek-bar-height: calc(var(--button-action-size) / 2);
+    --seek-bar-handle-size: calc(2 * var(--seek-bar-height));
+}
+
+/* Container */
 .player-controls {
     background-color: var(--color-secondary);
     padding: var(--player-control-padding);
@@ -15,6 +24,7 @@
     }
 }
 
+/* Play button */
 .player-controls .button-action {
     width: 0;
     border: 0;
@@ -39,6 +49,66 @@
     opacity: 1;
 }
 
+/* Mute button */
+.player-controls .button-mute {
+    background: transparent;
+    border: 0;
+    height: var(--button-action-size);
+    aspect-ratio: 1;
+    cursor: pointer;
+    opacity: .7;
+    transition: 100ms opacity ease;
+}
+
+.player-controls .button-mute:hover {
+    opacity: 1;
+}
+
+.player-controls .button-mute span {
+    display: block;
+    width: 8px;
+    height: 8px;
+    position: relative;
+    background: var(--color-primary);
+}
+
+.player-controls .button-mute span::before {
+    content: '';
+    position: absolute;
+    left: 18px;
+    top: -1px;
+    width: 5px;
+    height: 5px;
+    transform: rotate(45deg);
+    border-radius: 0 50px 0 0;
+    border-style: double;
+    border-color: var(--color-primary);
+    border-width: 10px 10px 0 0;
+    transition: all 0.2s ease-out;
+}
+
+.player-controls .button-mute span::after {
+    content: '';
+    position: absolute;
+    left: -15px;
+    top: -6px;
+    width: 0;
+    height: 0;
+    border-style: solid;
+    border-color: transparent var(--color-primary) transparent transparent;
+    border-width: 10px 14px 10px 15px;
+}
+
+.player-controls .button-mute:hover span::before {
+    transform: scale(.8) translate(-3px, 0) rotate(45deg);
+}
+
+.player-controls .button-mute.muted span::before {
+    transform: scale(.5) translate(-15px, 0) rotate(45deg);
+    opacity: 0;
+}
+
+/* Time */
 .player-controls .time-display {
     text-align: center;
     font-size: 1.3em;
@@ -46,6 +116,7 @@
     color: var(--color-primary);
 }
 
+/* Seek bar */
 .player-controls .seek-bar {
     flex-grow: 1;
     appearance: none;
