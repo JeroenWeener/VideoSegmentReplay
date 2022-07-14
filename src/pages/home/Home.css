@@ -1,19 +1,6 @@
-.button-project-add {
-    background-color: var(--color-accent);
-    color: var(--color-primary);
-    outline: none;
-    border: none;
-    width: 100px;
-    height: 100px;
-    margin: 1em;
-    border-radius: 10px;
-    font-size: 1em;
-    transition: transform .2s;
-    cursor: pointer;
-}
-
-.button-project-add:hover {
-    transform: scale(1.02);
+.home-container {
+    display: flex;
+    flex-direction: column;
 }
 
 .project-container {
@@ -25,4 +12,24 @@
 
 .project-rows {
     box-shadow: 0 2px 2px rgb(0 0 0 / .15);
+}
+
+.button-project-add {
+    align-self: flex-end;
+    display: block;
+    margin-top: 1rem;
+    border-radius: 5px;
+    padding: .5rem;
+    outline: none;
+    border: none;
+    color: var(--color-primary);
+    font-size: 1em;
+    background-image: linear-gradient(to right, #4CB8C4 0%, #3CD3AD  51%, #4CB8C4  100%);
+    background-size: 200% auto;
+    cursor: pointer;
+    transition: background-position 0.5s;
+}
+
+.button-project-add:hover {
+    background-position: right center;
 }

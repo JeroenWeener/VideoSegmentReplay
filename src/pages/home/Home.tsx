@@ -19,7 +19,9 @@ const Home = () => {
     setProjects(remainingProjects)
   }
 
-  return <>
+  return <div className='home-container'>
+    <button className='button-project-add' onClick={() => navigate('../project/new')}>Add project</button>
+
     <div className='project-container'>
       <div className="project-rows">
         {projects.map((project, index) =>
@@ -32,8 +34,7 @@ const Home = () => {
         )}
       </div>
     </div>
-    <button className='button-project-add' onClick={() => navigate('../project/new')}>Add project</button>
-  </>;
+  </div>;
 }
 
 export default Home;
