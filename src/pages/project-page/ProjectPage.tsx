@@ -9,6 +9,7 @@ import { Project } from '../../models/project.model'
 import MomentPanelContainer from '../../components/moment-panel-container/MomentPanelContainer'
 import ReactPlayer from 'react-player'
 import ShortcutListener from '../../components/shortcut-listener/ShortcutListener'
+import { updateProject } from '../../utils/local-storage.util'
 
 const ProjectPage = () => {
   const navigate = useNavigate()
@@ -48,6 +49,7 @@ const ProjectPage = () => {
       ...project!,
       moments,
     }
+    updateProject(project!, updatedProject)
     setProject(updatedProject)
     navigate(`../project/${projectToBase64(updatedProject)}`, { replace: true })
   }

@@ -34,14 +34,16 @@ export const addProject = (projectName: string, videoId: string): Project => {
 }
 
 /**
- * Updates the provided project in local storage. Returns the updated list of projects from local storage.
+ * Updates a project in local storage. Returns the updated list of projects from local storage.
+ * As projects have no unique identifier, the function requires the old project in addition to the updated one.
  * 
- * @param project the updated project
+ * @param oldProject the former project
+ * @param newProject the updated project
  * @returns the updated list of projects in local storage
  */
-export const updateProject = (project: Project): Project[] => {
+export const updateProject = (oldProject: Project, newProject: Project): Project[] => {
     const projects: Project[] = getProjects()
-    const updatedProjects = projects.map(p => p === project ? project : p)
+    const updatedProjects = projects.map(p => _.isEqual(p, oldProject) ? newProject : p)
     setProjects(updatedProjects)
     return updatedProjects
 }
