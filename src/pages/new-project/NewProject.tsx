@@ -1,6 +1,6 @@
 import { FormEvent, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { addProject } from '../../utils/local-storage.util'
+import { createProject } from '../../utils/local-storage.util'
 import { projectToBase64 } from '../../utils/project.util'
 import { extractVideoIdFromYouTubeUrl, isValidYouTubeUrl } from '../../utils/regex.util'
 
@@ -14,7 +14,7 @@ const NewProject = () => {
     const videoId = extractVideoIdFromYouTubeUrl(youtubeUrl)
 
     if (videoId) {
-      const project = addProject(projectName, videoId)
+      const project = createProject(projectName, videoId)
       navigate(`../project/${projectToBase64(project)}`)
     }
   }

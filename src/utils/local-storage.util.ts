@@ -19,7 +19,7 @@ export const setProjects = (projects: Project[]): void => {
  * @param videoId the YouTube video ID of the video of the project
  * @returns the created project
  */
-export const addProject = (projectName: string, videoId: string): Project => {
+export const createProject = (projectName: string, videoId: string): Project => {
     const projects: Project[] = getProjects()
     const newProject = {
         name: projectName,
@@ -31,6 +31,23 @@ export const addProject = (projectName: string, videoId: string): Project => {
     setProjects(updatedProjects)
 
     return newProject
+}
+
+/**
+ * Adds project to local storage if it is new.
+ * 
+ * @param project the project to add
+ * @returns the project
+ */
+export const addProject = (project: Project): Project => {
+    const projects: Project[] = getProjects()
+    const isProjectNew = projects.find((p) => _.isEqual(p, project)) === undefined
+    let updatedProjects = projects
+    if (isProjectNew) {
+        updatedProjects.push(project)
+    }
+    setProjects(updatedProjects)
+    return project
 }
 
 /**

@@ -9,7 +9,7 @@ import { Project } from '../../models/project.model'
 import MomentPanelContainer from '../../components/moment-panel-container/MomentPanelContainer'
 import ReactPlayer from 'react-player'
 import ShortcutListener from '../../components/shortcut-listener/ShortcutListener'
-import { updateProject } from '../../utils/local-storage.util'
+import { addProject, updateProject } from '../../utils/local-storage.util'
 
 const ProjectPage = () => {
   const navigate = useNavigate()
@@ -37,6 +37,7 @@ const ProjectPage = () => {
       const supposedProject = projectFromBase64(projectData)
       if (supposedProject) {
         setProject(supposedProject)
+        addProject(supposedProject)
         return
       }
     }
