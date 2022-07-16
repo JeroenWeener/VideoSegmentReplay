@@ -1,5 +1,5 @@
 import _ from "lodash"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom"
 import { Project } from "../../models/project.model"
 import CurrentProjectService from "../../services/current-project-service"
@@ -17,9 +17,36 @@ const ProjectDropdown = ({
 }: ProjectDropdownProps) => {
     const navigate = useNavigate()
     const [open, setOpen] = useState<boolean>(false)
-    
+
     const currentProject = currentProjectService.getCurrentProject()
     const sortedProjects = currentProject ? [currentProject, ...projects.filter(p => !_.isEqual(p, currentProject))] : projects
+
+    useEffect(() => {
+        if (!open) return
+
+        const clickOutsideHandler = (e: MouseEvent) => {
+            const container = document.getElementById('dropdown-projects-container')
+            if (container && !container.contains(e.target as Node)) {
+                setOpen(false)
+            }
+        }
+        const escHandler = (e: KeyboardEvent) => {
+            if (
+                e.key === 'Escape' ||
+                e.code === 'Escape' ||
+                e.keyCode === 27
+            ) {
+                setOpen(false)
+            }
+        }
+
+        window.addEventListener('click', clickOutsideHandler)
+        window.addEventListener('keyup', escHandler)
+        return () => {
+            window.removeEventListener('click', clickOutsideHandler)
+            window.removeEventListener('keyup', escHandler)
+        }
+    }, [currentProject, open])
 
     const openProject = (project: Project): void => {
         navigate(`/project/${projectToBase64(project)}`)
@@ -27,6 +54,7 @@ const ProjectDropdown = ({
 
     return <>
         {currentProject && <div
+            id="dropdown-projects-container"
             className={`${open ? 'opened' : ''} dropdown-projects`}
             onClick={() => setOpen(e => !e)}
         >
