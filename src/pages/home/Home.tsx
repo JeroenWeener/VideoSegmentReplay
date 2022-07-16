@@ -2,20 +2,20 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import ProjectItem from '../../components/project-item/ProjectItem';
 import { Project } from '../../models/project.model';
-import { deleteProject, getProjects } from '../../utils/local-storage.util';
+import { deleteProjectFromStorage, getProjectsFromStorage } from '../../utils/local-storage.util';
 import { projectToBase64 } from '../../utils/project.util';
 import './Home.css'
 
 const Home = () => {
   const navigate = useNavigate();
-  const [projects, setProjects] = useState<Project[]>(getProjects())
+  const [projects, setProjects] = useState<Project[]>(getProjectsFromStorage())
 
   const handleProjectSelect = (project: Project) => {
     navigate(`../project/${projectToBase64(project)}`)
   }
 
   const handleProjectDelete = (project: Project) => {
-    const remainingProjects = deleteProject(project)
+    const remainingProjects = deleteProjectFromStorage(project)
     setProjects(remainingProjects)
   }
 

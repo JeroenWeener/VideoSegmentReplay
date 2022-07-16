@@ -1,5 +1,6 @@
 import { useNavigate } from 'react-router-dom'
 import { Project } from '../../models/project.model'
+import ProjectDropdown from '../project-dropdown/ProjectDropdown'
 import './Header.css'
 
 interface HeaderProps {
@@ -20,7 +21,7 @@ const Header = ({ projects }: HeaderProps) => {
                 <span className='logo-appear'>eplay</span>
             </div>
 
-            <select>{projects.map((project, index) => <option key={index} value={index}>{project.name}</option>)}</select>
+            <ProjectDropdown projects={projects} />
         </div>
     </div>
 }

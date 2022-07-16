@@ -9,7 +9,10 @@ import { Project } from '../../models/project.model'
 import MomentPanelContainer from '../../components/moment-panel-container/MomentPanelContainer'
 import ReactPlayer from 'react-player'
 import ShortcutListener from '../../components/shortcut-listener/ShortcutListener'
-import { addProject, updateProject } from '../../utils/local-storage.util'
+import { addProjectToStorage, updateProjectInStorage } from '../../utils/local-storage.util'
+import CurrentProjectService from '../../services/current-project-service'
+
+const currentProjectService = CurrentProjectService.getInstance()
 
 const ProjectPage = () => {
   const navigate = useNavigate()
@@ -30,6 +33,13 @@ const ProjectPage = () => {
   useEffect(() => {
     loadProjectFromUrl()
     // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [projectData])
+
+  /**
+   * onDismount
+   */
+  useEffect(() => {
+    return () => currentProjectService.setCurrentProject(null)
   }, [])
 
   const loadProjectFromUrl = () => {
@@ -37,7 +47,8 @@ const ProjectPage = () => {
       const supposedProject = projectFromBase64(projectData)
       if (supposedProject) {
         setProject(supposedProject)
-        addProject(supposedProject)
+        addProjectToStorage(supposedProject)
+        currentProjectService.setCurrentProject(supposedProject)
         return
       }
     }
@@ -50,7 +61,7 @@ const ProjectPage = () => {
       ...project!,
       moments,
     }
-    updateProject(project!, updatedProject)
+    updateProjectInStorage(project!, updatedProject)
     setProject(updatedProject)
     navigate(`../project/${projectToBase64(updatedProject)}`, { replace: true })
   }

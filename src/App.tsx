@@ -3,7 +3,7 @@ import { Route, BrowserRouter, Routes, useLocation, Navigate } from 'react-route
 import Home from './pages/home/Home';
 import NewProject from './pages/new-project/NewProject';
 import Header from './components/header/Header';
-import { getProjects } from './utils/local-storage.util';
+import { getProjectsFromStorage } from './utils/local-storage.util';
 import { useEffect, useState } from 'react';
 import { Project } from './models/project.model';
 import ProjectPage from './pages/project-page/ProjectPage';
@@ -18,10 +18,10 @@ const App = () => {
 
 const Content = () => {
   const location = useLocation()
-  const [projects, setProjects] = useState<Project[]>(getProjects())
+  const [projects, setProjects] = useState<Project[]>(getProjectsFromStorage())
 
   useEffect(() => {
-    setProjects(getProjects)
+    setProjects(getProjectsFromStorage)
   }, [location])
 
   return <>

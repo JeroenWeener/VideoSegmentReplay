@@ -3,12 +3,12 @@ import { Project } from "../models/project.model"
 
 const PROJECTS = 'projects'
 
-export const getProjects = (): Project[] => {
+export const getProjectsFromStorage = (): Project[] => {
     const projectsJSON = localStorage.getItem(PROJECTS)
     return projectsJSON ? JSON.parse(projectsJSON) : []
 }
 
-export const setProjects = (projects: Project[]): void => {
+export const setProjectsInStorage = (projects: Project[]): void => {
     localStorage.setItem(PROJECTS, JSON.stringify(projects))
 }
 
@@ -19,8 +19,8 @@ export const setProjects = (projects: Project[]): void => {
  * @param videoId the YouTube video ID of the video of the project
  * @returns the created project
  */
-export const createProject = (projectName: string, videoId: string): Project => {
-    const projects: Project[] = getProjects()
+export const createProjectInStorage = (projectName: string, videoId: string): Project => {
+    const projects: Project[] = getProjectsFromStorage()
     const newProject = {
         name: projectName,
         videoId: videoId,
@@ -28,7 +28,7 @@ export const createProject = (projectName: string, videoId: string): Project => 
     }
 
     const updatedProjects = [...projects, newProject]
-    setProjects(updatedProjects)
+    setProjectsInStorage(updatedProjects)
 
     return newProject
 }
@@ -39,14 +39,14 @@ export const createProject = (projectName: string, videoId: string): Project => 
  * @param project the project to add
  * @returns the project
  */
-export const addProject = (project: Project): Project => {
-    const projects: Project[] = getProjects()
+export const addProjectToStorage = (project: Project): Project => {
+    const projects: Project[] = getProjectsFromStorage()
     const isProjectNew = projects.find((p) => _.isEqual(p, project)) === undefined
     let updatedProjects = projects
     if (isProjectNew) {
         updatedProjects.push(project)
     }
-    setProjects(updatedProjects)
+    setProjectsInStorage(updatedProjects)
     return project
 }
 
@@ -58,10 +58,10 @@ export const addProject = (project: Project): Project => {
  * @param newProject the updated project
  * @returns the updated list of projects in local storage
  */
-export const updateProject = (oldProject: Project, newProject: Project): Project[] => {
-    const projects: Project[] = getProjects()
+export const updateProjectInStorage = (oldProject: Project, newProject: Project): Project[] => {
+    const projects: Project[] = getProjectsFromStorage()
     const updatedProjects = projects.map(p => _.isEqual(p, oldProject) ? newProject : p)
-    setProjects(updatedProjects)
+    setProjectsInStorage(updatedProjects)
     return updatedProjects
 }
 
@@ -71,9 +71,9 @@ export const updateProject = (oldProject: Project, newProject: Project): Project
  * @param project the project that should be deleted
  * @returns the updated list of projects from local storage
  */
-export const deleteProject = (project: Project): Project[] => {
-    const projects: Project[] = getProjects()
+export const deleteProjectFromStorage = (project: Project): Project[] => {
+    const projects: Project[] = getProjectsFromStorage()
     const remainingProjects = projects.filter(p => !_.isEqual(p, project))
-    setProjects(remainingProjects)
+    setProjectsInStorage(remainingProjects)
     return remainingProjects
 }
