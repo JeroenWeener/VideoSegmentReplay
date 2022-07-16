@@ -46,6 +46,8 @@ const ProjectPage = () => {
     if (projectData) {
       const supposedProject = projectFromBase64(projectData)
       if (supposedProject) {
+        setPlaying(false)
+        setEnded(false)
         setProject(supposedProject)
         addProjectToStorage(supposedProject)
         currentProjectService.setCurrentProject(supposedProject)
