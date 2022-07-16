@@ -1,9 +1,25 @@
 .plus {
     height: 100%;
     width: 100%;
-    z-index: 1;
-    background-repeat: no-repeat;
-    background-position: center;
-    background-size: 80px 80px;
-    background-image: url(data:image/svg+xml;utf8;base64,PHN2ZyBmaWxsPSIjMzMzIiB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgZmlsbC1ydWxlPSJldmVub2RkIiBjbGlwLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik0xMSAxMXYtMTFoMXYxMWgxMXYxaC0xMXYxMWgtMXYtMTFoLTExdi0xaDExeiIvPjwvc3ZnPg==);
+    --plus-width: 1%;
+}
+
+.plus::before,
+.plus::after {
+    position: absolute;
+    content: '';
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    background-color: var(--color-secondary);
+}
+
+.plus::before {
+    width: var(--plus-width);
+    height: 50%;
+}
+
+.plus::after {
+    width: 50%;
+    height: var(--plus-width);
 }

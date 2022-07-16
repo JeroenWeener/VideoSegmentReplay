@@ -89,10 +89,6 @@ const MomentPanelContainer = ({
         )}
 
         <NewMomentPanel onClick={createMoment} />
-
-        {moments.length === 0 &&
-            <div style={{ visibility: 'hidden' }}><NewMomentPanel /></div>
-        }
     </div>
 }
 

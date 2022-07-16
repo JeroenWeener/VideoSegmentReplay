@@ -10,8 +10,7 @@
 .dropdown-option-projects {
     font-size: 1.5rem;
     height: 4rem;
-    width: 20rem;
-    min-width: 20rem;
+    max-width: 50vw;
     text-overflow: ellipsis;
     white-space: nowrap;
     overflow: hidden;

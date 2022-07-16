@@ -19,18 +19,38 @@
 }
 
 .button-project-delete {
+    position: relative;
     height: 24px;
     width: 24px;
     border: none;
     background: none;
-    background-repeat: no-repeat;
-    background-position: center;
-    background-size: 24px 24px;
-    background-image: url(data:image/svg+xml;utf8;base64,PHN2ZyBmaWxsPSIjMzMzIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgd2lkdGg9IjI0cHgiIGhlaWdodD0iMjRweCI+PHBhdGggZD0iTSA0LjcwNzAzMTIgMy4yOTI5Njg4IEwgMy4yOTI5Njg4IDQuNzA3MDMxMiBMIDEwLjU4NTkzOCAxMiBMIDMuMjkyOTY4OCAxOS4yOTI5NjkgTCA0LjcwNzAzMTIgMjAuNzA3MDMxIEwgMTIgMTMuNDE0MDYyIEwgMTkuMjkyOTY5IDIwLjcwNzAzMSBMIDIwLjcwNzAzMSAxOS4yOTI5NjkgTCAxMy40MTQwNjIgMTIgTCAyMC43MDcwMzEgNC43MDcwMzEyIEwgMTkuMjkyOTY5IDMuMjkyOTY4OCBMIDEyIDEwLjU4NTkzOCBMIDQuNzA3MDMxMiAzLjI5Mjk2ODggeiIvPjwvc3ZnPg==);
-    transition: transform .1s;
+    opacity: .7;
+    transition: all .1s;
     cursor: pointer;
+    --cross-width: 1px;
+}
+
+.button-project-delete::before,
+.button-project-delete::after {
+    position: absolute;
+    content: '';
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%) rotate(45deg);
+    background-color: var(--color-secondary);
+}
+
+.button-project-delete::before {
+    width: var(--cross-width);
+    height: 100%;
+}
+
+.button-project-delete::after {
+    width: 100%;
+    height: var(--cross-width);
 }
 
 .button-project-delete:hover {
-    transform: rotate(90deg);
+    transform: rotate(180deg) scale(1.1);
+    opacity: 1;
 }

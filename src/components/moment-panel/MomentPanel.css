@@ -9,7 +9,7 @@
     aspect-ratio: 1;
     background-color: var(--color-background);
     border-radius: var(--border-radius);
-    box-shadow: 0px 3px 4px rgb(0 0 0 / .15);
+    box-shadow: 0px 1px 2px rgb(0 0 0 / .15);
     cursor: pointer;
     user-select: none;
     transition: transform .1s;
@@ -57,17 +57,36 @@
     position: absolute;
     top: 10px;
     right: 10px;
-    height: 1em;
-    width: 1em;
-    background-repeat: no-repeat;
-    background-position: center;
-    background-size: 1em 1em;
-    background-image: url(data:image/svg+xml;utf8;base64,PHN2ZyBmaWxsPSIjMzMzIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgd2lkdGg9IjI0cHgiIGhlaWdodD0iMjRweCI+PHBhdGggZD0iTSA0LjcwNzAzMTIgMy4yOTI5Njg4IEwgMy4yOTI5Njg4IDQuNzA3MDMxMiBMIDEwLjU4NTkzOCAxMiBMIDMuMjkyOTY4OCAxOS4yOTI5NjkgTCA0LjcwNzAzMTIgMjAuNzA3MDMxIEwgMTIgMTMuNDE0MDYyIEwgMTkuMjkyOTY5IDIwLjcwNzAzMSBMIDIwLjcwNzAzMSAxOS4yOTI5NjkgTCAxMy40MTQwNjIgMTIgTCAyMC43MDcwMzEgNC43MDcwMzEyIEwgMTkuMjkyOTY5IDMuMjkyOTY4OCBMIDEyIDEwLjU4NTkzOCBMIDQuNzA3MDMxMiAzLjI5Mjk2ODggeiIvPjwvc3ZnPg==);
-    transition: transform .1s;
+    height: 1.5em;
+    width: 1.5em;
+    opacity: .7;
+    transition: all .1s;
+    --cross-width: 1px;
+}
+
+.button-delete::before,
+.button-delete::after {
+    position: absolute;
+    content: '';
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%) rotate(45deg);
+    background-color: var(--color-secondary);
+}
+
+.button-delete::before {
+    width: var(--cross-width);
+    height: 100%;
+}
+
+.button-delete::after {
+    width: 100%;
+    height: var(--cross-width);
 }
 
 .button-delete:hover {
-    transform: rotate(90deg);
+    transform: rotate(180deg) scale(1.1);
+    opacity: 1;
 }
 
 .time {
