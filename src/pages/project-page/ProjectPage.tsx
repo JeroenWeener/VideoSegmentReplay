@@ -41,9 +41,14 @@ const ProjectPage = () => {
     }
     // Return to home if project data is corrupt
     navigate('/')
-
-    return () => currentProjectService.setCurrentProject(null)
   }, [navigate, projectData])
+
+  /**
+   * componentWillUnmount
+   */
+  useEffect(() => {
+    return () => currentProjectService.setCurrentProject(null)
+  }, [])
 
   useEffect(() => {
     storeVolume(volume)
