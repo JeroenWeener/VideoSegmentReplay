@@ -57,10 +57,10 @@ const MomentPanelContainer = ({
         }
     }
 
-    const updateMoment = (oldMoment: Moment, updatedMoment: Moment): void => {
-        const updatedMoments = moments.map((m) => {
-            // Replace old moment
-            if (_.isEqual(m, oldMoment)) {
+    const updateMoment = (updatedMoment: Moment, index: number): void => {
+        const updatedMoments = moments.map((m, i) => {
+            // Replace old moment. Since multiple moments can be identical, only update the first
+            if (index === i) {
                 return updatedMoment
             }
 
@@ -84,7 +84,7 @@ const MomentPanelContainer = ({
                 playing={playing}
                 onStart={() => activateMoment(moment, index)}
                 onDelete={() => deleteMoment(index)}
-                onUpdate={(updatedMoment) => updateMoment(moment, updatedMoment)}
+                onUpdate={(updatedMoment) => updateMoment(updatedMoment, index)}
             />
         )}
 
