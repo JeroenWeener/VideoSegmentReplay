@@ -1,6 +1,6 @@
 import { LOG_SAFETY_CHECKS } from "../config"
 import { Moment, URLMoment } from "../models/moment.model"
-import { isSingleAlphanumericChar } from "./regex.util"
+import { isValidTrigger } from "./regex.util"
 
 /**
  * Formats seconds to a hh:mm:ss string.
@@ -28,7 +28,7 @@ export const secondsToHMSString = (seconds: number, showHours: boolean = false) 
 export const toUrlMoment = (moment: Moment): URLMoment => {
     return {
         s: moment.startTime,
-        t: moment.trigger,
+        ...(moment.trigger && { t: moment.trigger }),
     }
 }
 
@@ -41,7 +41,7 @@ export const toUrlMoment = (moment: Moment): URLMoment => {
 export const fromUrlMoment = (urlMoment: URLMoment): Moment => {
     return {
         startTime: urlMoment.s,
-        trigger: urlMoment.t,
+        ...(urlMoment.t && { trigger: urlMoment.t })
     }
 }
 
@@ -53,14 +53,14 @@ export const fromUrlMoment = (urlMoment: URLMoment): Moment => {
  * @param urlMoment the URLMoment that is inspected
  * @returns whether the URLMoment is considered safe for use
  */
- export const isURLMomentSafe = (urlMoment: URLMoment): boolean => {
+export const isURLMomentSafe = (urlMoment: URLMoment): boolean => {
     const momentProperties = ['s', 't']
 
     const containsOnlyDescribedProperties = Object.keys(urlMoment).every(property => momentProperties.includes(property))
 
     const startTimeIsNumber = typeof urlMoment.s === 'number'
 
-    const triggerIsUndefinedOrValidChar = !urlMoment.t || isSingleAlphanumericChar(urlMoment.t)
+    const triggerIsUndefinedOrValidChar = !urlMoment.t || isValidTrigger(urlMoment.t)
 
     if (LOG_SAFETY_CHECKS) {
         console.debug('\t--- Moment ---')

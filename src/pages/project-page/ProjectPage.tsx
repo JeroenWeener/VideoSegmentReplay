@@ -5,7 +5,6 @@ import './ProjectPage.css'
 import PlayerControl from '../../components/player-control/PlayerControl'
 import VideoPlayer from '../../components/video-player/VideoPlayer'
 import { projectFromBase64, projectToBase64 } from '../../utils/project.util'
-import { Project } from '../../models/project.model'
 import MomentPanelContainer from '../../components/moment-panel-container/MomentPanelContainer'
 import ReactPlayer from 'react-player'
 import ShortcutListener from '../../components/shortcut-listener/ShortcutListener'
@@ -18,7 +17,6 @@ const ProjectPage = () => {
   const navigate = useNavigate()
   const { projectData } = useParams()
 
-  const [project, setProject] = useState<Project>()
   // Expose player to seek, as this is not directly supported by ReactPlayer
   const [player, setPlayer] = useState<ReactPlayer>()
   const [playing, setPlaying] = useState<boolean>(false)
@@ -27,32 +25,15 @@ const ProjectPage = () => {
   const [currentTime, setCurrentTime] = useState<number>(0)
   const [duration, setDuration] = useState<number>(0)
   const [lastUserUpdate, setLastUserUpdate] = useState<number>(Date.now())
-
-
-  // Load project from URL
-  useEffect(() => {
-    loadProjectFromUrl()
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [projectData])
-
-  /**
-   * onDismount
-   */
-  useEffect(() => {
-    return () => currentProjectService.setCurrentProject(null)
-  }, [])
+  
+  const project = currentProjectService.getCurrentProject()
 
   useEffect(() => {
-    storeVolume(volume)
-  }, [volume])
-
-  const loadProjectFromUrl = () => {
     if (projectData) {
       const supposedProject = projectFromBase64(projectData)
       if (supposedProject) {
         setPlaying(false)
         setEnded(false)
-        setProject(supposedProject)
         addProjectToStorage(supposedProject)
         currentProjectService.setCurrentProject(supposedProject)
         return
@@ -60,34 +41,39 @@ const ProjectPage = () => {
     }
     // Return to home if project data is corrupt
     navigate('/')
-  }
 
-  const updateMoments = (moments: Moment[]) => {
+    return () => currentProjectService.setCurrentProject(null)
+  }, [navigate, projectData])
+
+  useEffect(() => {
+    storeVolume(volume)
+  }, [volume])
+
+  const handleMomentsUpdate = (moments: Moment[]) => {
     const updatedProject = {
       ...project!,
       moments,
     }
     updateProjectInStorage(project!, updatedProject)
-    setProject(updatedProject)
     navigate(`../project/${projectToBase64(updatedProject)}`, { replace: true })
   }
 
-  const play = () => {
+  const handlePlay = () => {
     setPlaying(true)
     setEnded(false)
   }
 
-  const pause = () => {
+  const handlePause = () => {
     setPlaying(false)
   }
 
-  const end = () => {
+  const handleEnd = () => {
     setPlaying(false)
     setEnded(true)
   }
 
-  const toggle = () => {
-    playing ? pause() : play()
+  const handleToggle = () => {
+    playing ? handlePause() : handlePlay()
   }
 
   /**
@@ -115,7 +101,7 @@ const ProjectPage = () => {
    * 
    * @param seconds proposed new current time for player in seconds
    */
-  const seek = (seconds: number) => {
+  const handleSeek = (seconds: number) => {
     setLastUserUpdate(Date.now())
     let s = seconds < 0 ? 0 : seconds
     s = s > duration ? duration : s
@@ -124,9 +110,9 @@ const ProjectPage = () => {
     player?.seekTo(s, 'seconds')
   }
 
-  const seekAndPlay = (seconds: number) => {
-    seek(seconds)
-    play()
+  const handleSeekAndPlay = (seconds: number) => {
+    handleSeek(seconds)
+    handlePlay()
   }
 
   return <>
@@ -137,10 +123,10 @@ const ProjectPage = () => {
             videoId={project.videoId}
             playing={playing}
             volume={volume}
-            onPlay={play}
-            onPause={pause}
+            onPlay={handlePlay}
+            onPause={handlePause}
             onProgress={handlePlayerProgress}
-            onEnded={end}
+            onEnded={handleEnd}
             setDuration={setDuration}
             setPlayer={setPlayer}
           ></VideoPlayer>
@@ -149,9 +135,9 @@ const ProjectPage = () => {
           <MomentPanelContainer
             playing={playing}
             moments={project.moments}
-            momentsUpdated={updateMoments}
+            updateMoments={handleMomentsUpdate}
             currentTime={currentTime}
-            seekTo={seekAndPlay}
+            seekTo={handleSeekAndPlay}
           />
         </div>
       </div>
@@ -162,16 +148,16 @@ const ProjectPage = () => {
       volume={volume}
       currentTime={currentTime}
       duration={duration}
-      onPlay={play}
-      onPause={pause}
-      onSeek={seek}
+      onPlay={handlePlay}
+      onPause={handlePause}
+      onSeek={handleSeek}
       setVolume={setVolume}
     ></PlayerControl>
 
     <ShortcutListener
       onMute={() => setVolume(volume === 0 ? 100 : 0)}
-      onToggle={toggle}
-      onSeekRelative={(seconds) => seek(currentTime + seconds)}
+      onToggle={handleToggle}
+      onSeekRelative={(seconds) => handleSeek(currentTime + seconds)}
     />
   </>
 }

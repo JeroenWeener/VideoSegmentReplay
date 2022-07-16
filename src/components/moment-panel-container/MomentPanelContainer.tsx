@@ -1,3 +1,4 @@
+import _ from 'lodash'
 import { useEffect, useState } from 'react'
 import { Moment } from '../../models/moment.model'
 import MomentPanel from '../moment-panel/MomentPanel'
@@ -7,7 +8,7 @@ import './MomentPanelContainer.css'
 interface MomentPanelContainerProps {
     playing: boolean
     moments: Moment[]
-    momentsUpdated: (moments: Moment[]) => void
+    updateMoments: (moments: Moment[]) => void
     currentTime: number
     seekTo: (seconds: number) => void
 }
@@ -15,7 +16,7 @@ interface MomentPanelContainerProps {
 const MomentPanelContainer = ({
     playing,
     moments,
-    momentsUpdated,
+    updateMoments,
     currentTime,
     seekTo,
 }: MomentPanelContainerProps) => {
@@ -37,7 +38,7 @@ const MomentPanelContainer = ({
     const createMoment = () => {
         const startTime = Math.round(currentTime * 10) / 10
         const updatedMoments = [...moments, { startTime: startTime }]
-        momentsUpdated(updatedMoments)
+        updateMoments(updatedMoments)
     }
 
     const deleteMoment = (momentIndex: number) => {
@@ -45,12 +46,17 @@ const MomentPanelContainer = ({
         if (momentIndex === activeMomentIndex) {
             setActiveMomentIndex(null)
         }
-        momentsUpdated(updatedMoments)
+        updateMoments(updatedMoments)
     }
 
     const activateMoment = (moment: Moment, index: number) => {
         setActiveMomentIndex(index)
         seekTo(moment.startTime)
+    }
+
+    const updateMoment = (oldMoment: Moment, updatedMoment: Moment): void => {
+        const updatedMoments = moments.map(m => _.isEqual(m, oldMoment) ? updatedMoment : m)
+        updateMoments(updatedMoments)
     }
 
     return <div className='panel-container'>
@@ -62,6 +68,7 @@ const MomentPanelContainer = ({
                 playing={playing}
                 onStart={() => activateMoment(moment, index)}
                 onDelete={() => deleteMoment(index)}
+                onUpdate={(updatedMoment) => updateMoment(moment, updatedMoment)}
             />
         )}
 

@@ -24,13 +24,13 @@ const ProjectDropdown = ({
     useEffect(() => {
         if (!open) return
 
-        const clickOutsideHandler = (e: MouseEvent) => {
+        const handleClickOutside = (e: MouseEvent) => {
             const container = document.getElementById('dropdown-projects-container')
             if (container && !container.contains(e.target as Node)) {
                 setOpen(false)
             }
         }
-        const escHandler = (e: KeyboardEvent) => {
+        const handleEsc = (e: KeyboardEvent) => {
             if (
                 e.key === 'Escape' ||
                 e.code === 'Escape' ||
@@ -40,11 +40,11 @@ const ProjectDropdown = ({
             }
         }
 
-        window.addEventListener('click', clickOutsideHandler)
-        window.addEventListener('keyup', escHandler)
+        window.addEventListener('click', handleClickOutside)
+        window.addEventListener('keyup', handleEsc)
         return () => {
-            window.removeEventListener('click', clickOutsideHandler)
-            window.removeEventListener('keyup', escHandler)
+            window.removeEventListener('click', handleClickOutside)
+            window.removeEventListener('keyup', handleEsc)
         }
     }, [currentProject, open])
 
