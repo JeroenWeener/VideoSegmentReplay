@@ -18,7 +18,7 @@ const ShortcutListener = ({
     onSeekRelative,
 }: ShortcutListenerProps) => {
     useEffect(() => {
-        const handleKeydown = (e: any): void => {
+        const handleKeyUp = (e: any): void => {
             if (
                 e.key === ' ' ||
                 e.code === 'Space' ||
@@ -82,8 +82,8 @@ const ShortcutListener = ({
                 onMute()
             }
         }
-        document.body.addEventListener('keydown', handleKeydown)
-        return () => document.body.removeEventListener('keydown', handleKeydown)
+        document.body.addEventListener('keyup', handleKeyUp)
+        return () => document.body.removeEventListener('keyup', handleKeyUp)
     }, [onMute, onSeekRelative, onToggle])
 
     return <></>

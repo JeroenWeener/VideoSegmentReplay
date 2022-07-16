@@ -1,9 +1,10 @@
 import { useEffect } from "react"
 import { isValidTrigger } from "../../utils/regex.util"
 import Dialog from "../dialog/Dialog"
+import './TriggerDialog.css'
 
 interface TriggerDialogProps {
-    onRegisterTrigger: (trigger: string) => void
+    onRegisterTrigger: (trigger?: string) => void
     onClose: () => void
 }
 
@@ -14,16 +15,30 @@ const TriggerDialog = ({
 
     useEffect(() => {
         const handleTriggerInput = (e: KeyboardEvent) => {
+            e.stopPropagation()
             if (isValidTrigger(e.key)) {
                 onRegisterTrigger(e.key)
+            } else if (
+                e.key === 'Backspace' ||
+                e.keyCode === 8 ||
+                e.code === 'Backspace'
+            ) {
+                onRegisterTrigger()
             }
         }
 
         window.addEventListener('keyup', handleTriggerInput)
+
         return () => window.removeEventListener('keyup', handleTriggerInput)
     }, [onRegisterTrigger])
 
-    return <Dialog onClose={onClose}>Press a key to register it as a trigger</Dialog>
+    return <Dialog onClose={onClose}>
+        <div className="trigger-dialog">
+            <div>Press a key to register it as a trigger</div>
+            <div className="small-text">OR</div>
+            <button className="remove-trigger-button" onClick={() => onRegisterTrigger()}>Remove trigger</button>
+        </div>
+    </Dialog>
 }
 
 export default TriggerDialog

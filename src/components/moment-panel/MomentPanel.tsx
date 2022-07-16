@@ -33,9 +33,11 @@ const MomentPanel = ({
         setShowTriggerDialog(true)
     }
 
-    const handleTriggerRegister = (trigger: string) => {
+    const handleTriggerRegister = (trigger?: string) => {
         setShowTriggerDialog(false)
-        onUpdate({ ...moment, trigger: trigger })
+        const updatedMoment = moment
+        delete updatedMoment.trigger
+        onUpdate({ ...updatedMoment, ...(trigger && { trigger: trigger }) })
     }
 
     return <>
@@ -49,7 +51,7 @@ const MomentPanel = ({
             </div>
             <div className='time'>{secondsToHMSString(moment.startTime)}</div>
         </div>
-        
+
         {showTriggerDialog && <TriggerDialog onRegisterTrigger={handleTriggerRegister} onClose={() => setShowTriggerDialog(false)} />}
     </>
 }
