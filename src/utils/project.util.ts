@@ -88,10 +88,13 @@ const isURLProjectSafe = (urlProject: URLProject): boolean => {
 
     const momentsIsArray = Array.isArray(urlProject.m)
     const momentsAreSafe = urlProject.m.every(moment => isURLMomentSafe(moment))
+    const triggers = urlProject.m.map(moment => moment.t).filter(t => t)
+    const momentsContainUniqueTriggers = new Set(triggers).size === triggers.length
 
     if (LOG_SAFETY_CHECKS) {
         console.debug('Moments is array:', momentsIsArray)
         console.debug('Moments are safe:', momentsAreSafe)
+        console.debug('Moments contain unique triggers:', momentsContainUniqueTriggers)
     }
 
     return (
@@ -99,6 +102,7 @@ const isURLProjectSafe = (urlProject: URLProject): boolean => {
         videoIdIsValid &&
         nameIsString &&
         momentsIsArray &&
-        momentsAreSafe
+        momentsAreSafe &&
+        momentsContainUniqueTriggers
     )
 }

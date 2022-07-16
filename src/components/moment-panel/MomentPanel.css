@@ -35,15 +35,19 @@
     0% {
         transform: scale(1);
     }
+
     25% {
         transform: scale(1.02);
     }
+
     50% {
         transform: scale(.98);
     }
+
     75% {
         transform: scale(1.03);
     }
+
     100% {
         transform: scale(1);
     }
@@ -53,12 +57,11 @@
     position: absolute;
     top: 10px;
     right: 10px;
-    height: 24px;
-    width: 24px;
-    cursor: pointer;
+    height: 1em;
+    width: 1em;
     background-repeat: no-repeat;
     background-position: center;
-    background-size: 24px 24px;
+    background-size: 1em 1em;
     background-image: url(data:image/svg+xml;utf8;base64,PHN2ZyBmaWxsPSIjMzMzIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgd2lkdGg9IjI0cHgiIGhlaWdodD0iMjRweCI+PHBhdGggZD0iTSA0LjcwNzAzMTIgMy4yOTI5Njg4IEwgMy4yOTI5Njg4IDQuNzA3MDMxMiBMIDEwLjU4NTkzOCAxMiBMIDMuMjkyOTY4OCAxOS4yOTI5NjkgTCA0LjcwNzAzMTIgMjAuNzA3MDMxIEwgMTIgMTMuNDE0MDYyIEwgMTkuMjkyOTY5IDIwLjcwNzAzMSBMIDIwLjcwNzAzMSAxOS4yOTI5NjkgTCAxMy40MTQwNjIgMTIgTCAyMC43MDcwMzEgNC43MDcwMzEyIEwgMTkuMjkyOTY5IDMuMjkyOTY4OCBMIDEyIDEwLjU4NTkzOCBMIDQuNzA3MDMxMiAzLjI5Mjk2ODggeiIvPjwvc3ZnPg==);
     transition: transform .1s;
 }
@@ -73,4 +76,31 @@
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
+}
+
+.trigger-indicator {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    opacity: .5;
+    font-size: 1em;
+    aspect-ratio: 1;
+    height: 1.5em;
+    line-height: 1.5em;
+    border: black solid 1px;
+    border-radius: 5px;
+    text-align: center;
+    transition: opacity .1s;
+}
+
+.trigger-indicator:hover {
+    opacity: 1;
+}
+
+.trigger-indicator .hidden {
+    display: none;
+}
+
+.trigger-indicator:hover .hidden {
+    display: inherit;
 }

@@ -9,3 +9,7 @@ export const extractVideoIdFromYouTubeUrl = (url: string): string | null => {
 export const isValidVideoId = (videoId: string): boolean => {
     return /^[0-9A-Za-z_-]{10}[048AEIMQUYcgkosw]$/.test(videoId)
 }
+
+export const isSingleAlphanumericChar = (s: string): boolean => {
+    return /^[0-9a-z]$/.test(s)
+}

@@ -1,5 +1,6 @@
 export interface Moment {
     startTime: number
+    trigger?: string
 }
 
 /**
@@ -7,4 +8,5 @@ export interface Moment {
  */
  export interface URLMoment {
     s: number
+    t?: string
 }

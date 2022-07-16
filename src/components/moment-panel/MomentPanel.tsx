@@ -23,11 +23,20 @@ const MomentPanel = ({
         event.stopPropagation()
     }
 
+    const handleTriggerClick = (e: any) => {
+        e.preventDefault()
+        console.log(e)
+        console.log('handleTriggerClick')
+    }
+
     return <div
         className={`moment-panel ${active ? 'active' : ''} ${playing && active ? 'pulse' : ''}`}
-        onClick={() => onStart()}
+        onClick={onStart}
     >
-        <div className="button-delete" onClick={(e) => deleteMoment(e)} />
+        <div className="button-delete" onClick={deleteMoment} />
+        <div className="trigger-indicator" onClick={handleTriggerClick}>
+            <span className={`${moment.trigger ? '' : 'hidden'}`}>{moment.trigger || '_'}</span>
+        </div>
         <div className='time'>{secondsToHMSString(moment.startTime)}</div>
     </div>
 }

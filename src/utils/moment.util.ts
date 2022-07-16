@@ -1,5 +1,6 @@
 import { LOG_SAFETY_CHECKS } from "../config"
 import { Moment, URLMoment } from "../models/moment.model"
+import { isSingleAlphanumericChar } from "./regex.util"
 
 /**
  * Formats seconds to a hh:mm:ss string.
@@ -27,6 +28,7 @@ export const secondsToHMSString = (seconds: number, showHours: boolean = false) 
 export const toUrlMoment = (moment: Moment): URLMoment => {
     return {
         s: moment.startTime,
+        t: moment.trigger,
     }
 }
 
@@ -39,6 +41,7 @@ export const toUrlMoment = (moment: Moment): URLMoment => {
 export const fromUrlMoment = (urlMoment: URLMoment): Moment => {
     return {
         startTime: urlMoment.s,
+        trigger: urlMoment.t,
     }
 }
 
@@ -51,20 +54,24 @@ export const fromUrlMoment = (urlMoment: URLMoment): Moment => {
  * @returns whether the URLMoment is considered safe for use
  */
  export const isURLMomentSafe = (urlMoment: URLMoment): boolean => {
-    const momentProperties = ['i', 's']
+    const momentProperties = ['s', 't']
 
     const containsOnlyDescribedProperties = Object.keys(urlMoment).every(property => momentProperties.includes(property))
 
     const startTimeIsNumber = typeof urlMoment.s === 'number'
 
+    const triggerIsUndefinedOrValidChar = !urlMoment.t || isSingleAlphanumericChar(urlMoment.t)
+
     if (LOG_SAFETY_CHECKS) {
         console.debug('\t--- Moment ---')
         console.debug('\tContains only described properties:', containsOnlyDescribedProperties)
         console.debug('\tStart time is number:', startTimeIsNumber)
+        console.debug('\tTrigger is undefined or valid char:', triggerIsUndefinedOrValidChar)
     }
 
     return (
         containsOnlyDescribedProperties &&
-        startTimeIsNumber
+        startTimeIsNumber &&
+        triggerIsUndefinedOrValidChar
     )
 }
