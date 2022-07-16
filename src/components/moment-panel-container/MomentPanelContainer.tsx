@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react'
 import { Moment } from '../../models/moment.model'
 import MomentPanel from '../moment-panel/MomentPanel'
 import NewMomentPanel from '../new-moment-panel/NewMomentPanel'
+import TriggerListener from '../trigger-listener/TriggerListener'
 import './MomentPanelContainer.css'
 
 interface MomentPanelContainerProps {
@@ -49,7 +50,10 @@ const MomentPanelContainer = ({
         updateMoments(updatedMoments)
     }
 
-    const activateMoment = (moment: Moment, index: number) => {
+    const activateMoment = (moment: Moment, index?: number) => {
+        if (index === undefined) {
+            index = moments.findIndex(m => _.isEqual(m, moment))
+        }
         setActiveMomentIndex(index)
         seekTo(moment.startTime)
     }
@@ -77,6 +81,11 @@ const MomentPanelContainer = ({
         {moments.length === 0 &&
             <div style={{ visibility: 'hidden' }}><NewMomentPanel /></div>
         }
+
+        <TriggerListener
+            moments={moments}
+            onPlay={activateMoment}
+        />
     </div>
 }
 

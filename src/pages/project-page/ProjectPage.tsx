@@ -25,7 +25,7 @@ const ProjectPage = () => {
   const [currentTime, setCurrentTime] = useState<number>(0)
   const [duration, setDuration] = useState<number>(0)
   const [lastUserUpdate, setLastUserUpdate] = useState<number>(Date.now())
-  
+
   const project = currentProjectService.getCurrentProject()
 
   useEffect(() => {

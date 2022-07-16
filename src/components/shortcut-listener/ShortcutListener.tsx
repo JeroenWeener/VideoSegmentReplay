@@ -82,8 +82,10 @@ const ShortcutListener = ({
                 onMute()
             }
         }
-        document.body.addEventListener('keyup', handleKeyUp)
-        return () => document.body.removeEventListener('keyup', handleKeyUp)
+        
+        window.addEventListener('keyup', handleKeyUp)
+
+        return () => window.removeEventListener('keyup', handleKeyUp)
     }, [onMute, onSeekRelative, onToggle])
 
     return <></>
