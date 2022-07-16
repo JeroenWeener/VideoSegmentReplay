@@ -1,25 +1,25 @@
 import { useEffect } from "react"
-import { Moment } from "../../models/moment.model"
 
 interface TriggerListenerProps {
-    moments: Moment[]
-    onPlay: (moment: Moment) => void
+    trigger?: string
+    onTrigger: () => void
 }
 
 const TriggerListener = ({
-    moments,
-    onPlay,
+    trigger,
+    onTrigger,
 }: TriggerListenerProps) => {
     useEffect(() => {
+        if (!trigger || !onTrigger) return
+
         const handleKeyUp = (e: KeyboardEvent) => {
-            const triggeredMoment = moments.find((m) => m.trigger === e.key)
-            triggeredMoment && onPlay(triggeredMoment)
+            trigger === e.key && onTrigger()
         }
 
         window.addEventListener('keyup', handleKeyUp)
 
         return () => window.removeEventListener('keyup', handleKeyUp)
-    }, [moments, onPlay])
+    }, [trigger, onTrigger])
 
     return <></>
 }

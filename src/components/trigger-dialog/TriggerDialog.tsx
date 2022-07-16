@@ -27,9 +27,10 @@ const TriggerDialog = ({
             }
         }
 
-        window.addEventListener('keyup', handleTriggerInput)
+        // Register event listeners at body so they take precedence over other listeners (that are attached to window)
+        document.body.addEventListener('keyup', handleTriggerInput)
 
-        return () => window.removeEventListener('keyup', handleTriggerInput)
+        return () => document.body.removeEventListener('keyup', handleTriggerInput)
     }, [onRegisterTrigger])
 
     return <Dialog onClose={onClose}>

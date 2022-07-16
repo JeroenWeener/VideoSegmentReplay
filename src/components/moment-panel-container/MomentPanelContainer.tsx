@@ -3,7 +3,6 @@ import { useEffect, useState } from 'react'
 import { Moment } from '../../models/moment.model'
 import MomentPanel from '../moment-panel/MomentPanel'
 import NewMomentPanel from '../new-moment-panel/NewMomentPanel'
-import TriggerListener from '../trigger-listener/TriggerListener'
 import './MomentPanelContainer.css'
 
 interface MomentPanelContainerProps {
@@ -59,7 +58,20 @@ const MomentPanelContainer = ({
     }
 
     const updateMoment = (oldMoment: Moment, updatedMoment: Moment): void => {
-        const updatedMoments = moments.map(m => _.isEqual(m, oldMoment) ? updatedMoment : m)
+        const updatedMoments = moments.map((m) => {
+            // Replace old moment
+            if (_.isEqual(m, oldMoment)) {
+                return updatedMoment
+            }
+
+            // Remove triggers from other moments that are under the same key
+            if (m.trigger && m.trigger === updatedMoment.trigger) {
+                return (({ trigger, ...m }) => m)(m)
+            }
+
+            return m
+        })
+
         updateMoments(updatedMoments)
     }
 
@@ -81,11 +93,6 @@ const MomentPanelContainer = ({
         {moments.length === 0 &&
             <div style={{ visibility: 'hidden' }}><NewMomentPanel /></div>
         }
-
-        <TriggerListener
-            moments={moments}
-            onPlay={activateMoment}
-        />
     </div>
 }
 

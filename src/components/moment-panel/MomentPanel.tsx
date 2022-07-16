@@ -2,6 +2,7 @@ import React, { MouseEvent, useState } from "react"
 import { Moment } from "../../models/moment.model"
 import { secondsToHMSString } from "../../utils/moment.util"
 import TriggerDialog from "../trigger-dialog/TriggerDialog"
+import TriggerListener from "../trigger-listener/TriggerListener"
 import './MomentPanel.css'
 
 interface MomentPanelProps {
@@ -35,9 +36,8 @@ const MomentPanel = ({
 
     const handleTriggerRegister = (trigger?: string) => {
         setShowTriggerDialog(false)
-        const updatedMoment = moment
-        delete updatedMoment.trigger
-        onUpdate({ ...updatedMoment, ...(trigger && { trigger: trigger }) })
+        const momentWithoutTrigger = (({ trigger, ...m }) => m)(moment)
+        onUpdate({ ...momentWithoutTrigger, ...(trigger && { trigger: trigger }) })
     }
 
     return <>
@@ -51,6 +51,8 @@ const MomentPanel = ({
             </div>
             <div className='time'>{secondsToHMSString(moment.startTime)}</div>
         </div>
+
+        <TriggerListener trigger={moment.trigger} onTrigger={onStart} />
 
         {showTriggerDialog && <TriggerDialog onRegisterTrigger={handleTriggerRegister} onClose={() => setShowTriggerDialog(false)} />}
     </>
