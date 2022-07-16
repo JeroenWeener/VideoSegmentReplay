@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import ProjectDialog from '../../components/project-dialog/ProjectDialog';
 import ProjectItem from '../../components/project-item/ProjectItem';
 import { Project } from '../../models/project.model';
 import { deleteProjectFromStorage, getProjectsFromStorage } from '../../utils/local-storage.util';
@@ -9,6 +10,7 @@ import './Home.css'
 const Home = () => {
   const navigate = useNavigate();
   const [projects, setProjects] = useState<Project[]>(getProjectsFromStorage())
+  const [projectDialogOpened, setProjectDialogOpened] = useState<boolean>(false)
 
   const handleProjectSelect = (project: Project) => {
     navigate(`../project/${projectToBase64(project)}`)
@@ -19,22 +21,31 @@ const Home = () => {
     setProjects(remainingProjects)
   }
 
-  return <div className='home-container'>
-    <button className='button-project-add' onClick={() => navigate('../project/new')}>Add project</button>
+  const handleProjectCreate = (projectName: string, videoId: string) => {
+    const newProject = { name: projectName, videoId: videoId, moments: [] }
+    handleProjectSelect(newProject)
+  }
 
-    <div className='project-container'>
-      <div className="project-rows">
-        {projects.sort((a, b) => a.name.localeCompare(b.name)).map((project, index) =>
-          <ProjectItem
-            key={index}
-            project={project}
-            onSelect={() => handleProjectSelect(project)}
-            onDelete={() => handleProjectDelete(project)}
-          />
-        )}
+  return <>
+    <div className='home-container'>
+      <button className='button-project-add' onClick={() => setProjectDialogOpened(true)}>Add project</button>
+
+      <div className='project-container'>
+        <div className="project-rows">
+          {projects.sort((a, b) => a.name.localeCompare(b.name)).map((project, index) =>
+            <ProjectItem
+              key={index}
+              project={project}
+              onSelect={() => handleProjectSelect(project)}
+              onDelete={() => handleProjectDelete(project)}
+            />
+          )}
+        </div>
       </div>
     </div>
-  </div>;
+
+    {projectDialogOpened && <ProjectDialog onCreate={handleProjectCreate} onClose={() => setProjectDialogOpened(false)} />}
+  </>
 }
 
 export default Home;

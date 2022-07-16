@@ -1,7 +1,6 @@
 import './App.css';
 import { Route, BrowserRouter, Routes, useLocation, Navigate } from 'react-router-dom';
 import Home from './pages/home/Home';
-import NewProject from './pages/new-project/NewProject';
 import Header from './components/header/Header';
 import { getProjectsFromStorage } from './utils/local-storage.util';
 import { useEffect, useState } from 'react';
@@ -31,7 +30,6 @@ const Content = () => {
     <div className='content'>
       <Routes>
         <Route path="/" element={<Home />} />
-        <Route path="/project/new" element={<NewProject />} />
         <Route path="/project/:projectData" element={<ProjectPage />} />
         <Route path="*" element={<Navigate to="/" />} />
       </Routes>
