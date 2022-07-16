@@ -93,6 +93,12 @@
     transition: opacity .1s;
 }
 
+@media (hover: none) {
+    .trigger-indicator {
+        display: none;
+    }
+}
+
 .trigger-indicator:hover {
     opacity: 1;
 }
