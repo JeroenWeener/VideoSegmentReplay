@@ -11,8 +11,9 @@ root.render(
   // <React.StrictMode>
   <>
     <link href='https://fonts.googleapis.com/css?family=Montserrat' rel='stylesheet'></link>
+    <link href='https://fonts.googleapis.com/css?family=Comfortaa' rel='stylesheet'></link>
     <App />
-  </> 
+  </>
   // </React.StrictMode>
 );
 

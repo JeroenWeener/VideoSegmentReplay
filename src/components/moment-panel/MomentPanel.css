@@ -118,6 +118,10 @@
     }
 }
 
+.trigger-indicator span {
+    font-family: 'Comfortaa';
+}
+
 .trigger-indicator:hover {
     opacity: 1;
 }
