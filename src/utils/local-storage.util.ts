@@ -77,3 +77,29 @@ export const deleteProjectFromStorage = (project: Project): Project[] => {
     setProjectsInStorage(remainingProjects)
     return remainingProjects
 }
+
+const VOLUME = 'volume'
+
+/**
+ * Store app volume in local storage.
+ * Volume is rounded to the nearest integer and clipped between 0-100.
+ * 
+ * @param volume the volume of the app that is to be stored
+ * @returns the final volume value
+ */
+export const storeVolume = (volume: number): number => {
+    let v = Math.round(volume)
+    v = v < 0 ? 0 : v
+    v = v > 100 ? 100 : v
+    localStorage.setItem(VOLUME, '' + v)
+    return v
+}
+
+/**
+ * Retrieve app volume from local storage or 100 if it is not set.
+ * 
+ * @returns the app volume
+ */
+export const retrieveVolume = (): number => {
+    return +(localStorage.getItem(VOLUME) || 100)
+}

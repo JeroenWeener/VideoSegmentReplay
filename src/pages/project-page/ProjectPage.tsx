@@ -9,7 +9,7 @@ import { Project } from '../../models/project.model'
 import MomentPanelContainer from '../../components/moment-panel-container/MomentPanelContainer'
 import ReactPlayer from 'react-player'
 import ShortcutListener from '../../components/shortcut-listener/ShortcutListener'
-import { addProjectToStorage, updateProjectInStorage } from '../../utils/local-storage.util'
+import { addProjectToStorage, retrieveVolume, storeVolume, updateProjectInStorage } from '../../utils/local-storage.util'
 import CurrentProjectService from '../../services/current-project-service'
 
 const currentProjectService = CurrentProjectService.getInstance()
@@ -22,7 +22,7 @@ const ProjectPage = () => {
   // Expose player to seek, as this is not directly supported by ReactPlayer
   const [player, setPlayer] = useState<ReactPlayer>()
   const [playing, setPlaying] = useState<boolean>(false)
-  const [volume, setVolume] = useState<number>(100)
+  const [volume, setVolume] = useState<number>(retrieveVolume())
   const [ended, setEnded] = useState<boolean>(false)
   const [currentTime, setCurrentTime] = useState<number>(0)
   const [duration, setDuration] = useState<number>(0)
@@ -41,6 +41,10 @@ const ProjectPage = () => {
   useEffect(() => {
     return () => currentProjectService.setCurrentProject(null)
   }, [])
+
+  useEffect(() => {
+    storeVolume(volume)
+  }, [volume])
 
   const loadProjectFromUrl = () => {
     if (projectData) {
