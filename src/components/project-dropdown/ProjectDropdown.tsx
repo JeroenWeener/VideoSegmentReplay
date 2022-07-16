@@ -17,9 +17,14 @@ const ProjectDropdown = ({
 }: ProjectDropdownProps) => {
     const navigate = useNavigate()
     const [open, setOpen] = useState<boolean>(false)
+    const [projectList, setProjectList] = useState<Project[]>(projects)
 
     const currentProject = currentProjectService.getCurrentProject()
-    const sortedProjects = currentProject ? [currentProject, ...projects.filter(p => !_.isEqual(p, currentProject))] : projects
+
+    useEffect(() => {
+        const sortedProjects = projects.sort((a, b) => a.name.localeCompare(b.name))
+        setProjectList(currentProject ? [currentProject, ...sortedProjects.filter(p => !_.isEqual(p, currentProject))] : sortedProjects)
+    }, [currentProject, projects])
 
     useEffect(() => {
         if (!open) return
@@ -58,7 +63,7 @@ const ProjectDropdown = ({
             className={`${open ? 'opened' : ''} dropdown-projects`}
             onClick={() => setOpen(e => !e)}
         >
-            {sortedProjects.map((project, index) => <div
+            {projectList.map((project, index) => <div
                 key={index}
                 className='dropdown-option-projects'
                 onClick={() => index !== 0 && openProject(project)}

@@ -24,7 +24,7 @@ const Home = () => {
 
     <div className='project-container'>
       <div className="project-rows">
-        {projects.map((project, index) =>
+        {projects.sort((a, b) => a.name.localeCompare(b.name)).map((project, index) =>
           <ProjectItem
             key={index}
             project={project}

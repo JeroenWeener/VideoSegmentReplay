@@ -1,3 +1,4 @@
+import _ from "lodash"
 import { LOG_SAFETY_CHECKS } from "../config"
 import { Project, URLProject } from "../models/project.model"
 import { fromUrlMoment, isURLMomentSafe, toUrlMoment } from "./moment.util"
@@ -61,6 +62,25 @@ const fromUrlProject = (urlProject: URLProject): Project => {
         videoId: urlProject.v,
         moments: urlProject.m.map(urlMoment => fromUrlMoment(urlMoment)),
     }
+}
+
+/**
+ * Estimates* whether two projects are the same.
+ * 
+ * Since projects do not have an ID, we can only estimate if they are meant to be the same project, but with an update.
+ * To assess this, we handle the following criteria:
+ * a. projects are different if their video ids are different
+ * b. projects are different if **both** their name and moments are different
+ * 
+ * This means that the app continues to recognize projects when users update a name or the moments.
+ * 
+ * @param projectA
+ * @param projectB
+ * @returns whether the projects are estimated to be equal
+ */
+export const isDifferentProject = (projectA: Project, projectB: Project): boolean => {
+    return projectA.videoId !== projectB.videoId ||
+        (projectA.name !== projectB.name && _.isEqual(projectA.moments, projectB.moments))
 }
 
 /**

@@ -35,19 +35,38 @@ export const createProjectInStorage = (projectName: string, videoId: string): Pr
 
 /**
  * Adds project to local storage if it is new.
+ * If the project name is already taken, append (#).
  * 
  * @param project the project to add
- * @returns the project
+ * @returns the new project with unique name
  */
 export const addProjectToStorage = (project: Project): Project => {
     const projects: Project[] = getProjectsFromStorage()
-    const isProjectNew = projects.find((p) => _.isEqual(p, project)) === undefined
-    let updatedProjects = projects
+
+    const isProjectNew = !projects.find((p) => _.isEqual(p, project))
+
     if (isProjectNew) {
-        updatedProjects.push(project)
+        const projectName = calculateProjectName(project.name, projects.map(p => p.name))
+
+        const newProject = { ...project, name: projectName }
+        setProjectsInStorage([...projects, newProject])
+        return newProject
     }
-    setProjectsInStorage(updatedProjects)
     return project
+}
+
+const calculateProjectName = (originalName: string, existingProjectNames: string[]): string => {
+    let counter = 0
+    let projectName
+
+    const updateName = (name: string) => counter++ === 0 ? name : `${name} (${counter - 1})`
+    const isProjectNameTaken = (name: string) => existingProjectNames.includes(name)
+
+    do {
+        projectName = updateName(originalName)
+    } while (isProjectNameTaken(projectName))
+
+    return projectName
 }
 
 /**

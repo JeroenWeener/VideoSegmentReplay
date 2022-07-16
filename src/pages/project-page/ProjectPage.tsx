@@ -4,7 +4,7 @@ import { Moment } from '../../models/moment.model'
 import './ProjectPage.css'
 import PlayerControl from '../../components/player-control/PlayerControl'
 import VideoPlayer from '../../components/video-player/VideoPlayer'
-import { projectFromBase64, projectToBase64 } from '../../utils/project.util'
+import { isDifferentProject, projectFromBase64, projectToBase64 } from '../../utils/project.util'
 import MomentPanelContainer from '../../components/moment-panel-container/MomentPanelContainer'
 import ReactPlayer from 'react-player'
 import ShortcutListener from '../../components/shortcut-listener/ShortcutListener'
@@ -32,15 +32,21 @@ const ProjectPage = () => {
     if (projectData) {
       const supposedProject = projectFromBase64(projectData)
       if (supposedProject) {
-        setPlaying(false)
-        setEnded(false)
-        addProjectToStorage(supposedProject)
-        currentProjectService.setCurrentProject(supposedProject)
+        // Reset player parameters if a new project is loaded
+        if (project && isDifferentProject(project, supposedProject)) {
+          setPlaying(false)
+          setEnded(false)
+        }
+        const addedProject = addProjectToStorage(supposedProject)
+        currentProjectService.setCurrentProject(addedProject)
         return
       }
     }
     // Return to home if project data is corrupt
     navigate('/')
+
+    // project is not a dependency as it is only set within this effect. Adding it as a dependency causes a callback loop
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [navigate, projectData])
 
   /**
@@ -138,11 +144,12 @@ const ProjectPage = () => {
         </div>
         <div className="moments-container">
           <MomentPanelContainer
+            key={project.videoId}
             playing={playing}
             moments={project.moments}
-            updateMoments={handleMomentsUpdate}
             currentTime={currentTime}
-            seekTo={handleSeekAndPlay}
+            onUpdateMoments={handleMomentsUpdate}
+            onSeekTo={handleSeekAndPlay}
           />
         </div>
       </div>

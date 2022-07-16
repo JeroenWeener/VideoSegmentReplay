@@ -1,5 +1,5 @@
 import _ from 'lodash'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { Moment } from '../../models/moment.model'
 import MomentPanel from '../moment-panel/MomentPanel'
 import NewMomentPanel from '../new-moment-panel/NewMomentPanel'
@@ -8,28 +8,26 @@ import './MomentPanelContainer.css'
 interface MomentPanelContainerProps {
     playing: boolean
     moments: Moment[]
-    updateMoments: (moments: Moment[]) => void
     currentTime: number
-    seekTo: (seconds: number) => void
+    onUpdateMoments: (moments: Moment[]) => void
+    onSeekTo: (seconds: number) => void
 }
 
 const MomentPanelContainer = ({
     playing,
     moments,
-    updateMoments,
     currentTime,
-    seekTo,
+    onUpdateMoments,
+    onSeekTo,
 }: MomentPanelContainerProps) => {
     const [activeMomentIndex, setActiveMomentIndex] = useState<number | null>(null)
 
-    useEffect(() => {
-        if (activeMomentIndex) {
-            const activeMoment = moments[activeMomentIndex]
-            if (currentTime < activeMoment.startTime) {
-                setActiveMomentIndex(null)
-            }
+    if (activeMomentIndex) {
+        const activeMoment = moments[activeMomentIndex]
+        if (currentTime < activeMoment?.startTime) {
+            setActiveMomentIndex(null)
         }
-    }, [activeMomentIndex, currentTime, moments])
+    }
 
     /**
      * Creates a Moment at the current time.
@@ -38,7 +36,7 @@ const MomentPanelContainer = ({
     const createMoment = () => {
         const startTime = Math.round(currentTime * 10) / 10
         const updatedMoments = [...moments, { startTime: startTime }]
-        updateMoments(updatedMoments)
+        onUpdateMoments(updatedMoments)
     }
 
     const deleteMoment = (momentIndex: number) => {
@@ -46,15 +44,17 @@ const MomentPanelContainer = ({
         if (momentIndex === activeMomentIndex) {
             setActiveMomentIndex(null)
         }
-        updateMoments(updatedMoments)
+        onUpdateMoments(updatedMoments)
     }
 
     const activateMoment = (moment: Moment, index?: number) => {
         if (index === undefined) {
             index = moments.findIndex(m => _.isEqual(m, moment))
         }
-        setActiveMomentIndex(index)
-        seekTo(moment.startTime)
+        if (index !== -1) {
+            setActiveMomentIndex(index)
+            onSeekTo(moment.startTime)
+        }
     }
 
     const updateMoment = (oldMoment: Moment, updatedMoment: Moment): void => {
@@ -72,7 +72,7 @@ const MomentPanelContainer = ({
             return m
         })
 
-        updateMoments(updatedMoments)
+        onUpdateMoments(updatedMoments)
     }
 
     return <div className='panel-container'>
