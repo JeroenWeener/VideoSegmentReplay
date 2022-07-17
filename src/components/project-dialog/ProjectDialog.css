@@ -22,8 +22,8 @@
     transition: outline-color .1s;
 }
 
-.project-dialog-form input:hover,
-.project-dialog-form input:focus {
+.project-dialog-form input[type=text]:hover,
+.project-dialog-form input[type=text]:focus {
     outline-color: var(--color-secondary);
 }
 
@@ -39,6 +39,10 @@
 .project-dialog-form input[type=submit]:hover,
 .project-dialog-form input[type=submit]:focus {
     background-position: right center;
+}
+
+.project-dialog-form input[type=submit]:focus:not(:disabled) {
+    outline-color: var(--color-secondary);
 }
 
 
