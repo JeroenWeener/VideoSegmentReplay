@@ -18,7 +18,7 @@ const ShortcutListener = ({
     onSeekRelative,
 }: ShortcutListenerProps) => {
     useEffect(() => {
-        const handleKeyUp = (e: any): void => {
+        const handleKeyUp = (e: KeyboardEvent): void => {
             if (
                 e.key === ' ' ||
                 e.code === 'Space' ||
@@ -28,6 +28,26 @@ const ShortcutListener = ({
                 onToggle()
             }
 
+            if (
+                e.key === 'k' ||
+                e.code === 'KeyK' ||
+                e.keyCode === 75
+            ) {
+                e.preventDefault()
+                onToggle()
+            }
+
+            if (
+                e.key === 'm' ||
+                e.code === 'KeyM' ||
+                e.keyCode === 77
+            ) {
+                e.preventDefault()
+                onMute()
+            }
+        }
+
+        const handleKeyDown = (e: KeyboardEvent): void => {
             if (
                 e.key === 'ArrowLeft' ||
                 e.code === 'ArrowLeft' ||
@@ -63,29 +83,15 @@ const ShortcutListener = ({
                 e.preventDefault()
                 onSeekRelative(10)
             }
-
-            if (
-                e.key === 'k' ||
-                e.code === 'KeyK' ||
-                e.keyCode === 75
-            ) {
-                e.preventDefault()
-                onToggle()
-            }
-
-            if (
-                e.key === 'm' ||
-                e.code === 'KeyM' ||
-                e.keyCode === 77
-            ) {
-                e.preventDefault()
-                onMute()
-            }
         }
-        
-        window.addEventListener('keyup', handleKeyUp)
 
-        return () => window.removeEventListener('keyup', handleKeyUp)
+        window.addEventListener('keyup', handleKeyUp)
+        window.addEventListener('keydown', handleKeyDown)
+
+        return () => {
+            window.removeEventListener('keyup', handleKeyUp)
+            window.removeEventListener('keydown', handleKeyDown)
+        }
     }, [onMute, onSeekRelative, onToggle])
 
     return <></>
