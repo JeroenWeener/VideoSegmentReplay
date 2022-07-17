@@ -1,0 +1,56 @@
+.projectRow {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    height: 3rem;
+    padding: 0 1rem;
+    background-color: var(--color-primary);
+    cursor: pointer;
+
+    &:hover {
+        background-color: #ddd;
+    }
+}
+
+.labelProjectName {
+    flex-grow: 1;
+    height: 3rem;
+    line-height: 3rem;
+}
+
+.buttonProjectDelete {
+    position: relative;
+    height: 24px;
+    width: 24px;
+    border: none;
+    background: none;
+    opacity: .7;
+    transition: all .1s;
+    cursor: pointer;
+    $cross-width: 1px;
+
+    &::before,
+    &::after {
+        position: absolute;
+        content: '';
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%) rotate(45deg);
+        background-color: var(--color-secondary);
+    }
+
+    &::before {
+        width: $cross-width;
+        height: 100%;
+    }
+
+    &::after {
+        width: 100%;
+        height: $cross-width;
+    }
+
+    &:hover {
+        transform: rotate(180deg) scale(1.1);
+        opacity: 1;
+    }
+}

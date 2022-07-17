@@ -1,5 +1,5 @@
 import { useEffect } from 'react'
-import './Dialog.css'
+import styles from './Dialog.module.scss'
 
 interface DialogProps {
     children: React.ReactNode,
@@ -12,8 +12,8 @@ const Dialog = ({
 }: DialogProps) => {
     useEffect(() => {
         const handleClickOutside = (e: MouseEvent) => {
-            const dialog = document.getElementById('dialog')
-            const backdrop = document.getElementById('dialog-backdrop')
+            const dialog = document.getElementById(styles.dialog)
+            const backdrop = document.getElementById(styles.backdrop)
             if (backdrop?.contains(e.target as Node) && !dialog?.contains(e.target as Node)) {
                 onClose()
             }
@@ -39,8 +39,8 @@ const Dialog = ({
     }, [onClose])
 
     return <>
-        <div id="dialog-backdrop">
-            <div id="dialog">
+        <div id={styles.backdrop}>
+            <div id={styles.dialog}>
                 {children}
             </div>
         </div>

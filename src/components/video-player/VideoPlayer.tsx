@@ -1,6 +1,6 @@
-import { useEffect, useRef, useState } from "react"
+import { useEffect, useState } from "react"
 import ReactPlayer from "react-player/lazy"
-import './VideoPlayer.css'
+import styles from './VideoPlayer.module.scss'
 
 interface VideoPlayerProps {
     videoId: string
@@ -19,7 +19,6 @@ const VideoPlayer = ({
     videoId,
     playing,
     volume,
-
     onPlay,
     onPause,
     onEnded,
@@ -27,9 +26,6 @@ const VideoPlayer = ({
     setDuration,
     setPlayer,
 }: VideoPlayerProps) => {
-    const videoWrapperRef = useRef<HTMLDivElement>(null)
-    const reactPlayerRef = useRef<ReactPlayer>(null)
-
     const [videoScale, setVideoScale] = useState<number>(1)
 
     useEffect(() => {
@@ -49,7 +45,8 @@ const VideoPlayer = ({
     const handleResize = () => {
         const maxVideoHeight = 289
         const maxVideoWidth = maxVideoHeight * 16 / 9
-        const parentWidth = videoWrapperRef.current?.clientWidth || 0
+        const parentWidth = document.getElementById(styles.videoWrapper)?.clientWidth || 0
+        
         if (parentWidth > maxVideoWidth) {
             const scale = parentWidth / maxVideoWidth
             setVideoScale(scale)
@@ -58,14 +55,13 @@ const VideoPlayer = ({
         }
     }
 
-    return <div className="video-wrapper" ref={videoWrapperRef} style={{
+    return <div id={styles.videoWrapper} style={{
         borderRadius: `${(window.innerWidth || 0) > 720 ? 5 * videoScale : 0}px`,
     }}>
-        <div className="video-scaling-container" style={{
+        <div className={styles.videoScalingContainer} style={{
             transform: `scale(${videoScale})`,
         }}>
             <ReactPlayer
-                ref={reactPlayerRef}
                 height='100%'
                 width='100%'
                 url={`https://www.youtube.com/embed/${videoId}`}

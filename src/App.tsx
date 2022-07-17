@@ -1,4 +1,4 @@
-import './App.css';
+import styles from './App.module.scss';
 import { Route, BrowserRouter, Routes, useLocation, Navigate } from 'react-router-dom';
 import Home from './pages/home/Home';
 import Header from './components/header/Header';
@@ -24,10 +24,10 @@ const Content = () => {
   }, [location])
 
   return <>
-    <div className='header-container'>
+    <div className={styles.headerContainer}>
       <Header projects={projects} />
     </div>
-    <div className='content'>
+    <div className={styles.content}>
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/project/:projectData" element={<ProjectPage />} />

@@ -1,5 +1,5 @@
 import { Project } from "../../models/project.model"
-import './ProjectItem.css'
+import styles from './ProjectItem.module.scss'
 
 interface ProjectItemProps {
     project: Project
@@ -12,9 +12,9 @@ const ProjectItem = ({
     onSelect,
     onDelete,
 }: ProjectItemProps) => {
-    return <div className="project-row">
-        <span className="label-project-name" onClick={onSelect}>{project.name}</span>
-        <button className="button-project-delete" onClick={onDelete} />
+    return <div className={styles.projectRow}>
+        <span className={styles.labelProjectName} onClick={onSelect}>{project.name}</span>
+        <button className={styles.buttonProjectDelete} onClick={onDelete} />
     </div>
 }
 

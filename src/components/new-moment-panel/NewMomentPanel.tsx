@@ -1,5 +1,5 @@
-import '../moment-panel/MomentPanel.css'
-import './NewMomentPanel.css'
+import panelStyles from '../moment-panel/MomentPanel.module.scss'
+import styles from './NewMomentPanel.module.scss'
 
 interface NewMomentPanelProps {
     onClick: () => void
@@ -7,10 +7,10 @@ interface NewMomentPanelProps {
 
 const NewMomentPanel = ({ onClick }: NewMomentPanelProps) => {
     return <div
-        className="moment-panel new-moment-panel"
+        className={panelStyles.momentPanel}
         onClick={onClick}
     >
-        <div className='plus' />
+        <div className={styles.plus} />
     </div>
 }
 

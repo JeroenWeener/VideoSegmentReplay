@@ -1,7 +1,7 @@
 import { useEffect } from "react"
 import { isValidTrigger } from "../../utils/regex.util"
 import Dialog from "../dialog/Dialog"
-import './TriggerDialog.css'
+import styles from './TriggerDialog.module.scss'
 
 interface TriggerDialogProps {
     onRegisterTrigger: (trigger?: string) => void
@@ -34,10 +34,10 @@ const TriggerDialog = ({
     }, [onRegisterTrigger])
 
     return <Dialog onClose={onClose}>
-        <div className="trigger-dialog">
+        <div className={styles.triggerDialog}>
             <div>Press a key to register it as a trigger</div>
-            <div className="small-text">OR</div>
-            <button className="remove-trigger-button" onClick={() => onRegisterTrigger()}>Remove trigger</button>
+            <div className={styles.smallText}>OR</div>
+            <button className={styles.removeTriggerButton} onClick={() => onRegisterTrigger()}>Remove trigger</button>
         </div>
     </Dialog>
 }

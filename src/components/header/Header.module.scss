@@ -4,7 +4,7 @@
     box-shadow: 0px 1px 1px rgb(0 0 0 / .15);
 }
 
-.header .header-content {
+.headerContent {
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -21,20 +21,20 @@
     overflow: hidden;
     cursor: pointer;
     user-select: none;
-}
 
-.logo span {
-    float: left;
-}
+    span {
+        float: left;
+    }
 
-.logo .logo-appear {
-    transition: opacity .2s, margin-left .2s .1s;
-    margin-left: -100%;
-    opacity: 0;
-}
+    .logoAppear {
+        transition: opacity .2s, margin-left .2s .1s;
+        margin-left: -100%;
+        opacity: 0;
+    }
 
-.logo:hover .logo-appear {
-    transition: margin-left .2s, opacity .2s .1s;
-    margin-left: 0;
-    opacity: 1;
+    &:hover .logoAppear {
+        transition: margin-left .2s, opacity .2s .1s;
+        margin-left: 0;
+        opacity: 1;
+    }
 }

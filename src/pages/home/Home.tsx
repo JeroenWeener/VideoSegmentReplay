@@ -5,7 +5,7 @@ import ProjectItem from '../../components/project-item/ProjectItem';
 import { Project } from '../../models/project.model';
 import { deleteProjectFromStorage, getProjectsFromStorage } from '../../utils/local-storage.util';
 import { projectToBase64 } from '../../utils/project.util';
-import './Home.css'
+import styles from './Home.module.scss'
 
 const Home = () => {
   const navigate = useNavigate();
@@ -27,11 +27,11 @@ const Home = () => {
   }
 
   return <>
-    <div className='home-container'>
-      <button className='button-project-add' onClick={() => setProjectDialogOpened(true)}>New project</button>
+    <div className={styles.homeContainer}>
+      <button className={styles.buttonProjectAdd} onClick={() => setProjectDialogOpened(true)}>New project</button>
 
-      <div className='project-container'>
-        <div className="project-rows">
+      <div className={styles.projectContainer}>
+        <div className={styles.projectRows}>
           {projects.sort((a, b) => a.name.localeCompare(b.name)).map((project, index) =>
             <ProjectItem
               key={index}

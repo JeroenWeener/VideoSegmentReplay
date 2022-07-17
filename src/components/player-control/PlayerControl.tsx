@@ -1,5 +1,5 @@
 import { secondsToHMSString } from "../../utils/moment.util"
-import './PlayerControl.css'
+import styles from './PlayerControl.module.scss'
 
 interface PlayerControlProps {
   playing: boolean
@@ -31,14 +31,14 @@ const PlayerControl = ({
     return `${currentHMS} / ${totalHMS}`
   }
 
-  return <div className="player-controls">
-    <button onClick={() => playing ? onPause() : onPlay()} className={`button-action ${playing ? 'pause' : ''}`} />
-    <button onClick={() => volume === 0 ? setVolume(100) : setVolume(0)} className={`button-mute ${volume === 100 ? '' : 'muted'}`}>
+  return <div className={styles.playerControls}>
+    <button onClick={() => playing ? onPause() : onPlay()} className={`${styles.buttonAction} ${playing ? styles.pause : ''}`} />
+    <button onClick={() => volume === 0 ? setVolume(100) : setVolume(0)} className={`${styles.buttonMute} ${volume === 100 ? '' : styles.muted}`}>
       <span></span>
     </button>
-    <span className='time-display'>{getTimeString()}</span>
+    <span className={styles.timeDisplay}>{getTimeString()}</span>
     <input
-      className='seek-bar'
+      className={styles.seekBar}
       type="range"
       min="0"
       max={duration}

@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { Moment } from '../../models/moment.model'
-import './ProjectPage.css'
+import styles from './ProjectPage.module.scss'
 import PlayerControl from '../../components/player-control/PlayerControl'
 import VideoPlayer from '../../components/video-player/VideoPlayer'
 import { isDifferentProject, projectFromBase64, projectToBase64 } from '../../utils/project.util'
@@ -128,8 +128,8 @@ const ProjectPage = () => {
 
   return <>
     {project &&
-      <div className="content-container">
-        <div className="player-container">
+      <div className={styles.contentContainer}>
+        <div className={styles.playerContainer}>
           <VideoPlayer
             videoId={project.videoId}
             playing={playing}
@@ -142,7 +142,7 @@ const ProjectPage = () => {
             setPlayer={setPlayer}
           ></VideoPlayer>
         </div>
-        <div className="moments-container">
+        <div className={styles.momentsContainer}>
           <MomentPanelContainer
             key={project.videoId}
             playing={playing}

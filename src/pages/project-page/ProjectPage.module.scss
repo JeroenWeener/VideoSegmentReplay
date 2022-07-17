@@ -1,0 +1,35 @@
+:root {
+    --player-control-height: 50px;
+}
+
+.contentContainer {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: calc(100% - var(--player-control-height));
+    column-gap: 1em;
+
+    .momentsContainer {
+        flex-basis: 100%;
+        display: flex;
+        flex-direction: column;
+        min-height: 0;
+    }
+}
+
+@media (min-width: 720px) {
+    .contentContainer {
+        flex-direction: row;
+        height: calc(100% - var(--player-control-height));
+        padding-top: 1em;
+
+        .playerContainer {
+            flex-basis: 100%;
+            padding: 10px 0 0 10px;
+        }
+
+        .momentsContainer {
+            flex-basis: 50%;
+        }
+    }
+}

@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom"
 import { Project } from "../../models/project.model"
 import CurrentProjectService from "../../services/current-project-service"
 import { projectToBase64 } from "../../utils/project.util"
-import './ProjectDropdown.css'
+import styles from './ProjectDropdown.module.scss'
 
 const currentProjectService = CurrentProjectService.getInstance()
 
@@ -30,7 +30,7 @@ const ProjectDropdown = ({
         if (!open) return
 
         const handleClickOutside = (e: MouseEvent) => {
-            const container = document.getElementById('dropdown-projects-container')
+            const container = document.getElementById(styles.dropdownProjectsContainer)
             if (container && !container.contains(e.target as Node)) {
                 setOpen(false)
             }
@@ -59,13 +59,13 @@ const ProjectDropdown = ({
 
     return <>
         {currentProject && <div
-            id="dropdown-projects-container"
-            className={`${open ? 'opened' : ''} dropdown-projects`}
+            id={styles.dropdownProjectsContainer}
+            className={`${open ? styles.opened : ''} ${styles.dropdownProjects}`}
             onClick={() => setOpen(e => !e)}
         >
             {projectList.map((project, index) => <div
                 key={index}
-                className='dropdown-option-projects'
+                className={styles.dropdownOptionProjects}
                 onClick={() => index !== 0 && openProject(project)}
             >
                 {project.name}

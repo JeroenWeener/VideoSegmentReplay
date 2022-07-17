@@ -3,7 +3,7 @@ import { useState } from 'react'
 import { Moment } from '../../models/moment.model'
 import MomentPanel from '../moment-panel/MomentPanel'
 import NewMomentPanel from '../new-moment-panel/NewMomentPanel'
-import './MomentPanelContainer.css'
+import styles from './MomentPanelContainer.module.scss'
 
 interface MomentPanelContainerProps {
     playing: boolean
@@ -75,7 +75,7 @@ const MomentPanelContainer = ({
         onUpdateMoments(updatedMoments)
     }
 
-    return <div className='panel-container'>
+    return <div className={styles.panelContainer}>
         {moments.map((moment: Moment, index: number) =>
             <MomentPanel
                 key={index}

@@ -1,0 +1,22 @@
+#videoWrapper {
+    /* magic number for which YouTube will not show relevant videos */
+    $video-player-max-height: 289px;
+    $video-player-aspect-ratio: 16 / 9;
+    aspect-ratio: $video-player-aspect-ratio;
+
+    .videoScalingContainer {
+        max-height: $video-player-max-height;
+        aspect-ratio: $video-player-aspect-ratio;
+        transform-origin: top left;
+    }
+}
+
+@media (min-width: 720px) {
+    #videoWrapper {
+        /* border-radius is set by component */
+
+        iframe {
+            border-radius: 5px;
+        }
+    }
+}
