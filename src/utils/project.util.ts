@@ -126,3 +126,18 @@ const isURLProjectSafe = (urlProject: URLProject): boolean => {
         momentsContainUniqueTriggers
     )
 }
+
+export const projectIdeas = [
+    {
+        name: 'Call me maybe - Carly Rae Jepsen',
+        videoUrl: 'https://www.youtube.com/watch?v=fWNaR-rxAic',
+    },
+    {
+        name: 'Jumpstyle 180 how-to',
+        videoUrl: 'https://www.youtube.com/watch?v=WqNlBjtueig',
+    },
+    {
+        name: 'Piano tutorial Let it Go',
+        videoUrl: 'https://www.youtube.com/watch?v=4Kh3IvMD4xE',
+    },
+]

@@ -28,7 +28,7 @@ const Home = () => {
 
   return <>
     <div className='home-container'>
-      <button className='button-project-add' onClick={() => setProjectDialogOpened(true)}>Add project</button>
+      <button className='button-project-add' onClick={() => setProjectDialogOpened(true)}>New project</button>
 
       <div className='project-container'>
         <div className="project-rows">
