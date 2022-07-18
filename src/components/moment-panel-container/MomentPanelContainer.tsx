@@ -26,6 +26,8 @@ const MomentPanelContainer = ({
     const [activeMomentId, setActiveMomentId] = useState<number | null>(null)
     const [momentsHistory, setMomentsHistory] = useState<Moment[][]>([[...initialMoments]])
     const [historyPointer, setHistoryPointer] = useState<number>(0)
+    const [undoPressed, setUndoPressed] = useState<boolean>(false)
+    const [redoPressed, setRedoPressed] = useState<boolean>(false)
 
     const currentMoments: Moment[] = momentsHistory[historyPointer] || []
 
@@ -55,9 +57,14 @@ const MomentPanelContainer = ({
      * Emits new current moments to parent.
      */
     const handleUndo = () => {
+        setUndoPressed(true)
         const newHistoryPointer = historyPointer === 0 ? 0 : historyPointer - 1
         setHistoryPointer(newHistoryPointer)
         onUpdateMoments(momentsHistory[newHistoryPointer])
+    }
+
+    const handleUndoReleased = () => {
+        setUndoPressed(false)
     }
 
     /**
@@ -65,9 +72,14 @@ const MomentPanelContainer = ({
      * Emits the new current moments to parent.
      */
     const handleRedo = () => {
+        setRedoPressed(true)
         const newHistoryPointer = historyPointer === momentsHistory.length - 1 ? historyPointer : historyPointer + 1
         setHistoryPointer(newHistoryPointer)
         onUpdateMoments(momentsHistory[newHistoryPointer])
+    }
+
+    const handleRedoReleased = () => {
+        setRedoPressed(false)
     }
 
     /**
@@ -114,13 +126,13 @@ const MomentPanelContainer = ({
     return <>
         <div className={styles.actionButtonContainer}>
             <button
-                className={`${styles.actionButton} ${historyPointer === 0 ? styles.disabled : ''}`}
+                className={`${styles.actionButton} ${historyPointer === 0 ? styles.disabled : ''} ${undoPressed ? styles.pressed : ''}`}
                 onClick={handleUndo}
             >
                 <MdUndo className={styles.actionButtonIcon} />
             </button>
             <button
-                className={`${styles.actionButton} ${historyPointer === momentsHistory.length - 1 ? styles.disabled : ''}`}
+                className={`${styles.actionButton} ${historyPointer === momentsHistory.length - 1 ? styles.disabled : ''} ${redoPressed ? styles.pressed : ''}`}
                 onClick={handleRedo}
             >
                 <MdRedo className={styles.actionButtonIcon} />
@@ -142,7 +154,7 @@ const MomentPanelContainer = ({
             <NewMomentPanel onClick={createMoment} />
         </div>
 
-        <HistoryShortcutListener onUndo={handleUndo} onRedo={handleRedo} />
+        <HistoryShortcutListener onUndo={handleUndo} onRedo={handleRedo} onUndoReleased={handleUndoReleased} onRedoReleased={handleRedoReleased} />
     </>
 }
 

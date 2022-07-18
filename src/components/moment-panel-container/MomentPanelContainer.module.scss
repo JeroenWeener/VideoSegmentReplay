@@ -24,8 +24,10 @@
     box-shadow: 0px 2px 2px rgb(0 0 0 / .15);
     padding: .5em;
     cursor: pointer;
+    transition: all .1s;
 
-    &:hover {
+    &:hover,
+    &.pressed:not(.disabled) {
         background-color: var(--color-hover);
     }
 
