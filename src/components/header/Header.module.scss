@@ -9,6 +9,7 @@
     align-items: center;
     justify-content: space-between;
     max-width: 1400px;
+    padding-left: calc(.5em + 10px);
     margin: 0 auto 0 auto;
     color: var(--color-secondary);
     font-size: 2em;
@@ -17,7 +18,7 @@
 
 @media (min-width: 720px) {
     .headerContent {
-        padding: 0 calc(.5em + 10px);
+        padding-right: calc(.5em + 10px);
     }
 }
 

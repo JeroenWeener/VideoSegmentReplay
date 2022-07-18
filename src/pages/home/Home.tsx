@@ -34,9 +34,11 @@ const Home = () => {
 
       <div className={styles.projectContainer}>
         {sortProjects(projects).map((project, index) =>
-          <div className={styles.projectRow}>
+          <div
+            key={index}
+            className={styles.projectRow}
+          >
             <ProjectItem
-              key={index}
               project={project}
               onSelect={() => handleProjectSelect(project)}
               onDelete={() => handleProjectDelete(project)}

@@ -4,7 +4,8 @@
   --color-hover: #eee;
   --color-secondary: #333;
   --color-accent: #3cd3ad;
-  --gradient-accent: linear-gradient(to right, #4cb8c4 0%, var(--color-accent) 51%, #4cb8c4 100%);
+  --color-accent-2: #4cb8c4;
+  --gradient-accent: linear-gradient(to right, var(--color-accent-2) 0%, var(--color-accent) 51%, var(--color-accent-2) 100%);
 }
 
 body {

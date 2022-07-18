@@ -1,0 +1,25 @@
+.spinner {
+    aspect-ratio: 1;
+    height: 80%;
+    border: 10px var(--color-accent) solid;
+    animation: morph 1.5s linear infinite, appear .5s;
+    border-radius: 50%;
+}
+
+@keyframes morph {
+    50% {
+        border-radius: 5%;
+        height: 60%;
+        border: 10px var(--color-accent-2) solid;
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+@keyframes appear {
+    from {
+        opacity: 0;
+    }
+}

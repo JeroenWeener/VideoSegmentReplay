@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react"
 import ReactPlayer from "react-player/lazy"
+import LoadingIndicator from "../loading-indicator/LoadingIndicator"
 import styles from './VideoPlayer.module.scss'
 
 interface VideoPlayerProps {
@@ -27,6 +28,7 @@ const VideoPlayer = ({
     setPlayer,
 }: VideoPlayerProps) => {
     const [videoScale, setVideoScale] = useState<number>(1)
+    const [loading, setLoading] = useState<boolean>(true)
 
     useEffect(() => {
         handleResize()
@@ -42,11 +44,15 @@ const VideoPlayer = ({
         return () => clearInterval(blurInterval)
     }, [])
 
+    useEffect(() => {
+        setLoading(true)
+    }, [videoId])
+
     const handleResize = () => {
         const maxVideoHeight = 289
         const maxVideoWidth = maxVideoHeight * 16 / 9
         const parentWidth = document.getElementById(styles.videoWrapper)?.clientWidth || 0
-        
+
         if (parentWidth > maxVideoWidth) {
             const scale = parentWidth / maxVideoWidth
             setVideoScale(scale)
@@ -55,44 +61,53 @@ const VideoPlayer = ({
         }
     }
 
+    const handleReady = (player: ReactPlayer): void => {
+        setPlayer(player)
+        setLoading(false)
+    }
+
     return <div id={styles.videoWrapper} style={{
         borderRadius: `${(window.innerWidth || 0) > 720 ? 5 * videoScale : 0}px`,
     }}>
         <div className={styles.videoScalingContainer} style={{
             transform: `scale(${videoScale})`,
         }}>
-            <ReactPlayer
-                height='100%'
-                width='100%'
-                url={`https://www.youtube.com/embed/${videoId}`}
-                progressInterval={1000 / 120}
-                playing={playing}
-                volume={volume}
-                config={{
-                    youtube: {
-                        playerVars: {
-                            autoplay: 0,
-                            cc_load_policy: 0,
-                            controls: 0,
-                            disablekb: 1,
-                            enablejsapi: 1,
-                            fs: 0,
-                            iv_load_policy: 3,
-                            loop: 0,
-                            modestbranding: 1,
-                            playsinline: 1,
-                            rel: 0,
+            {loading && <div className={styles.loadingIndicator}><LoadingIndicator /></div>}
+
+            <div className={`${styles.playerContainer} ${loading ? '' : styles.visible}`}>
+                <ReactPlayer
+                    height='100%'
+                    width='100%'
+                    url={`https://www.youtube.com/embed/${videoId}`}
+                    progressInterval={1000 / 120}
+                    playing={playing}
+                    volume={volume}
+                    config={{
+                        youtube: {
+                            playerVars: {
+                                autoplay: 0,
+                                cc_load_policy: 0,
+                                controls: 0,
+                                disablekb: 1,
+                                enablejsapi: 1,
+                                fs: 0,
+                                iv_load_policy: 3,
+                                loop: 0,
+                                modestbranding: 1,
+                                playsinline: 1,
+                                rel: 0,
+                            },
+                            embedOptions: {},
                         },
-                        embedOptions: {},
-                    },
-                }}
-                onPlay={onPlay}
-                onPause={onPause}
-                onProgress={({ playedSeconds }) => onProgress(playedSeconds)}
-                onEnded={onEnded}
-                onDuration={setDuration}
-                onReady={setPlayer}
-            />
+                    }}
+                    onPlay={onPlay}
+                    onPause={onPause}
+                    onProgress={({ playedSeconds }) => onProgress(playedSeconds)}
+                    onEnded={onEnded}
+                    onDuration={setDuration}
+                    onReady={(player) => handleReady(player)}
+                />
+            </div>
         </div>
     </div>
 }
