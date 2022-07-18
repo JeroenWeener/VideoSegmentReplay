@@ -9,7 +9,7 @@ import ProjectPage from './pages/project-page/ProjectPage';
 
 const App = () => {
   return <>
-    <BrowserRouter>
+    <BrowserRouter basename={`/${process.env.PUBLIC_URL}`}>
       <Content />
     </BrowserRouter>
   </>;
@@ -29,7 +29,7 @@ const Content = () => {
     </div>
     <div className={styles.content}>
       <Routes>
-        <Route path="/" element={<Home />} />
+        <Route path="" element={<Home />} />
         <Route path="/project/:projectData" element={<ProjectPage />} />
         <Route path="*" element={<Navigate to="/" />} />
       </Routes>
