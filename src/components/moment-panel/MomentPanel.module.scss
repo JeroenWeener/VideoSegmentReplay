@@ -71,7 +71,7 @@
     height: 100%;
     aspect-ratio: 1;
     opacity: .7;
-    transition: all .1s;
+    transition: transform .1s, opacity .1s;
     $cross-width: max(1px, 1%);
 
     &::before,
@@ -98,6 +98,10 @@
         transform: rotate(180deg) scale(1.1);
         opacity: 1;
     }
+
+    &.hidden {
+        visibility: hidden;
+    }
 }
 
 .triggerIndicator {
@@ -109,7 +113,7 @@
     text-align: center;
     transition: opacity .1s;
 
-    &:hover {
+    &:not(.hidden):hover {
         opacity: 1;
     }
 
@@ -123,6 +127,10 @@
 
     &:hover .hidden {
         display: inherit;
+    }
+
+    &.hidden {
+        border-color: transparent;
     }
 }
 

@@ -9,6 +9,7 @@ interface MomentPanelProps {
     moment: Moment
     active: boolean
     playing: boolean
+    editing: boolean
     onStart: () => void
     onDelete: () => void
     onUpdate: (updatedMoment: Moment) => void
@@ -18,6 +19,7 @@ const MomentPanel = ({
     moment,
     active,
     playing,
+    editing,
     onStart,
     onDelete,
     onUpdate,
@@ -56,11 +58,11 @@ const MomentPanel = ({
             onClick={onStart}
         >
             <div className={styles.header}>
-                <div className={styles.triggerIndicator} onClick={handleTriggerClick}>
+                <div className={`${styles.triggerIndicator} ${editing ? '' : styles.hidden}`} onClick={(e) => editing && handleTriggerClick(e)}>
                     <span className={`${moment.trigger ? '' : styles.hidden}`}>{moment.trigger || '_'}</span>
                 </div>
 
-                <div className={styles.buttonDelete} onClick={deleteMoment} />
+                <div className={`${styles.buttonDelete} ${editing ? '' : styles.hidden}`} onClick={(e) => editing && deleteMoment(e)} />
             </div>
             {moment.description !== undefined ? <>
                 <div className={styles.description}>{moment.description}</div>

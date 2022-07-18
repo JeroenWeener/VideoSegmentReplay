@@ -5,8 +5,8 @@ import HistoryShortcutListener from '../history-shortcut-listener/HistoryShortcu
 import MomentPanel from '../moment-panel/MomentPanel'
 import NewMomentPanel from '../new-moment-panel/NewMomentPanel'
 import styles from './MomentPanelContainer.module.scss'
-import { MdUndo } from 'react-icons/md'
-import { MdRedo } from 'react-icons/md'
+import { MdEdit, MdEditOff, MdRedo, MdUndo } from 'react-icons/md'
+import EditModeShortcutListener from '../edit-mode-shortcut-listener/EditModeShortcutListener'
 
 interface MomentPanelContainerProps {
     playing: boolean
@@ -28,6 +28,8 @@ const MomentPanelContainer = ({
     const [historyPointer, setHistoryPointer] = useState<number>(0)
     const [undoPressed, setUndoPressed] = useState<boolean>(false)
     const [redoPressed, setRedoPressed] = useState<boolean>(false)
+    const [editing, setEditing] = useState<boolean>(false)
+    const [editPressed, setEditPressed] = useState<boolean>(false)
 
     const currentMoments: Moment[] = momentsHistory[historyPointer] || []
 
@@ -123,6 +125,15 @@ const MomentPanelContainer = ({
         updateMoments(updatedMoments)
     }
 
+    const toggleEditMode = () => {
+        setEditPressed(false)
+        setEditing(b => !b)
+    }
+
+    const handleEditPressed = () => {
+        setEditPressed(true)
+    }
+
     return <>
         <div className={styles.actionButtonContainer}>
             <button
@@ -137,6 +148,12 @@ const MomentPanelContainer = ({
             >
                 <MdRedo className={styles.actionButtonIcon} />
             </button>
+            <button
+                className={`${styles.actionButton} ${editPressed ? styles.pressed : ''}`}
+                onClick={toggleEditMode}
+            >
+                {editing ? <MdEditOff className={styles.actionButtonIcon} /> : <MdEdit className={styles.actionButtonIcon} />}
+            </button>
         </div>
         <div className={styles.panelContainer}>
             {currentMoments.map(moment =>
@@ -145,6 +162,7 @@ const MomentPanelContainer = ({
                     moment={moment}
                     active={moment.id === activeMomentId}
                     playing={playing}
+                    editing={editing}
                     onStart={() => activateMoment(moment)}
                     onDelete={() => deleteMoment(moment)}
                     onUpdate={updateMoment}
@@ -155,6 +173,7 @@ const MomentPanelContainer = ({
         </div>
 
         <HistoryShortcutListener onUndo={handleUndo} onRedo={handleRedo} onUndoReleased={handleUndoReleased} onRedoReleased={handleRedoReleased} />
+        <EditModeShortcutListener onToggleEditModePressed={handleEditPressed} onToggleEditMode={toggleEditMode} />
     </>
 }
 
