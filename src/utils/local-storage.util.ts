@@ -1,60 +1,65 @@
-import _ from "lodash"
-import { Project } from "../models/project.model"
+import { Moment } from "../models/moment.model"
+import { Project, UnidentifiedProject } from "../models/project.model"
+import { buildMoment } from "./moment.util"
+import { areEqualProjects, buildProject } from "./project.util"
 
 const PROJECTS = 'projects'
 
+/**
+ * Retrieves the projects from storage.
+ * 
+ * @returns the projects in storage
+ */
 export const getProjectsFromStorage = (): Project[] => {
     const projectsJSON = localStorage.getItem(PROJECTS)
     return projectsJSON ? JSON.parse(projectsJSON) : []
 }
 
+/**
+ * Overwrites the projects in storage
+ * 
+ * @param projects the projects
+ */
 export const setProjectsInStorage = (projects: Project[]): void => {
     localStorage.setItem(PROJECTS, JSON.stringify(projects))
 }
 
 /**
- * Creates new project and stores it in local storage. Returns the new project.
+ * Adds project to local storage if it is new or updates it if it is already there.
  * 
- * @param projectName the name of the project
- * @param videoId the YouTube video ID of the video of the project
- * @returns the created project
- */
-export const createProjectInStorage = (projectName: string, videoId: string): Project => {
-    const projects: Project[] = getProjectsFromStorage()
-    const newProject = {
-        name: projectName,
-        videoId: videoId,
-        moments: [],
-    }
-
-    const updatedProjects = [...projects, newProject]
-    setProjectsInStorage(updatedProjects)
-
-    return newProject
-}
-
-/**
- * Adds project to local storage if it is new.
- * If the project name is already taken, append (#).
+ * If the project is new, but its name is already taken, the name is appended with '(#)'.
  * 
  * @param project the project to add
- * @returns the new project with unique name
+ * @returns the new or updated project
  */
-export const addProjectToStorage = (project: Project): Project => {
+export const addProjectToStorage = (project: UnidentifiedProject): Project => {
     const projects: Project[] = getProjectsFromStorage()
 
-    const isProjectNew = !projects.find((p) => _.isEqual(p, project))
+    const existingProject: Project | undefined = projects.find(p => areEqualProjects(p, project))
 
-    if (isProjectNew) {
+    if (!existingProject) {
         const projectName = calculateProjectName(project.name, projects.map(p => p.name))
 
-        const newProject = { ...project, name: projectName }
+        const newProject = { ...buildProject(project), name: projectName }
         setProjectsInStorage([...projects, newProject])
         return newProject
     }
-    return project
+
+    const updatedMoments: Moment[] = project.moments.map(m => buildMoment(m))
+    const updatedProject: Project = { ...existingProject, ...project, moments: updatedMoments }
+    const otherProjects: Project[] = projects.filter(p => !areEqualProjects(p, existingProject))
+    setProjectsInStorage([...otherProjects, updatedProject])
+    return updatedProject
 }
 
+/**
+ * Calculates the name for a project. This will be the original name, unless it is already taken.
+ * Then, it will append '(#)' to the name with # the lowest number to make the number unique.
+ * 
+ * @param originalName the desired name of the project
+ * @param existingProjectNames the names of all other projects
+ * @returns originalName or originalName + '(#)'
+ */
 const calculateProjectName = (originalName: string, existingProjectNames: string[]): string => {
     let counter = 0
     let projectName
@@ -71,15 +76,13 @@ const calculateProjectName = (originalName: string, existingProjectNames: string
 
 /**
  * Updates a project in local storage. Returns the updated list of projects from local storage.
- * As projects have no unique identifier, the function requires the old project in addition to the updated one.
  * 
- * @param oldProject the former project
  * @param newProject the updated project
  * @returns the updated list of projects in local storage
  */
-export const updateProjectInStorage = (oldProject: Project, newProject: Project): Project[] => {
+export const updateProjectInStorage = (newProject: Project): Project[] => {
     const projects: Project[] = getProjectsFromStorage()
-    const updatedProjects = projects.map(p => _.isEqual(p, oldProject) ? newProject : p)
+    const updatedProjects = projects.map(p => p.id === newProject.id ? newProject : p)
     setProjectsInStorage(updatedProjects)
     return updatedProjects
 }
@@ -92,7 +95,7 @@ export const updateProjectInStorage = (oldProject: Project, newProject: Project)
  */
 export const deleteProjectFromStorage = (project: Project): Project[] => {
     const projects: Project[] = getProjectsFromStorage()
-    const remainingProjects = projects.filter(p => !_.isEqual(p, project))
+    const remainingProjects = projects.filter(p => p.id !== project.id)
     setProjectsInStorage(remainingProjects)
     return remainingProjects
 }

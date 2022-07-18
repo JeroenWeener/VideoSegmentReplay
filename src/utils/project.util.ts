@@ -1,8 +1,9 @@
 import _ from "lodash"
 import { LOG_SAFETY_CHECKS } from "../config"
-import { Project, URLProject } from "../models/project.model"
-import { fromUrlMoment, isURLMomentSafe, toUrlMoment } from "./moment.util"
+import { Project, UnidentifiedProject, URLProject } from "../models/project.model"
+import { buildMoment, fromUrlMoment, isURLMomentSafe, toUrlMoment } from "./moment.util"
 import { isValidVideoId } from "./regex.util"
+import { areEqualMoments } from "./moment.util"
 
 /**
  * Returns the provided project as URLProject in Base64 encoding.
@@ -24,7 +25,7 @@ export const projectToBase64 = (project: Project): string => {
  * @param encodedString the supposed Base64 encoded URLProject
  * @returns the encoded project, or null if the encoding is faulty in any way
  */
-export const projectFromBase64 = (encodedString: string): (Project | null) => {
+export const projectFromBase64 = (encodedString: string): UnidentifiedProject | null => {
     try {
         const strippedJsonString: string = window.atob(encodedString)
         // Restore quotes round property names
@@ -51,12 +52,12 @@ const toUrlProject = (project: Project): URLProject => {
 }
 
 /**
- * Returns Project from URLProject.
+ * Returns UnidentifiedProject from URLProject.
  * 
  * @param urlProject
- * @returns Project
+ * @returns UnidentifiedProject
  */
-const fromUrlProject = (urlProject: URLProject): Project => {
+const fromUrlProject = (urlProject: URLProject): UnidentifiedProject => {
     return {
         name: urlProject.n,
         videoId: urlProject.v,
@@ -65,22 +66,77 @@ const fromUrlProject = (urlProject: URLProject): Project => {
 }
 
 /**
- * Estimates* whether two projects are the same.
+ * Builds a new Project.
  * 
- * Since projects do not have an ID, we can only estimate if they are meant to be the same project, but with an update.
- * To assess this, we handle the following criteria:
- * a. projects are different if their video ids are different
- * b. projects are different if **both** their name and moments are different
+ * @param projectName the name of the project
+ * @param videoId the id of the video associated with the project
+ * @returns a new Project
+ */
+export const buildNewProject = (projectName: string, videoId: string): Project => {
+    return {
+        id: Math.floor(Math.random() * Number.MAX_SAFE_INTEGER),
+        name: projectName,
+        videoId: videoId,
+        moments: [],
+    }
+}
+
+/**
+ * Builds a Project from an UnidentifiedProject by adding a random ID.
  * 
- * This means that the app continues to recognize projects when users update a name or the moments.
+ * @param project a project without ID
+ * @returns the provided project with an ID
+ */
+export const buildProject = (project: UnidentifiedProject): Project => {
+    return {
+        ...project,
+        id: Math.floor(Math.random() * Number.MAX_SAFE_INTEGER),
+        moments: project.moments.map(m => buildMoment(m)),
+    }
+}
+
+/**
+ * Compares 2 projects.
+ * 
+ * Projects are equal if:
+ * - they have the same ID (if both are of type Project)
+ * - they have the same videoID AND
+ *   - they have the same name OR their moments are considered equal
  * 
  * @param projectA
  * @param projectB
- * @returns whether the projects are estimated to be equal
+ * @returns whether projectA and projectB are considered equal
  */
-export const isDifferentProject = (projectA: Project, projectB: Project): boolean => {
-    return projectA.videoId !== projectB.videoId ||
-        (projectA.name !== projectB.name && _.isEqual(projectA.moments, projectB.moments))
+export const areEqualProjects = (projectA: Project | UnidentifiedProject, projectB: Project | UnidentifiedProject): boolean => {
+    if ('id' in projectA && 'id' in projectB) {
+        return projectA.id === projectB.id
+    }
+
+    if (projectA.videoId !== projectB.videoId) {
+        return false
+    }
+
+    const sameName = projectA.name === projectB.name
+    const sameNumberOfMoments = projectA.moments.length === projectB.moments.length
+    const sameMoments = sameNumberOfMoments && _.zip(projectA.moments, projectB.moments).every(([ma, mb]) => areEqualMoments(ma!, mb!))
+
+    return sameName || sameMoments
+}
+
+/**
+ * Sorts projects by name. If projects have equal names, sort according to video id.
+ * 
+ * @param projects
+ * @returns projects, sorted
+ */
+export const sortProjects = (projects: Project[]): Project[] => {
+    return projects.sort((projectA, projectB) => {
+        const nameComparison = projectA.name.localeCompare(projectB.name)
+        if (nameComparison === 0) {
+            return projectA.videoId.localeCompare(projectB.videoId)
+        }
+        return nameComparison
+    })
 }
 
 /**

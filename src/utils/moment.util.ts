@@ -1,5 +1,6 @@
+import _ from "lodash"
 import { LOG_SAFETY_CHECKS } from "../config"
-import { Moment, URLMoment } from "../models/moment.model"
+import { Moment, UnidentifiedMoment, URLMoment } from "../models/moment.model"
 import { isValidTrigger } from "./regex.util"
 
 /**
@@ -33,16 +34,65 @@ export const toUrlMoment = (moment: Moment): URLMoment => {
 }
 
 /**
- * Returns Moment from URLMoment.
+ * Returns UnidentifiedMoment from URLMoment.
  * 
  * @param urlMoment
- * @returns Moment
+ * @returns UnIdentifiedMoment
  */
-export const fromUrlMoment = (urlMoment: URLMoment): Moment => {
+export const fromUrlMoment = (urlMoment: URLMoment): UnidentifiedMoment => {
     return {
         startTime: urlMoment.s,
         ...(urlMoment.t && { trigger: urlMoment.t })
     }
+}
+
+/**
+ * Builds a new Moment.
+ * 
+ * This Moment will not have a trigger.
+ * 
+ * @param startTime the start time of the moment
+ * @returns a new Moment consisting of an ID and a start time
+ */
+export const buildNewMoment = (startTime: number): Moment => {
+    return {
+        id: Math.floor(Math.random() * Number.MAX_SAFE_INTEGER),
+        startTime: startTime,
+    }
+}
+
+/**
+ * Builds a Moment from an UnidentifiedMoment by adding a random ID.
+ * 
+ * @param moment a moment without ID
+ * @returns the provided moment with an ID
+ */
+export const buildMoment = (moment: UnidentifiedMoment): Moment => {
+    return {
+        id: Math.floor(Math.random() * Number.MAX_SAFE_INTEGER),
+        ...moment,
+    }
+}
+
+/**
+ * Compares 2 moments.
+ * 
+ * Moments are equal if:
+ * - they have the same ID (if both are of type Moment)
+ * - at least one of them does not have an ID AND their properties are identical (bar trigger)
+ * 
+ * @param momentA
+ * @param momentB
+ * @returns whether momentA and momentB are considered equal
+ */
+export const areEqualMoments = (momentA: Moment | UnidentifiedMoment, momentB: Moment | UnidentifiedMoment): boolean => {
+    if ('id' in momentA && 'id' in momentB) {
+        return momentA.id === momentB.id
+    }
+
+    const strippedMomentA = 'id' in momentA ? (({ id, trigger, ...m }) => m)(momentA) : momentA
+    const strippedMomentB = 'id' in momentB ? (({ id, trigger, ...m }) => m)(momentB) : momentB
+    return _.isEqual(strippedMomentA, strippedMomentB)
 }
 
 /**

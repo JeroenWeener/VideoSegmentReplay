@@ -4,12 +4,13 @@ import { Moment } from '../../models/moment.model'
 import styles from './ProjectPage.module.scss'
 import PlayerControl from '../../components/player-control/PlayerControl'
 import VideoPlayer from '../../components/video-player/VideoPlayer'
-import { isDifferentProject, projectFromBase64, projectToBase64 } from '../../utils/project.util'
+import { areEqualProjects, projectFromBase64, projectToBase64 } from '../../utils/project.util'
 import MomentPanelContainer from '../../components/moment-panel-container/MomentPanelContainer'
 import ReactPlayer from 'react-player'
 import ShortcutListener from '../../components/shortcut-listener/ShortcutListener'
 import { addProjectToStorage, retrieveVolume, storeVolume, updateProjectInStorage } from '../../utils/local-storage.util'
 import CurrentProjectService from '../../services/current-project-service'
+import { Project, UnidentifiedProject } from '../../models/project.model'
 
 const currentProjectService = CurrentProjectService.getInstance()
 
@@ -30,15 +31,15 @@ const ProjectPage = () => {
 
   useEffect(() => {
     if (projectData) {
-      const supposedProject = projectFromBase64(projectData)
+      const supposedProject: UnidentifiedProject | null = projectFromBase64(projectData)
       if (supposedProject) {
         // Reset player parameters if a new project is loaded
-        if (project && isDifferentProject(project, supposedProject)) {
+        if (!project || !areEqualProjects(project, supposedProject)) {
           setPlaying(false)
           setEnded(false)
+          const addedProject: Project = addProjectToStorage(supposedProject)
+          currentProjectService.setCurrentProject(addedProject)
         }
-        const addedProject = addProjectToStorage(supposedProject)
-        currentProjectService.setCurrentProject(addedProject)
         return
       }
     }
@@ -60,13 +61,31 @@ const ProjectPage = () => {
     storeVolume(volume)
   }, [volume])
 
+  /**
+   * Updates the project:
+   * - updates project in storage
+   * - sets current project in service
+   * - update URL
+   * 
+   * @param updatedProject the updated project
+   */
+  const updateProject = (updatedProject: Project) => {
+    updateProjectInStorage(updatedProject)
+    currentProjectService.setCurrentProject(updatedProject)
+    navigate(`../project/${projectToBase64(updatedProject)}`, { replace: true })
+  }
+
+  /**
+   * Updates the moments of the project by calling updateProject()
+   * 
+   * @param moments the updated moments
+   */
   const handleMomentsUpdate = (moments: Moment[]) => {
     const updatedProject = {
       ...project!,
       moments,
     }
-    updateProjectInStorage(project!, updatedProject)
-    navigate(`../project/${projectToBase64(updatedProject)}`, { replace: true })
+    updateProject(updatedProject)
   }
 
   const handlePlay = () => {
@@ -144,9 +163,9 @@ const ProjectPage = () => {
         </div>
         <div className={styles.momentsContainer}>
           <MomentPanelContainer
-            key={project.videoId}
+            key={project.id}
             playing={playing}
-            moments={project.moments}
+            initialMoments={project.moments}
             currentTime={currentTime}
             onUpdateMoments={handleMomentsUpdate}
             onSeekTo={handleSeekAndPlay}

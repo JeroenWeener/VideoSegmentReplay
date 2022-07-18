@@ -3,7 +3,7 @@ import { useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom"
 import { Project } from "../../models/project.model"
 import CurrentProjectService from "../../services/current-project-service"
-import { projectToBase64 } from "../../utils/project.util"
+import { projectToBase64, sortProjects } from "../../utils/project.util"
 import styles from './ProjectDropdown.module.scss'
 
 const currentProjectService = CurrentProjectService.getInstance()
@@ -22,7 +22,7 @@ const ProjectDropdown = ({
     const currentProject = currentProjectService.getCurrentProject()
 
     useEffect(() => {
-        const sortedProjects = projects.sort((a, b) => a.name.localeCompare(b.name))
+        const sortedProjects = sortProjects(projects)
         setProjectList(currentProject ? [currentProject, ...sortedProjects.filter(p => !_.isEqual(p, currentProject))] : sortedProjects)
     }, [currentProject, projects])
 

@@ -4,7 +4,7 @@ import ProjectDialog from '../../components/project-dialog/ProjectDialog';
 import ProjectItem from '../../components/project-item/ProjectItem';
 import { Project } from '../../models/project.model';
 import { deleteProjectFromStorage, getProjectsFromStorage } from '../../utils/local-storage.util';
-import { projectToBase64 } from '../../utils/project.util';
+import { buildNewProject, projectToBase64, sortProjects } from '../../utils/project.util';
 import styles from './Home.module.scss'
 
 const Home = () => {
@@ -22,8 +22,7 @@ const Home = () => {
   }
 
   const handleProjectCreate = (projectName: string, videoId: string) => {
-    const newProject = { name: projectName, videoId: videoId, moments: [] }
-    handleProjectSelect(newProject)
+    handleProjectSelect(buildNewProject(projectName, videoId))
   }
 
   return <>
@@ -32,7 +31,7 @@ const Home = () => {
 
       <div className={styles.projectContainer}>
         <div className={styles.projectRows}>
-          {projects.sort((a, b) => a.name.localeCompare(b.name)).map((project, index) =>
+          {sortProjects(projects).map((project, index) =>
             <ProjectItem
               key={index}
               project={project}
