@@ -33,10 +33,12 @@ const ProjectPage = () => {
     if (projectData) {
       const supposedProject: UnidentifiedProject | null = projectFromBase64(projectData)
       if (supposedProject) {
-        // Reset player parameters if a new project is loaded
         if (!project || !areEqualProjects(project, supposedProject)) {
-          setPlaying(false)
-          setEnded(false)
+          // Reset player parameters if videoIds differ
+          if (project?.videoId !== supposedProject.videoId) {
+            setPlaying(false)
+            setEnded(false)
+          }
           const addedProject: Project = addProjectToStorage(supposedProject)
           currentProjectService.setCurrentProject(addedProject)
         }
