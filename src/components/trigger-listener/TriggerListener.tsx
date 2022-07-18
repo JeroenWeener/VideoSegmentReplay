@@ -2,24 +2,34 @@ import { useEffect } from "react"
 
 interface TriggerListenerProps {
     trigger?: string
-    onTrigger: () => void
+    onTriggerDown: () => void
+    onTriggerUp: () => void
 }
 
 const TriggerListener = ({
     trigger,
-    onTrigger,
+    onTriggerDown,
+    onTriggerUp,
 }: TriggerListenerProps) => {
     useEffect(() => {
-        if (!trigger || !onTrigger) return
-
-        const handleKeyUp = (e: KeyboardEvent) => {
-            trigger === e.key && onTrigger()
+        if (!trigger || !onTriggerDown || !onTriggerUp) return
+        
+        const handleKeyDown = (e: KeyboardEvent) => {
+            trigger === e.key && onTriggerDown()
         }
 
+        const handleKeyUp = (e: KeyboardEvent) => {
+            trigger === e.key && onTriggerUp()
+        }
+
+        window.addEventListener('keydown', handleKeyDown)
         window.addEventListener('keyup', handleKeyUp)
 
-        return () => window.removeEventListener('keyup', handleKeyUp)
-    }, [trigger, onTrigger])
+        return () => {
+            window.removeEventListener('keydown', handleKeyDown)
+            window.removeEventListener('keyup', handleKeyUp)
+        }
+    }, [trigger, onTriggerDown, onTriggerUp])
 
     return <></>
 }

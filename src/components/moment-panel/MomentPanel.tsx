@@ -23,6 +23,7 @@ const MomentPanel = ({
     onUpdate,
 }: MomentPanelProps) => {
     const [showTriggerDialog, setShowTriggerDialog] = useState<boolean>(false)
+    const [isTriggerDown, setIsTriggerDown] = useState<boolean>(false)
 
     const deleteMoment = (event: React.MouseEvent) => {
         event.stopPropagation()
@@ -40,9 +41,18 @@ const MomentPanel = ({
         onUpdate({ ...momentWithoutTrigger, ...(trigger && { trigger: trigger }) })
     }
 
+    const handleTriggerDown = () => {
+        setIsTriggerDown(true)
+    }
+
+    const handleTriggerUp = () => {
+        setIsTriggerDown(false)
+        onStart()
+    }
+
     return <>
         <div
-            className={`${styles.momentPanel} ${active ? styles.active : ''} ${playing && active ? styles.pulse : ''}`}
+            className={`${styles.momentPanel} ${playing && active ? styles.pulse : ''} ${isTriggerDown ? styles.highlighted : ''}`}
             onClick={onStart}
         >
             <div className={styles.header}>
@@ -63,7 +73,7 @@ const MomentPanel = ({
             }
         </div>
 
-        <TriggerListener trigger={moment.trigger} onTrigger={onStart} />
+        <TriggerListener trigger={moment.trigger} onTriggerDown={handleTriggerDown} onTriggerUp={handleTriggerUp} />
 
         {showTriggerDialog && <TriggerDialog onRegisterTrigger={handleTriggerRegister} onClose={() => setShowTriggerDialog(false)} />}
     </>
