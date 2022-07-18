@@ -1,4 +1,3 @@
-import _ from "lodash"
 import { LOG_SAFETY_CHECKS } from "../config"
 import { Moment, UnidentifiedMoment, URLMoment } from "../models/moment.model"
 import { isValidTrigger } from "./regex.util"
@@ -28,6 +27,7 @@ export const secondsToHMSString = (seconds: number, showHours: boolean = false) 
  */
 export const toUrlMoment = (moment: Moment): URLMoment => {
     return {
+        ...(moment.description && { d: moment.description }),
         s: moment.startTime,
         ...(moment.trigger && { t: moment.trigger }),
     }
@@ -41,6 +41,7 @@ export const toUrlMoment = (moment: Moment): URLMoment => {
  */
 export const fromUrlMoment = (urlMoment: URLMoment): UnidentifiedMoment => {
     return {
+        ...(urlMoment.d && { description: urlMoment.d }),
         startTime: urlMoment.s,
         ...(urlMoment.t && { trigger: urlMoment.t })
     }
@@ -54,9 +55,10 @@ export const fromUrlMoment = (urlMoment: URLMoment): UnidentifiedMoment => {
  * @param startTime the start time of the moment
  * @returns a new Moment consisting of an ID and a start time
  */
-export const buildNewMoment = (startTime: number): Moment => {
+export const buildNewMoment = (startTime: number, description?: string): Moment => {
     return {
         id: Math.floor(Math.random() * Number.MAX_SAFE_INTEGER),
+        ...(description && { description: description }),
         startTime: startTime,
     }
 }
@@ -79,7 +81,7 @@ export const buildMoment = (moment: UnidentifiedMoment): Moment => {
  * 
  * Moments are equal if:
  * - they have the same ID (if both are of type Moment)
- * - at least one of them does not have an ID AND their properties are identical (bar trigger)
+ * - either their start time or their description matches
  * 
  * @param momentA
  * @param momentB
@@ -90,9 +92,7 @@ export const areEqualMoments = (momentA: Moment | UnidentifiedMoment, momentB: M
         return momentA.id === momentB.id
     }
 
-    const strippedMomentA = 'id' in momentA ? (({ id, trigger, ...m }) => m)(momentA) : momentA
-    const strippedMomentB = 'id' in momentB ? (({ id, trigger, ...m }) => m)(momentB) : momentB
-    return _.isEqual(strippedMomentA, strippedMomentB)
+    return momentA.startTime === momentB.startTime || (!!momentA.description && momentA.description === momentB.description)
 }
 
 /**
@@ -104,9 +104,11 @@ export const areEqualMoments = (momentA: Moment | UnidentifiedMoment, momentB: M
  * @returns whether the URLMoment is considered safe for use
  */
 export const isURLMomentSafe = (urlMoment: URLMoment): boolean => {
-    const momentProperties = ['s', 't']
+    const momentProperties = ['d', 's', 't']
 
     const containsOnlyDescribedProperties = Object.keys(urlMoment).every(property => momentProperties.includes(property))
+
+    const descriptionIsUndefinedOrString = !urlMoment.d || typeof urlMoment.d === 'string'
 
     const startTimeIsNumber = typeof urlMoment.s === 'number'
 
@@ -115,12 +117,14 @@ export const isURLMomentSafe = (urlMoment: URLMoment): boolean => {
     if (LOG_SAFETY_CHECKS) {
         console.debug('\t--- Moment ---')
         console.debug('\tContains only described properties:', containsOnlyDescribedProperties)
+        console.debug('\tDescription is string:', descriptionIsUndefinedOrString)
         console.debug('\tStart time is number:', startTimeIsNumber)
         console.debug('\tTrigger is undefined or valid char:', triggerIsUndefinedOrValidChar)
     }
 
     return (
         containsOnlyDescribedProperties &&
+        descriptionIsUndefinedOrString &&
         startTimeIsNumber &&
         triggerIsUndefinedOrValidChar
     )

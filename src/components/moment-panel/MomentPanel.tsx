@@ -45,11 +45,22 @@ const MomentPanel = ({
             className={`${styles.momentPanel} ${active ? styles.active : ''} ${playing && active ? styles.pulse : ''}`}
             onClick={onStart}
         >
-            <div className={styles.buttonDelete} onClick={deleteMoment} />
-            <div className={styles.triggerIndicator} onClick={handleTriggerClick}>
-                <span className={`${moment.trigger ? '' : styles.hidden}`}>{moment.trigger || '_'}</span>
+            <div className={styles.header}>
+                <div className={styles.triggerIndicator} onClick={handleTriggerClick}>
+                    <span className={`${moment.trigger ? '' : styles.hidden}`}>{moment.trigger || '_'}</span>
+                </div>
+
+                <div className={styles.buttonDelete} onClick={deleteMoment} />
             </div>
-            <div className={styles.time}>{secondsToHMSString(moment.startTime)}</div>
+            {moment.description !== undefined ? <>
+                <div className={styles.description}>{moment.description}</div>
+                <div className={styles.time}>{secondsToHMSString(moment.startTime)}</div>
+            </> :
+                <>
+                    <div className={styles.description}>{secondsToHMSString(moment.startTime)}</div>
+                    <div />
+                </>
+            }
         </div>
 
         <TriggerListener trigger={moment.trigger} onTrigger={onStart} />
