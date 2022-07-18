@@ -5,6 +5,8 @@ import HistoryShortcutListener from '../history-shortcut-listener/HistoryShortcu
 import MomentPanel from '../moment-panel/MomentPanel'
 import NewMomentPanel from '../new-moment-panel/NewMomentPanel'
 import styles from './MomentPanelContainer.module.scss'
+import { MdUndo } from 'react-icons/md'
+import { MdRedo } from 'react-icons/md'
 
 interface MomentPanelContainerProps {
     playing: boolean
@@ -110,18 +112,18 @@ const MomentPanelContainer = ({
     }
 
     return <>
-        <div>
+        <div className={styles.actionButtonContainer}>
             <button
-                disabled={historyPointer === 0}
+                className={`${styles.actionButton} ${historyPointer === 0 ? styles.disabled : ''}`}
                 onClick={handleUndo}
             >
-                Undo
+                <MdUndo className={styles.actionButtonIcon} />
             </button>
             <button
-                disabled={historyPointer === momentsHistory.length - 1}
+                className={`${styles.actionButton} ${historyPointer === momentsHistory.length - 1 ? styles.disabled : ''}`}
                 onClick={handleRedo}
             >
-                Redo
+                <MdRedo className={styles.actionButtonIcon} />
             </button>
         </div>
         <div className={styles.panelContainer}>
