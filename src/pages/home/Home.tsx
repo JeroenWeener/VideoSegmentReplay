@@ -27,19 +27,22 @@ const Home = () => {
 
   return <>
     <div className={styles.homeContainer}>
-      <button className={styles.buttonProjectAdd} onClick={() => setProjectDialogOpened(true)}>New project</button>
+      <div className={styles.header}>
+        <h2>Projects</h2>
+        <button className={styles.buttonProjectAdd} onClick={() => setProjectDialogOpened(true)}>New project</button>
+      </div>
 
       <div className={styles.projectContainer}>
-        <div className={styles.projectRows}>
-          {sortProjects(projects).map((project, index) =>
+        {sortProjects(projects).map((project, index) =>
+          <div className={styles.projectRow}>
             <ProjectItem
               key={index}
               project={project}
               onSelect={() => handleProjectSelect(project)}
               onDelete={() => handleProjectDelete(project)}
             />
-          )}
-        </div>
+          </div>
+        )}
       </div>
     </div>
 

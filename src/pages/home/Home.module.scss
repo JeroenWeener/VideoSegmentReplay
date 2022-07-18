@@ -3,28 +3,34 @@
     flex-direction: column;
 }
 
+.header {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    margin: 1em 0;
+}
+
 .projectContainer {
     display: flex;
     flex-direction: column;
     justify-content: stretch;
-    padding-top: 1rem;
 }
 
-.projectRows {
-    box-shadow: 0 2px 2px rgb(0 0 0 / .15);
+.projectRow:not(:first-child) {
+    border-top: 1px #ccc solid;
 }
 
 .buttonProjectAdd {
     align-self: flex-end;
     display: block;
-    margin-top: 1rem;
     border-radius: 5px;
     padding: .5rem;
     outline: none;
     border: none;
     color: var(--color-primary);
     font-size: 1em;
-    background-image: linear-gradient(to right, #4CB8C4 0%, #3CD3AD 51%, #4CB8C4 100%);
+    background-image: var(--gradient-accent);
     background-size: 200% auto;
     cursor: pointer;
     transition: background-position .5s;

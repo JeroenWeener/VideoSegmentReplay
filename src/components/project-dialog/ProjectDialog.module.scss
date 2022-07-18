@@ -27,8 +27,8 @@
 
 
         &[type=submit] {
-            color: white;
-            background-image: linear-gradient(to right, #4CB8C4 0%, #3CD3AD 51%, #4CB8C4 100%);
+            color: var(--color-primary);
+            background-image: var(--gradient-accent);
             background-size: 200% auto;
             background-repeat: no-repeat;
             cursor: pointer;
@@ -45,6 +45,7 @@
 
             &:disabled {
                 background-position: 200%;
+                cursor: not-allowed;
                 color: inherit;
             }
         }

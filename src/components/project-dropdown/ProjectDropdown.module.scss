@@ -9,7 +9,7 @@
         text-overflow: ellipsis;
         white-space: nowrap;
         overflow: hidden;
-        background-color: #f8f8f8;
+        background-color: #fff;
         cursor: pointer;
         user-select: none;
         padding: 1rem;
@@ -35,13 +35,11 @@
 
         &:hover,
         &:active {
-            background-color: var(--color-primary);
+            background-color: var(--color-hover);
         }
     }
 
     &.opened {
-        background-color: var(--color-primary);
-
         .dropdownOptionProjects {
             display: inherit;
 

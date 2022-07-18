@@ -11,10 +11,10 @@
     column-gap: .5rem;
     flex-direction: row;
     align-items: center;
-    box-shadow: 0 0 4px rgb(0 0 0 / .15);
+    box-shadow: 0 0 2px rgb(0 0 0 / .15);
 
     .buttonAction {
-        width: 0;
+        aspect-ratio: 1;
         border: 0;
         background: transparent;
         height: $button-action-size;
@@ -124,7 +124,7 @@
             border-radius: 50%;
             height: $seek-bar-handle-size;
             width: $seek-bar-handle-size;
-            background: var(--color-accent);
+            background-color: var(--color-accent);
             cursor: pointer;
         }
 
@@ -135,7 +135,7 @@
             border-radius: 50%;
             height: $seek-bar-handle-size;
             width: $seek-bar-handle-size;
-            background: var(--color-accent);
+            background-color: var(--color-accent);
             cursor: pointer;
         }
     }

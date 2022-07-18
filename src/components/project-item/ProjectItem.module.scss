@@ -8,7 +8,7 @@
     cursor: pointer;
 
     &:hover {
-        background-color: #ddd;
+        background-color: var(--color-hover);
     }
 }
 
