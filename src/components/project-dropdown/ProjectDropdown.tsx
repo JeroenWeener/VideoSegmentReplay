@@ -30,7 +30,7 @@ const ProjectDropdown = ({
         if (!open) return
 
         const handleClickOutside = (e: MouseEvent) => {
-            const container = document.getElementById(styles.dropdownProjectsContainer)
+            const container = document.getElementById(styles.dropdownProjects)
             if (container && !container.contains(e.target as Node)) {
                 setOpen(false)
             }
@@ -59,8 +59,8 @@ const ProjectDropdown = ({
 
     return <>
         {currentProject && <div
-            id={styles.dropdownProjectsContainer}
-            className={`${open ? styles.opened : ''} ${styles.dropdownProjects}`}
+            id={styles.dropdownProjects}
+            className={`${open ? styles.opened : ''}`}
             onClick={() => setOpen(e => !e)}
         >
             {projectList.map((project, index) => <div
