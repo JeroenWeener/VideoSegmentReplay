@@ -8,16 +8,6 @@ import { Project } from './models/project.model';
 import ProjectPage from './pages/project-page/ProjectPage';
 
 const App = () => {
-
-  /**
-   * Manually calculate true value of 100vh, as mobile browser might report screen height without regarding url bar.
-   */
-  useEffect(() => {
-    const setVhProperty = () => document.documentElement.style.setProperty('--app-height', `${window.innerHeight}px`);
-    window.addEventListener('resize', setVhProperty)
-    return () => window.removeEventListener('resize', setVhProperty)
-  }, [])
-
   return <>
     <BrowserRouter basename={`/${process.env.PUBLIC_URL}`}>
       <Content />

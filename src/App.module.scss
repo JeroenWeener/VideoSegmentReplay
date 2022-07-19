@@ -8,9 +8,18 @@
   --gradient-accent: linear-gradient(to right, var(--color-accent-2) 0%, var(--color-accent) 51%, var(--color-accent-2) 100%);
 }
 
+html {
+  height: -moz-available;
+  height: -webkit-fill-available;
+  height: fill-available;
+}
+
 body {
-  height: 100vh; // fallback
-  height: var(--app-height, 100vh);
+  min-height: 100vh;
+  min-height: -moz-available;
+  min-height: -webkit-fill-available;
+  min-height: fill-available;
+
   background-color: var(--color-primary);
   color: var(--color-secondary);
 }
