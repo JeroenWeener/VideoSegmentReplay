@@ -1,6 +1,13 @@
 .homeContainer {
     display: flex;
     flex-direction: column;
+    margin: 0 1em;
+}
+
+@media (min-width: 720px) {
+    .homeContainer {
+        margin: 0;
+    }
 }
 
 .header {
