@@ -11,6 +11,7 @@ import ShortcutListener from '../../components/shortcut-listener/ShortcutListene
 import { addProjectToStorage, retrieveVolume, storeVolume, updateProjectInStorage } from '../../utils/local-storage.util'
 import CurrentProjectService from '../../services/current-project-service'
 import { Project, UnidentifiedProject } from '../../models/project.model'
+import screenfull from 'screenfull'
 
 const currentProjectService = CurrentProjectService.getInstance()
 
@@ -26,6 +27,7 @@ const ProjectPage = () => {
   const [currentTime, setCurrentTime] = useState<number>(0)
   const [duration, setDuration] = useState<number>(0)
   const [lastUserUpdate, setLastUserUpdate] = useState<number>(Date.now())
+  const [isFullscreen, setIsFullscreen] = useState<boolean>(false)
 
   const project = currentProjectService.getCurrentProject()
 
@@ -52,10 +54,10 @@ const ProjectPage = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [navigate, projectData])
 
-  /**
-   * componentWillUnmount
-   */
   useEffect(() => {
+    // Listen for when fullscreen is turned off by user
+    screenfull.onchange(() => setIsFullscreen(screenfull.isFullscreen))
+    
     return () => currentProjectService.setCurrentProject(null)
   }, [])
 
@@ -154,6 +156,7 @@ const ProjectPage = () => {
           <VideoPlayer
             videoId={project.videoId}
             playing={playing}
+            isFullscreen={isFullscreen}
             volume={volume}
             onPlay={handlePlay}
             onPause={handlePause}
@@ -191,6 +194,7 @@ const ProjectPage = () => {
       onMute={() => setVolume(volume === 0 ? 100 : 0)}
       onToggle={handleToggle}
       onSeekRelative={(seconds) => handleSeek(currentTime + seconds)}
+      onFullscreen={() => setIsFullscreen(true)}
     />
   </>
 }

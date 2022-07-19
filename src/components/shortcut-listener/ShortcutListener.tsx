@@ -10,43 +10,16 @@ interface ShortcutListenerProps {
     onMute: () => void
     onToggle: () => void
     onSeekRelative: (seconds: number) => void
+    onFullscreen: () => void
 }
 
 const ShortcutListener = ({
     onMute,
     onToggle,
     onSeekRelative,
+    onFullscreen,
 }: ShortcutListenerProps) => {
     useEffect(() => {
-        const handleKeyUp = (e: KeyboardEvent): void => {
-            if (
-                e.key === ' ' ||
-                e.code === 'Space' ||
-                e.keyCode === 32
-            ) {
-                e.preventDefault()
-                onToggle()
-            }
-
-            if (
-                e.key === 'k' ||
-                e.code === 'KeyK' ||
-                e.keyCode === 75
-            ) {
-                e.preventDefault()
-                onToggle()
-            }
-
-            if (
-                e.key === 'm' ||
-                e.code === 'KeyM' ||
-                e.keyCode === 77
-            ) {
-                e.preventDefault()
-                onMute()
-            }
-        }
-
         const handleKeyDown = (e: KeyboardEvent): void => {
             if (
                 e.key === 'ArrowLeft' ||
@@ -84,15 +57,53 @@ const ShortcutListener = ({
                 onSeekRelative(10)
             }
         }
+        
+        const handleKeyUp = (e: KeyboardEvent): void => {
+            if (
+                e.key === ' ' ||
+                e.code === 'Space' ||
+                e.keyCode === 32
+            ) {
+                e.preventDefault()
+                onToggle()
+            }
 
-        window.addEventListener('keyup', handleKeyUp)
+            if (
+                e.key === 'k' ||
+                e.code === 'KeyK' ||
+                e.keyCode === 75
+            ) {
+                e.preventDefault()
+                onToggle()
+            }
+
+            if (
+                e.key === 'm' ||
+                e.code === 'KeyM' ||
+                e.keyCode === 77
+            ) {
+                e.preventDefault()
+                onMute()
+            }
+
+            if (
+                e.key === 'f' ||
+                e.code === 'KeyF' ||
+                e.keyCode === 77
+            ) {
+                e.preventDefault()
+                onFullscreen()
+            }
+        }
+
         window.addEventListener('keydown', handleKeyDown)
+        window.addEventListener('keyup', handleKeyUp)
 
         return () => {
-            window.removeEventListener('keyup', handleKeyUp)
             window.removeEventListener('keydown', handleKeyDown)
+            window.removeEventListener('keyup', handleKeyUp)
         }
-    }, [onMute, onSeekRelative, onToggle])
+    }, [onMute, onSeekRelative, onToggle, onFullscreen])
 
     return <></>
 }

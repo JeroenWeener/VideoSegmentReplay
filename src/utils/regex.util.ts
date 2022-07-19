@@ -11,5 +11,5 @@ export const isValidVideoId = (videoId: string): boolean => {
 }
 
 export const isValidTrigger = (s: string): boolean => {
-    return /^[0-9a-in-z]$/.test(s)
+    return /^[0-9a-eghin-z]$/.test(s)
 }
