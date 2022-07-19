@@ -1,4 +1,5 @@
 import React, { MouseEvent, useState } from "react"
+import { MdEdit } from "react-icons/md"
 import { Moment } from "../../models/moment.model"
 import { secondsToHMSString } from "../../utils/moment.util"
 import TriggerDialog from "../trigger-dialog/TriggerDialog"
@@ -73,6 +74,12 @@ const MomentPanel = ({
                     <div />
                 </>
             }
+
+            <div className={`${styles.editOverlay} ${editing ? '' : styles.hidden}`}>
+                <button className={styles.editOverlayButton}>
+                    <MdEdit />
+                </button>
+            </div>
         </div>
 
         <TriggerListener trigger={moment.trigger} onTriggerDown={handleTriggerDown} onTriggerUp={handleTriggerUp} />
