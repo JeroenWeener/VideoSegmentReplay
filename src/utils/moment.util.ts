@@ -117,7 +117,7 @@ export const isURLMomentSafe = (urlMoment: URLMoment): boolean => {
     if (LOG_SAFETY_CHECKS) {
         console.debug('\t--- Moment ---')
         console.debug('\tContains only described properties:', containsOnlyDescribedProperties)
-        console.debug('\tDescription is string:', descriptionIsUndefinedOrString)
+        console.debug('\tDescription is undefined or string:', descriptionIsUndefinedOrString)
         console.debug('\tStart time is number:', startTimeIsNumber)
         console.debug('\tTrigger is undefined or valid char:', triggerIsUndefinedOrValidChar)
     }
@@ -129,3 +129,15 @@ export const isURLMomentSafe = (urlMoment: URLMoment): boolean => {
         triggerIsUndefinedOrValidChar
     )
 }
+
+export const momentIdeas = [
+    {
+        description: 'Verse 2',
+    },
+    {
+        description: 'Impossible piece',
+    },
+    {
+        description: 'Highlight 6',
+    },
+]

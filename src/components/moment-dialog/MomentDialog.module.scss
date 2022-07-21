@@ -1,0 +1,53 @@
+.momentDialogForm {
+    display: flex;
+    flex-direction: column;
+    gap: 1em;
+    min-width: 15rem;
+    width: 50vw;
+    max-width: 25rem;
+    margin-top: 1em;
+
+    input {
+        display: block;
+        width: 100%;
+        padding: 1em;
+        outline: 1px transparent solid;
+        border: none;
+        border-radius: 5px;
+
+        &[type=text] {
+            margin: .5em 0;
+            transition: outline-color .1s;
+
+            &:hover,
+            &:focus {
+                outline-color: var(--color-secondary);
+            }
+        }
+
+
+        &[type=submit] {
+            color: var(--color-primary);
+            background-image: var(--gradient-accent);
+            background-size: 200% auto;
+            background-repeat: no-repeat;
+            cursor: pointer;
+            transition: all .25s;
+
+            &:hover,
+            &:focus {
+                background-position: right center;
+            }
+
+            &:focus:not(:disabled) {
+                outline-color: var(--color-secondary);
+            }
+
+            &:disabled {
+                background-position: 200%;
+                cursor: not-allowed;
+                color: inherit;
+            }
+        }
+    }
+}

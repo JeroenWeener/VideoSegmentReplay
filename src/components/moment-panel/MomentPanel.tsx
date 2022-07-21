@@ -2,6 +2,7 @@ import React, { MouseEvent, useState } from "react"
 import { MdEdit } from "react-icons/md"
 import { Moment } from "../../models/moment.model"
 import { secondsToHMSString } from "../../utils/moment.util"
+import MomentDialog from "../moment-dialog/MomentDialog"
 import TriggerDialog from "../trigger-dialog/TriggerDialog"
 import TriggerListener from "../trigger-listener/TriggerListener"
 import styles from './MomentPanel.module.scss'
@@ -25,6 +26,7 @@ const MomentPanel = ({
     onDelete,
     onUpdate,
 }: MomentPanelProps) => {
+    const [showMomentDialog, setShowMomentDialog] = useState<boolean>(false)
     const [showTriggerDialog, setShowTriggerDialog] = useState<boolean>(false)
     const [isTriggerDown, setIsTriggerDown] = useState<boolean>(false)
 
@@ -53,6 +55,16 @@ const MomentPanel = ({
         onStart()
     }
 
+    const handleEditClick = (e: MouseEvent) => {
+        e.stopPropagation()
+        setShowMomentDialog(true)
+    }
+
+    const handleMomentUpdate = (moment: Moment) => {
+        onUpdate(moment)
+        setShowMomentDialog(false)
+    }
+
     return <>
         <div
             className={`${styles.momentPanel} ${playing && active ? styles.pulse : ''} ${isTriggerDown ? styles.highlighted : ''}`}
@@ -76,7 +88,7 @@ const MomentPanel = ({
             }
 
             <div className={`${styles.editOverlay} ${editing ? '' : styles.hidden}`}>
-                <button className={styles.editOverlayButton}>
+                <button className={styles.editOverlayButton} onClick={handleEditClick}>
                     <MdEdit />
                 </button>
             </div>
@@ -85,6 +97,7 @@ const MomentPanel = ({
         <TriggerListener trigger={moment.trigger} onTriggerDown={handleTriggerDown} onTriggerUp={handleTriggerUp} />
 
         {showTriggerDialog && <TriggerDialog onRegisterTrigger={handleTriggerRegister} onClose={() => setShowTriggerDialog(false)} />}
+        {showMomentDialog && <MomentDialog onUpdateMoment={(moment) => handleMomentUpdate(moment)} onClose={() => setShowMomentDialog(false)} moment={moment} />}
     </>
 }
 

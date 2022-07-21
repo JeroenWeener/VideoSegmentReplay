@@ -26,7 +26,6 @@ const ShortcutListener = ({
                 e.code === 'ArrowLeft' ||
                 e.keyCode === 37
             ) {
-                e.preventDefault()
                 onSeekRelative(-5)
             }
 
@@ -35,7 +34,6 @@ const ShortcutListener = ({
                 e.code === 'ArrowRight' ||
                 e.keyCode === 39
             ) {
-                e.preventDefault()
                 onSeekRelative(5)
             }
 
@@ -44,7 +42,6 @@ const ShortcutListener = ({
                 e.code === 'KeyJ' ||
                 e.keyCode === 74
             ) {
-                e.preventDefault()
                 onSeekRelative(-10)
             }
 
@@ -53,7 +50,6 @@ const ShortcutListener = ({
                 e.code === 'KeyL' ||
                 e.keyCode === 76
             ) {
-                e.preventDefault()
                 onSeekRelative(10)
             }
         }
@@ -64,7 +60,6 @@ const ShortcutListener = ({
                 e.code === 'Space' ||
                 e.keyCode === 32
             ) {
-                e.preventDefault()
                 onToggle()
             }
 
@@ -73,7 +68,6 @@ const ShortcutListener = ({
                 e.code === 'KeyK' ||
                 e.keyCode === 75
             ) {
-                e.preventDefault()
                 onToggle()
             }
 
@@ -82,16 +76,14 @@ const ShortcutListener = ({
                 e.code === 'KeyM' ||
                 e.keyCode === 77
             ) {
-                e.preventDefault()
                 onMute()
             }
 
             if (
                 e.key === 'f' ||
                 e.code === 'KeyF' ||
-                e.keyCode === 77
+                e.keyCode === 70
             ) {
-                e.preventDefault()
                 onFullscreen()
             }
         }
