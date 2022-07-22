@@ -1,8 +1,9 @@
-import { ChangeEvent, FormEvent, useEffect, useState } from "react"
+import { FormEvent, KeyboardEvent, useState } from "react"
 import { Moment } from "../../models/moment.model"
 import { momentIdeas } from "../../utils/moment.util"
 import { getRandom } from "../../utils/random.util"
 import Dialog from "../dialog/Dialog"
+import TimeInput from "../time-input/TimeInput"
 import styles from './MomentDialog.module.scss'
 
 interface MomentDialogProps {
@@ -17,6 +18,7 @@ const MomentDialog = ({
     onClose,
 }: MomentDialogProps) => {
     const [momentDescription, setMomentDescription] = useState<string>(moment.description || '')
+    const [momentStartTime, setMomentStartTime] = useState<number>(moment.startTime)
     const [momentIdea] = useState<{ description: string }>(getRandom(momentIdeas))
 
     const handleOnSubmit = (event: FormEvent) => {
@@ -24,12 +26,23 @@ const MomentDialog = ({
         onUpdateMoment({
             id: moment.id,
             description: momentDescription,
-            startTime: moment.startTime,
+            startTime: momentStartTime,
         })
     }
 
-    const onDescriptionChange = (e: ChangeEvent<HTMLInputElement>) => {
-        setMomentDescription(e.target.value)
+    /**
+     * Prevent keyboard events from propagating unless its the escape key, as this is used by the parent dialog to close.
+     * 
+     * @param e
+     */
+    const preventAppTriggers = (e: KeyboardEvent) => {
+        if (
+            e.key !== 'Escape' &&
+            e.code !== 'Escape' &&
+            e.keyCode !== 27
+        ) {
+            e.stopPropagation()
+        }
     }
 
     return <>
@@ -37,17 +50,24 @@ const MomentDialog = ({
             <h2>Edit moment</h2>
 
             <form className={styles.momentDialogForm} onSubmit={handleOnSubmit}>
-                <div>
+                <div
+                    onKeyDown={preventAppTriggers} // prevent app shortcuts from triggering
+                    onKeyUp={preventAppTriggers} // prevent app shortcuts from triggering
+                >
                     <label>
                         Moment description
                         <input
-                            autoFocus type='text'
+                            autoFocus
+                            type='text'
                             value={momentDescription}
                             placeholder={momentIdea.description}
-                            onKeyUp={(e) => e.stopPropagation()} // prevent app shortcuts from triggering
-                            onKeyDown={(e) => e.stopPropagation()} // prevent app shortcuts from triggering
-                            onChange={onDescriptionChange}
+                            onChange={(e) => setMomentDescription(e.target.value)}
                         />
+                    </label>
+
+                    <label>
+                        Start time
+                        <TimeInput initialSeconds={momentStartTime} onSecondsUpdated={setMomentStartTime} />
                     </label>
                 </div>
 

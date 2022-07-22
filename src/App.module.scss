@@ -9,16 +9,16 @@
 }
 
 html {
-  height: -moz-available;
-  height: -webkit-fill-available;
-  height: fill-available;
+  height: -moz-stretch;
+  height: -webkit-stretch;
+  height: stretch;
 }
 
 body {
   min-height: 100vh;
-  min-height: -moz-available;
-  min-height: -webkit-fill-available;
-  min-height: fill-available;
+  min-height: -moz-stretch;
+  min-height: -webkit-stretch;
+  min-height: stretch;
 
   background-color: var(--color-primary);
   color: var(--color-secondary);

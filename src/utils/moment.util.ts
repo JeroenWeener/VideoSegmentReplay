@@ -3,17 +3,17 @@ import { Moment, UnidentifiedMoment, URLMoment } from "../models/moment.model"
 import { isValidTrigger } from "./regex.util"
 
 /**
- * Formats seconds to a hh:mm:ss string.
+ * Formats seconds to a hh:mm:ss string. Allows for 1 decimal.
  * 
  * Hours are shown when relevant or when explicitly requested by setting showHours to true.
  * 
- * @param seconds the number of seconds that are to be formatted to a hh:mm:ss string
- * @returns (hh):(m)m:ss string
+ * @param seconds the number of seconds that are to be formatted to a hh:mm:ss.s string
+ * @returns (hh):(m)m:ss.s string
  */
 export const secondsToHMSString = (seconds: number, showHours: boolean = false) => {
     const h = Math.floor(seconds / 60 / 60)
     const m = Math.floor(seconds / 60 % 60)
-    const s = Math.ceil(seconds % 60)
+    const s = Math.ceil((seconds % 60) * 10) / 10
     const mString = h > 0 && m < 10 ? '0' + m : m
     const sString = s >= 10 ? s : '0' + s
     return `${h > 0 || showHours ? `${h}:` : ''}${mString}:${sString}`
