@@ -25,8 +25,9 @@ const MomentDialog = ({
         event.preventDefault()
         onUpdateMoment({
             id: moment.id,
-            description: momentDescription,
             startTime: momentStartTime,
+            ...(momentDescription && { description: momentDescription }),
+            ...(moment.trigger && { trigger: moment.trigger }),
         })
     }
 
