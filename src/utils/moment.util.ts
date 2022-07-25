@@ -8,12 +8,15 @@ import { isValidTrigger } from "./regex.util"
  * Hours are shown when relevant or when explicitly requested by setting showHours to true.
  * 
  * @param seconds the number of seconds that are to be formatted to a hh:mm:ss.s string
- * @returns (hh):(m)m:ss.s string
+ * @param showDecimal whether or not to show the time in 1 decimal significance
+ * @param showHours wheter to explicitly show the hours
+ * 
+ * @returns (hh):(m)m:ss(.s) string
  */
-export const secondsToHMSString = (seconds: number, showHours: boolean = false) => {
+export const secondsToHMSString = (seconds: number, showDecimal: boolean = false, showHours: boolean = false) => {
     const h = Math.floor(seconds / 60 / 60)
     const m = Math.floor(seconds / 60 % 60)
-    const s = Math.ceil((seconds % 60) * 10) / 10
+    const s = showDecimal ? Math.ceil((seconds % 60) * 10) / 10 : Math.ceil(seconds % 60)
     const mString = h > 0 && m < 10 ? '0' + m : m
     const sString = s >= 10 ? s : '0' + s
     return `${h > 0 || showHours ? `${h}:` : ''}${mString}:${sString}`

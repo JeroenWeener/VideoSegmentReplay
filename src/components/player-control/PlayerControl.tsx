@@ -27,7 +27,7 @@ const PlayerControl = ({
     if (duration === 0) return '-:-- / -:--'
 
     const totalHMS = secondsToHMSString(duration)
-    const currentHMS = secondsToHMSString(currentTime, totalHMS.length > '--:--'.length)
+    const currentHMS = secondsToHMSString(currentTime, false, totalHMS.length > '--:--'.length)
     return `${currentHMS} / ${totalHMS}`
   }
 

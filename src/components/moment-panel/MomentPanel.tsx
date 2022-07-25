@@ -79,10 +79,10 @@ const MomentPanel = ({
             </div>
             {moment.description !== undefined ? <>
                 <div className={styles.description}>{moment.description}</div>
-                <div className={styles.time}>{secondsToHMSString(moment.startTime)}</div>
+                <div className={styles.time}>{secondsToHMSString(moment.startTime, true)}</div>
             </> :
                 <>
-                    <div className={styles.description}>{secondsToHMSString(moment.startTime)}</div>
+                    <div className={styles.description}>{secondsToHMSString(moment.startTime, true)}</div>
                     <div />
                 </>
             }

@@ -10,7 +10,7 @@ const TimeInput = ({
     initialSeconds,
     onSecondsUpdated,
 }: TimeInputProps) => {
-    const [value, setValue] = useState<string>(secondsToHMSString(initialSeconds))
+    const [value, setValue] = useState<string>(secondsToHMSString(initialSeconds, true))
 
     useEffect(() => {
         onSecondsUpdated(getSecondsFromHHMMSS(value))
@@ -24,7 +24,7 @@ const TimeInput = ({
         const value = e.target.value
         const seconds = Math.max(0, getSecondsFromHHMMSS(value))
 
-        const time = secondsToHMSString(seconds)
+        const time = secondsToHMSString(seconds, true)
         setValue(time)
     }
 
